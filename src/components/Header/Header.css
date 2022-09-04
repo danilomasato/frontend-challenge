@@ -1,0 +1,151 @@
+#header {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 65px;
+  background: #f1f2fa 0% 0% no-repeat padding-box;
+}
+
+#header .row {
+  padding: 0;
+}
+
+#header .header-logo {
+  float: left;
+  width: 70px;
+  height: 28px;
+  padding: 20px 0;
+}
+
+#header .header-logo img {
+  width: 50px;
+  margin-top: -10px;
+}
+
+#header .icon-logo {
+  width: 66px;
+  height: 41px;
+}
+
+
+#nav {
+  float: right;
+  height: 65px;
+  border-bottom: 1px solid #ccc;
+}
+
+#nav li {
+  float: left;
+  cursor: pointer;
+  padding: 0 25px;
+  line-height: 65px;
+}
+
+#nav li a {
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+#nav li:last-child {
+  padding-right: 0;
+}
+
+.hamburger {
+  position: absolute;
+}
+
+@media (min-width: 1025px) {
+  #header {
+    height: 135px;
+  }
+
+  #header .header-logo {
+    margin: 0 0 0 40px;
+  }
+  
+  #nav {
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.15);
+  }
+
+  .hamburger {
+    display: none;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 1024px) {
+  #header .header-logo {
+    display: block;
+    margin: 0 0 0 15px;
+  }
+
+  #header {
+    overflow: hidden;
+    transition: height 0.3s ease;
+  }
+
+  .hamburger {
+    right: 0;
+    -webkit-tap-highlight-color: transparent;
+    margin-top: 9px;
+  }
+
+  .hamburger-box {
+    width: 15px;
+    height: 13px;
+  }
+
+  .hamburger-inner {
+    width: 100%;
+    height: 2px;
+  }
+
+  .hamburger-inner:before {
+    width: 100%;
+    top: -5px;
+    height: 100%;
+  }
+
+  .hamburger-inner:after {
+    width: 100%;
+    bottom: -5px;
+    height: 100%;
+  }
+
+  .hamburger .hamburger-inner,
+  .hamburger .hamburger-inner:after,
+  .hamburger .hamburger-inner:before,
+  .hamburger.is-active .hamburger-inner,
+  .hamburger.is-active .hamburger-inner:after,
+  .hamburger.is-active .hamburger-inner:before {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  #header.header-expanded {
+    height: 170px;
+  }
+
+  #nav {
+    display: grid;
+    width: 100%;
+    height: auto;
+    margin: 5px 0 0 0;
+  }
+
+  #nav li {
+    float: none;
+    line-height: 50px;
+    border-bottom: solid 1px #e7e7e7;
+  }
+
+  #nav li:last-child {
+    border-bottom: 0;
+  }
+
+  #nav li a {
+    display: block;
+  }
+}
