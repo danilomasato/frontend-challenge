@@ -1,5 +1,5 @@
 import {
-  RECEIVE_CHARACTER, 
+  RECEIVE_HOME, 
 } from "../constants/ActionTypes";
 
 const home = (state = {
@@ -7,8 +7,8 @@ const home = (state = {
     }, action) => {
 
     switch (action.type) {
-        case RECEIVE_CHARACTER:
-            return {...state, character: action.character};         
+        case RECEIVE_HOME:
+            return {...state, character: action.home};         
     default:
         return state;
   }

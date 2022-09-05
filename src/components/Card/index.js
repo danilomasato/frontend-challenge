@@ -1,27 +1,40 @@
 import React, { useState, useEffect } from "react";
+import {useHistory} from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
+import * as types from "../../constants/ActionTypes";
 
 export default function MultiActionAreaCard(props) {
 
-   const [characters, setCharacters] = React.useState([]);
+  const [characters, setCharacters] = React.useState([]);
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-    //first load
-    useEffect(() => {
-      if (props.data.character.results?.length > 0) {
-        console.log('boa========>', props.data.character.results)
-        setCharacters(props.data.character.results);
-      }
-    }, [props.data.character]);
+  //first load
+  useEffect(() => {
+    if (props.data.character.results?.length > 0) {
+      setCharacters(props.data.character.results);
+    }
+  }, [props.data.character]);
+
+  const handleClick = cardID => {
+    dispatch({
+      type: types.RECEIVE_CHARACTER,
+      payload: characters.filter(item => item.id === cardID)
+    })
+
+    history.push('/character')
+  };
 
   return (
     <>
     {characters.map(
-      card => 
-        <Card key={card.id} sx={{ maxWidth: 345 }}>
+      card =>
+        <Card key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
           <CardActionArea>
             <CardMedia
               component="img"
@@ -46,7 +59,5 @@ export default function MultiActionAreaCard(props) {
         </Card>
       )}
     </>
-    
-    
   );
 }

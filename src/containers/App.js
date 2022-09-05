@@ -1,7 +1,9 @@
 import React from "react";
 import { Switch, Route, HashRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { Home, CharacterDetail } from "./";
+import Home  from "./Home";
+import CharacterDetail from "./CharacterDetail";
+
 import "./App.css";
 
 const App = ({ store }) => (

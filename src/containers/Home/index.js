@@ -2,16 +2,16 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Container } from "../components";
-import { getCharacterData } from "../actions";
+import { Container } from "../../components";
+import { getCharacterData } from "../../actions";
 import "./Home.css";
-import Card from "../components/Card";
+import Card from "../../components/Card";
 
 const Home = ({ character }) => {
   return (
     <React.Fragment>
       <Container>
-        <Card data={character} />
+        <Card data={character}  />
       </Container>
     </React.Fragment>
   );
