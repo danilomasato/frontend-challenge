@@ -4,10 +4,10 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Container } from "../components";
 import { getCharacterData } from "../actions";
-import "./Home.css";
+// import "./Character.css";
 import Card from "../components/Card";
 
-const Home = ({ character }) => {
+const CharacterDetail = ({ character }) => {
   return (
     <React.Fragment>
       <Container>
@@ -29,4 +29,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CharacterDetail));

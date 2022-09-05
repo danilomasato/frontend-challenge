@@ -28,5 +28,10 @@
   .content {
     display: grid;
     padding: 0px 15px;
+    grid-row-gap: 20px;
+  }
+
+  .content .MuiPaper-elevation {
+    max-width: 100%;
   }
 }

@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Header } from "../Header";
 import "./Container.css";
 
 const Container = props => {
+  const [menu, setMenu] = useState([
+    {
+      title: "Home",
+      action: "/"
+    }
+  ]);
+  
   return (
     <>
-      <Header menu={props.menu}/>
+      <Header menu={menu}/>
       <div className="row center">
         <div className="content">{props.children}</div>
       </div>
