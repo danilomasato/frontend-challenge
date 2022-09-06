@@ -6,6 +6,7 @@ import { Container } from "../../components";
 import { getCharacterData } from "../../actions";
 import "./Home.css";
 import Card from "../../components/Card";
+import Pagination from "../../components/Pagination";
 
 const Home = ({ character }) => {
   return (
@@ -13,6 +14,8 @@ const Home = ({ character }) => {
       <Container>
         <Card data={character}  />
       </Container>
+      
+      <Pagination data={character}  />
     </React.Fragment>
   );
 };
