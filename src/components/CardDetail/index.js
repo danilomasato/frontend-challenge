@@ -3,12 +3,11 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions } from '@mui/material';
-import * as types from "../../constants/ActionTypes";
+import { CardActionArea } from '@mui/material';
 
 export default function MultiActionAreaCard(props) {
 
-  const [character, setCharacter] = React.useState([]);
+  const [character, setCharacter] = useState([]);
 
   //first load
   useEffect(() => {

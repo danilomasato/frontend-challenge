@@ -10,7 +10,7 @@ import * as types from "../../constants/ActionTypes";
 
 export default function MultiActionAreaCard(props) {
 
-  const [characters, setCharacters] = React.useState([]);
+  const [characters, setCharacters] = useState([]);
   const history = useHistory();
   const dispatch = useDispatch();
 

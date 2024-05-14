@@ -4,7 +4,7 @@ import { Header } from "../Header";
 import "./Container.css";
 
 const Container = props => {
-  const [menu, setMenu] = useState([
+  const [menu] = useState([
     {
       title: "Home",
       action: "/"
