@@ -9,7 +9,7 @@ export default function MultiActionAreaCard(props) {
 
   const [character, setCharacter] = useState([]);
 
-  //first load
+  //First load
   useEffect(() => {
     if (props.data.characterDetail?.length > 0) {
       setCharacter(props.data.characterDetail[0]);
