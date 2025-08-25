@@ -9,3 +9,13 @@ export const getCharacterData = () => dispatch => {
     })
   );
 };
+
+export const getArticles = () => dispatch => {
+  return api.getArticles().then(response =>
+    dispatch({
+      type: types.RECEIVE_HOME,
+      home: response
+    })
+  );
+};
+

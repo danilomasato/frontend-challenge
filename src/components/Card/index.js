@@ -10,21 +10,24 @@ import * as types from "../../constants/ActionTypes";
 
 export default function MultiActionAreaCard(props) {
 
-  const [characters, setCharacters] = useState([]);
+  const [articles, setArticles] = useState([]);
   const history = useHistory();
   const dispatch = useDispatch();
+  const baseURL = process.env.REACT_APP_URL;
 
   //first load
   useEffect(() => {
-    if (props.data.character.results?.length > 0) {
-      setCharacters(props.data.character.results);
+    let character = props.data.character.data
+
+    if (character?.length > 0) {
+      setArticles(character);
     }
-  }, [props.data.character]);
+  }, [props]);
 
   const handleClick = cardID => {
     dispatch({
       type: types.RECEIVE_CHARACTER,
-      payload: characters.filter(item => item.id === cardID)
+      payload: articles.filter(item => item.id === cardID)
     })
 
     history.push('/character')
@@ -32,22 +35,23 @@ export default function MultiActionAreaCard(props) {
 
   return (
     <>
-    {characters.map(
+    {articles.map(
       card =>
         <Card key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
           <CardActionArea>
             <CardMedia
               component="img"
               height="140"
-              image={card.image}
-              alt="green iguana"
+              image={`${baseURL}${card.cover.url}`}
+              alt={card.slug}
+              title={card.slug}
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
-                {card.name} 
+                {card.title} 
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Quantidade de Episódios: <b style={{ fontWeight: 600 }}>{card.episode.length} </b>
+                {card.description} <b style={{ fontWeight: 600 }}>{card.id} </b>
               </Typography>
             </CardContent>
           </CardActionArea>

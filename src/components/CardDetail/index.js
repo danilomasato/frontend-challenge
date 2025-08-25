@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -7,14 +6,8 @@ import { CardActionArea } from '@mui/material';
 
 export default function MultiActionAreaCard(props) {
 
-  const [character, setCharacter] = useState([]);
-
-  //First load
-  useEffect(() => {
-    if (props.data.characterDetail?.length > 0) {
-      setCharacter(props.data.characterDetail[0]);
-    }
-  }, [props.data.characterDetail]);
+  const baseURL = process.env.REACT_APP_URL;
+  const characterDetail = props.data.characterDetail[0]
 
   return (
     <>
@@ -23,21 +16,16 @@ export default function MultiActionAreaCard(props) {
             <CardMedia
               component="img"
               height="140"
-              image={character.image}
-              alt="green iguana"
+              image={`${baseURL}${characterDetail.cover.url}`}
+              alt={characterDetail.slug}
+              title={characterDetail.slug}
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
-                <b style={{ fontWeight: 600 }}>Nome: </b> {character.name} 
+                {characterDetail.title} 
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                <b style={{ fontWeight: 600 }}>Genero: </b> {character.gender} 
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <b style={{ fontWeight: 600 }}>Especie: </b> {character.species} 
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <b style={{ fontWeight: 600 }}>Tipo: </b> {character.type} 
+                {characterDetail.description} <b style={{ fontWeight: 600 }}>{characterDetail.id} </b>
               </Typography>
             </CardContent>
           </CardActionArea>
