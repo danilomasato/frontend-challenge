@@ -7,6 +7,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import * as types from "../../constants/ActionTypes";
+import ThumbSLider from "../ThumbSlider";
 
 export default function MultiActionAreaCard(props) {
 
@@ -25,27 +26,33 @@ export default function MultiActionAreaCard(props) {
   }, [props]);
 
   const handleClick = cardID => {
-    dispatch({
-      type: types.RECEIVE_CHARACTER,
-      payload: articles.filter(item => item.id === cardID)
-    })
+    // dispatch({
+    //   type: types.RECEIVE_CHARACTER,
+    //   payload: articles.filter(item => item.id === cardID)
+    // })
 
-    history.push('/character')
+    // history.push('/character')
   };
 
   return (
     <>
     {articles.map(
-      card =>
+      (card, index) =>
         <Card key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
           <CardActionArea>
-            <CardMedia
-              component="img"
+            <ThumbSLider 
               height="140"
-              image={`${baseURL}${card.cover.url}`}
+              image={card.cover}
               alt={card.slug}
               title={card.slug}
             />
+            {/* <CardMedia
+              component="img"
+              height="140"
+              image={`${baseURL}${card.cover[0].url}`}
+              alt={card.slug}
+              title={card.slug}
+            /> */}
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
                 {card.title} 
