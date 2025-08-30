@@ -63,7 +63,7 @@ export default function MultiActionAreaCard(props) {
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <Button size="small" color="primary">
+            <Button variant="contained" color="success" style={{ width: "100%" }}>
               Ver Mais
             </Button>
           </CardActions>

@@ -10,6 +10,11 @@ import Pagination from "../../components/Pagination";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { GetApiDistrict } from '../../utils';
+import { Button } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import SearchIcon from '@mui/icons-material/Search';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 
 const Home = ({ character }) => {
 
@@ -116,15 +121,26 @@ const Home = ({ character }) => {
   return (
     <React.Fragment>
       <Container>
-        <Autocomplete
-          disablePortal
-          options={ApiDistrict}
-          sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Pesquise por Bairros..." />}
-        />
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={2}>
+            <Grid size={8}>
+              <Autocomplete
+                disablePortal
+                options={ApiDistrict}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Pesquise por Bairros..." />}
+              />
+            </Grid>
+            <Grid size={4}>
+              <Button variant="contained" style={{ width: "100%" }}>
+                <SearchIcon />
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
         <Card data={character}  />
       </Container>
-      
+
       <Pagination data={character}  />
     </React.Fragment>
   );

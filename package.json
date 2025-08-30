@@ -8,6 +8,7 @@
     "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.8.7",
+    "@mui/styles": "^6.5.0",
     "@mui/x-data-grid": "^5.13.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
