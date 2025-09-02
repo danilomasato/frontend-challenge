@@ -19,6 +19,8 @@ import { Header } from "../../components/Header";
 const Home = ({ character }) => {
 
   const [ApiDistrict, setApiDistrict] = useState([]);
+  const [realEstate, setRealEstate] = useState(character);
+
   const [search, setSearch] = useState([]);
 
   const data = ['Água Rasa',
@@ -120,11 +122,16 @@ const Home = ({ character }) => {
       id: index
     })))
 
+    if(character.character.data?.length > 0 )
+      setRealEstate(character)
+
     if(search.label?.length > 0 ){
         character.character.data.filter((item, index) => {
           if(item.description.includes(search.label)){
-            character = item
-            console.log("search==============>", item)
+            setRealEstate({character: {
+              data: [item]
+            }})
+            console.log("realEstate==============>", item)
           }
         }
       )
@@ -171,10 +178,10 @@ const Home = ({ character }) => {
       </div>
 
       <Container>
-        <Card data={character}  />
+        <Card data={realEstate}  />
       </Container>
 
-      <Pagination data={character}  />
+      <Pagination data={realEstate}  />
     </React.Fragment>
   );
 };
