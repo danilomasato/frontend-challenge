@@ -11,7 +11,7 @@ const ThumbSLider = (props) => {
     <>
         <CustomSlider>
         {props.image.map((image, index) => {
-          return <img key={index} src={`${baseURL}${image.url}`} style={{ width: "100%", height: "140px" }} alt={image.imgAlt} />;
+          return <img key={index} src={`${baseURL}${image.url}`} style={{ width: "100%", height: "100%" }} alt={image.imgAlt} />;
         })}
       </CustomSlider>    
     </>

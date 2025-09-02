@@ -11,14 +11,15 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { GetApiDistrict } from '../../utils';
 import { Button } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import { Header } from "../../components/Header";
 
 const Home = ({ character }) => {
 
   const [ApiDistrict, setApiDistrict] = useState([]);
+  const [search, setSearch] = useState([]);
 
   const data = ['Água Rasa',
   'Alto de Pinheiros',
@@ -108,7 +109,9 @@ const Home = ({ character }) => {
   'Vila Matilde',
   'Vila Medeiros',
   'Vila Prudente',
-  'Vila Sônia']
+  'Vila Sônia',
+  'Vila Nova Conceição'
+]
 
   //useEffect for not loop, and many request's
   useEffect(() => {
@@ -116,28 +119,58 @@ const Home = ({ character }) => {
       label: item, 
       id: index
     })))
-  }, []);
+
+    if(search.label?.length > 0 ){
+        character.character.data.filter((item, index) => {
+          if(item.description.includes(search.label)){
+            character = item
+            console.log("search==============>", item)
+          }
+        }
+      )
+    }
+
+  }, [character, search]);
+
+  const [menu] = useState([
+    {
+      title: "Home",
+      action: "/"
+    }
+  ]);
+
+   const handleClick = cardID => {
+
+   }
 
   return (
     <React.Fragment>
+      <Header menu={menu}/>
+
+      <div className="row center">
+        <div className="content" style={{ minHeight: "auto",  display: "block" }}>
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid container spacing={2} style={{ gridColumnGap: "20px" }}>
+              <Grid size={8}>
+                <Autocomplete
+                  disablePortal
+                  options={ApiDistrict}
+                  sx={{ width: 300 }}
+                  onChange={(event, value) => setSearch(value)}
+                  renderInput={(params) => <TextField {...params} label="Pesquise por Bairros..." />}
+                />
+              </Grid>
+              <Grid size={4}>
+                <Button variant="contained" style={{ width: "100%" }}>
+                  <SearchIcon  onClick={(e) => {handleClick() }} />
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </div>
+      </div>
+
       <Container>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={2}>
-            <Grid size={8}>
-              <Autocomplete
-                disablePortal
-                options={ApiDistrict}
-                sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Pesquise por Bairros..." />}
-              />
-            </Grid>
-            <Grid size={4}>
-              <Button variant="contained" style={{ width: "100%" }}>
-                <SearchIcon />
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
         <Card data={character}  />
       </Container>
 
