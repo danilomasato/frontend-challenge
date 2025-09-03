@@ -42,23 +42,16 @@ export default function MultiActionAreaCard(props) {
           <CardActionArea>
             <ThumbSLider 
               height="140"
-              image={card.cover}
-              alt={card.slug}
-              title={card.slug}
+              image={card.fotos}
+              alt={card.imovel}
+              title={card.imovel}
             />
-            {/* <CardMedia
-              component="img"
-              height="140"
-              image={`${baseURL}${card.cover[0].url}`}
-              alt={card.slug}
-              title={card.slug}
-            /> */}
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
-                {card.title} 
+                {card.imovel} 
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {card.description} <b style={{ fontWeight: 600 }}>{card.id} </b>
+                {card.descricao} <b style={{ fontWeight: 600 }}>{card.id} </b>
               </Typography>
             </CardContent>
           </CardActionArea>

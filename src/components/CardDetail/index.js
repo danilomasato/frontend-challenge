@@ -16,16 +16,16 @@ export default function MultiActionAreaCard(props) {
             <CardMedia
               component="img"
               height="140"
-              image={`${baseURL}${characterDetail.cover.url}`}
-              alt={characterDetail.slug}
-              title={characterDetail.slug}
+              image={`${baseURL}${characterDetail.fotos.url}`}
+              alt={characterDetail.imovel}
+              title={characterDetail.imovel}
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="div">
-                {characterDetail.title} 
+                {characterDetail.imovel} 
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {characterDetail.description} <b style={{ fontWeight: 600 }}>{characterDetail.id} </b>
+                {characterDetail.descricao} <b style={{ fontWeight: 600 }}>{characterDetail.id} </b>
               </Typography>
             </CardContent>
           </CardActionArea>

@@ -128,7 +128,7 @@ const Home = ({ character }) => {
 
     if(search.label?.length > 0 ){
       character.character.data.filter((item, index) => {
-          if(item.description.includes(search.label)){
+          if(item.descricao.includes(search.label)){
             //loading
             setRealEstate("")
             setTimeout(() => {
