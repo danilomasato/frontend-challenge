@@ -95,7 +95,7 @@ function CustomCarousel({ children }) {
           slideNext();
         }}
       >
-        {">"}
+        {"›"}
       </button>
       <button
         className="slider__btn-prev"
@@ -104,7 +104,7 @@ function CustomCarousel({ children }) {
           slidePrev();
         }}
       >
-        {"<"}
+        {"‹"}
       </button>
     </div>
   );
