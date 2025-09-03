@@ -50,8 +50,11 @@ export default function MultiActionAreaCard(props) {
               <Typography gutterBottom variant="h5" component="div">
                 {card.imovel} 
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" style={{ minHeight: "40px" }}>
                 {card.descricao} <b style={{ fontWeight: 600 }}>{card.id} </b>
+              </Typography><br />
+              <Typography variant="body2" color="text.secondary">
+                <b style={{ fontWeight: 600 }}>Representante:</b> {card.autor.name} 
               </Typography>
             </CardContent>
           </CardActionArea>
