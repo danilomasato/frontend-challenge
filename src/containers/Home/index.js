@@ -15,6 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { Header } from "../../components/Header";
+import { Loading } from "../../components/Loading";
 
 const Home = ({ character }) => {
 
@@ -126,12 +127,15 @@ const Home = ({ character }) => {
       setRealEstate(character)
 
     if(search.label?.length > 0 ){
-        character.character.data.filter((item, index) => {
+      character.character.data.filter((item, index) => {
           if(item.description.includes(search.label)){
-            setRealEstate({character: {
-              data: [item]
-            }})
-            console.log("realEstate==============>", item)
+            //loading
+            setRealEstate("")
+            setTimeout(() => {
+               setRealEstate({character: {
+                data: [item]
+              }})
+            }, 2500);
           }
         }
       )
@@ -178,7 +182,10 @@ const Home = ({ character }) => {
       </div>
 
       <Container>
-        <Card data={realEstate}  />
+        { realEstate === "" ? 
+          <Loading /> : 
+          <Card data={realEstate} 
+        />}
       </Container>
 
       <Pagination data={realEstate}  />
