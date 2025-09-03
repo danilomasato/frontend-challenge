@@ -12,7 +12,7 @@
 }
 
 .container__slider > button {
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.5);
   outline: none;
   border: 0;
   color: whitesmoke;
@@ -26,11 +26,17 @@
 .slider__btn-next {
   position: absolute;
   right: 0;
+  border-radius: 0;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 .slider__btn-prev {
   position: absolute;
   left: 0;
+  border-radius: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .container__slider__links {
