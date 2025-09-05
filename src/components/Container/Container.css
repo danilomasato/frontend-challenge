@@ -1,11 +1,12 @@
 @media (min-width: 1025px) {
-  .row {
-    padding: 64px 0;
-  }
 
   .center {
     width: 933px;
     margin: 0 auto;
+  }
+
+   .row {
+    margin-top: 40px;
   }
 
   .content {

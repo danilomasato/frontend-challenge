@@ -16,6 +16,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { Header } from "../../components/Header";
 import { Loading } from "../../components/Loading";
+import { TopInfo } from "../../components/TopInfo";
 
 const Home = ({ character }) => {
 
@@ -140,12 +141,29 @@ const Home = ({ character }) => {
         }
       )
     }
+    
 
+    //Disable click right mouse
+    // const handleContextMenu = (e) => {
+    //   e.preventDefault(); // Prevent the default context menu
+    // };
+
+    // // Attach the event listener to the document body
+    // document.body.addEventListener('contextmenu', handleContextMenu);
+
+    // // Clean up the event listener when the component unmounts
+    // return () => {
+    //   document.body.removeEventListener('contextmenu', handleContextMenu);
+    // };
   }, [character, search]);
 
   const [menu] = useState([
     {
-      title: "Home",
+      title: "Início",
+      action: "/"
+    },
+    {
+      title: "Contato",
       action: "/"
     }
   ]);
@@ -156,6 +174,7 @@ const Home = ({ character }) => {
 
   return (
     <React.Fragment>
+      <TopInfo />
       <Header menu={menu}/>
 
       <div className="row center">

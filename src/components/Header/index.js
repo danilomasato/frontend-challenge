@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from "../../assets/icon/logo.svg";
+import logo from "../../assets/icon/logo.jpg";
 import "../../css/libs/hamburgers.min.css";
 import { NavLink } from "react-router-dom";
 import "./Header.css";
@@ -9,7 +9,7 @@ export const Header = data => {
 
   return (
     <header id="header" className={`${btStatus ? "" : "header-expanded"} `}>
-      <div className="row">
+      <div className="row" style={{ width: "980px", margin: "0 auto" }}>
         <div
           className={`hamburger hamburger--spin ${
             btStatus ? "" : "is-active"

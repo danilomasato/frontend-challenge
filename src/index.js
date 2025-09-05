@@ -14,6 +14,6 @@ const store = createStore(
   /* preloadedState, */ composeEnhancers(applyMiddleware(...middleware))
 );
 
-ReactDOM.render(<App store={store} />, document.getElementById("root"));
+ReactDOM.render(<App store={store} oncontextmenu="return false"/>, document.getElementById("root"));
 
 serviceWorker.unregister();

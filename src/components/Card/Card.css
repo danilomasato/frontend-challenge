@@ -1,0 +1,12 @@
+.card .see-more {
+    background: #00be9c;
+    box-shadow: none;
+    font-size: 14px;
+    text-transform: initial;
+}
+
+.card .title-imovel {
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: 'quicksand-regular', helvetica, arial;
+}

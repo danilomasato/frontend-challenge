@@ -1,0 +1,29 @@
+.top-info {
+    height: 40px;
+    color: #fff;
+}
+
+.top-info li  {
+    float: left;
+}
+
+.top-info li:nth-child(2) {
+    margin-left: 35px;
+}
+
+.top-info span {
+    float: left;
+    padding-left: 10px;
+    line-height: 40px;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.top-info .icon {
+    float: left;
+    width: 15px;
+    margin-top: 7px;
+    color: #ff5a3c;
+}
+

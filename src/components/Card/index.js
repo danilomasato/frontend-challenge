@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import * as types from "../../constants/ActionTypes";
 import ThumbSLider from "../ThumbSlider";
+import "./Card.css";
+
 
 export default function MultiActionAreaCard(props) {
 
@@ -38,7 +40,7 @@ export default function MultiActionAreaCard(props) {
     <>
     {articles.map(
       (card, index) =>
-        <Card key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
+        <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
           <CardActionArea>
             <ThumbSLider 
               height="140"
@@ -47,10 +49,10 @@ export default function MultiActionAreaCard(props) {
               title={card.imovel}
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
+              <Typography className="title-imovel" gutterBottom variant="h5" component="div">
                 {card.imovel} 
               </Typography>
-              <Typography variant="body2" color="text.secondary" style={{ minHeight: "40px" }}>
+              <Typography variant="body2" color="text.secondary">
                 {card.descricao} <b style={{ fontWeight: 600 }}>{card.id} </b>
               </Typography><br />
               <Typography variant="body2" color="text.secondary">
@@ -59,7 +61,7 @@ export default function MultiActionAreaCard(props) {
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <Button variant="contained" color="success" style={{ width: "100%" }}>
+            <Button className="see-more" variant="contained" style={{ width: "100%" }}>
               Ver Mais
             </Button>
           </CardActions>

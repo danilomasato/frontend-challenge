@@ -32,7 +32,7 @@ footer, header, hgroup, menu, nav, section {
 
 body {
   line-height: 1;
-  font-family: "helvetica", arial;
+  font-family: 'quicksand-regular', helvetica, arial;
   overflow-x: hidden;
   background: #f4f4f4;
 }
@@ -367,4 +367,19 @@ textarea {
     background: #ccc;
     color: #000;
     padding: 0.2em 0;
+}
+
+@font-face {
+   font-family: 'quicksand-regular';
+   src: url('../assets/fonts/Quicksand_Book.otf');
+}
+
+@font-face {
+   font-family: 'quicksand-light';
+   src: url('../assets/fonts/Quicksand_Light.otf');
+}
+
+@font-face {
+   font-family: 'quicksand-bold';
+   src: url('../assets/fonts/Quicksand_Bold.otf');
 }
