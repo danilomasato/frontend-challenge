@@ -15,7 +15,7 @@ export const Footer = data => {
                           <li><a href="#"> Quem somos </a></li>
                           <li><a href=""> nossos serviços </a></li>
                           <li><a href=""> política de privacidade </a></li>
-                          <li><a href=""> programa de afiliados</a></li>
+                          
                       </ul>
                   </div>
                  
@@ -23,31 +23,20 @@ export const Footer = data => {
                       <h4>Obter ajuda</h4>
                       <ul>
                           <li><a href="#">FAQ</a></li>
-                          <li><a href="#">Transporte</a></li>
-                          <li><a href="#">devoluções</a></li>
-                          <li><a href="#">Status De Pedido</a></li>
                           <li><a href="#">Opções De Pagamento</a></li>
                       </ul>
                   </div>
                 
                   <div class="footer-col">
-                      <h4>Loja online</h4>
+                      <h4>Afiliados</h4>
                       <ul>
-                          <li><a href="#">Relógio</a></li>
-                          <li><a href="#">Saco</a></li>
-                          <li><a href="#">Calçado</a></li>
-                          <li><a href="#">Endereço</a></li>
+                          <li><a href=""> programa de afiliados</a></li>
+                          <li><a href="#"> Venha ser um Corretor </a></li>
                       </ul>
                   </div>
                   
                   <div class="footer-col">
-                      <h4>Se subescreva!</h4>
-                      <div class="form-sub">
-                          <form>
-                              <input type="email" placeholder="Digite o seu e-mail" required />
-                              <button>subscrever</button>
-                          </form>
-                      </div>
+                      <h4>Medias Socias</h4>
 
                       <div class="medias-socias">
                           <a href="#"> <i class="fa fa-facebook"></i> </a>
