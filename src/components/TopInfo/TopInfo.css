@@ -27,3 +27,14 @@
     color: #ff5a3c;
 }
 
+.top-info li:nth-child(3),
+.top-info li:nth-child(4) {
+    float: right;
+}
+
+.top-info .icon-face, 
+.top-info .icon-insta {
+    color: #fff;
+    margin-right: 10px;
+}
+

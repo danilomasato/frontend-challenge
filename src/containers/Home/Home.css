@@ -9,3 +9,28 @@ div[role="alert"] {
 @media only screen and (max-width: 1024px) {
 
 }
+
+.search-neighborhoods {
+	width: 300px;
+	margin-left: 15px;
+	border: 0;
+	background: #fff;
+	border-radius: 5px;
+	height: 45px;
+	line-height: 45px;
+}
+
+.search-neighborhoods input {
+	padding: 0 !important;
+}
+
+.search-neighborhoods label {
+	font-size: 12px;
+	letter-spacing: 0;
+	margin: -3px 0px 0px 5px;
+    font-family: 'quicksand-regular', helvetica, arial;
+} 
+
+.search-neighborhoods fieldset {
+	border: 0;
+}

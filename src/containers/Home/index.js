@@ -17,6 +17,8 @@ import Grid from '@mui/material/Grid';
 import { Header } from "../../components/Header";
 import { Loading } from "../../components/Loading";
 import { TopInfo } from "../../components/TopInfo";
+import { TopHeader } from "../../components/TopHeader";
+import { Footer } from "../../components/Footer";
 
 const Home = ({ character }) => {
 
@@ -176,6 +178,7 @@ const Home = ({ character }) => {
     <React.Fragment>
       <TopInfo />
       <Header menu={menu}/>
+      <TopHeader />
 
       <div className="row center">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>
@@ -183,9 +186,13 @@ const Home = ({ character }) => {
             <Grid container spacing={2} style={{ gridColumnGap: "20px" }}>
               <Grid size={8}>
                 <Autocomplete
+                  className="search-neighborhoods"
                   disablePortal
                   options={ApiDistrict}
-                  sx={{ width: 300 }}
+                  InputProps={{
+                    className: 'search-neighborhoods',
+                    style: { backgroundColor: 'lightgray' }, // Estilo inline para o input
+                  }}
                   onChange={(event, value) => setSearch(value)}
                   renderInput={(params) => <TextField {...params} label="Pesquise por Bairros..." />}
                 />
@@ -208,6 +215,7 @@ const Home = ({ character }) => {
       </Container>
 
       <Pagination data={realEstate}  />
+      <Footer />
     </React.Fragment>
   );
 };

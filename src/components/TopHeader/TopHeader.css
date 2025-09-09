@@ -1,0 +1,7 @@
+.topHeader {
+    width: 100%;
+    height: 210px;
+    margin: 0 auto;
+    background: #f7f7fa url('../../assets/images/bg-top-header.jpg') no-repeat center;
+    background-position-x: 60%;
+}

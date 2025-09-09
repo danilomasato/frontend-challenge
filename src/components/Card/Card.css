@@ -7,6 +7,7 @@
 
 .card .title-imovel {
     font-size: 1rem;
+    letter-spacing: -1px;
     font-weight: bold;
     font-family: 'quicksand-regular', helvetica, arial;
 }
