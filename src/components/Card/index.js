@@ -33,7 +33,7 @@ export default function MultiActionAreaCard(props) {
       payload: articles.filter(item => item.id === cardID)
     })
 
-    history.push('/character')
+    history.push('/imovel')
   };
 
   return (

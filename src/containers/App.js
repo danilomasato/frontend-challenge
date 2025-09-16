@@ -11,7 +11,7 @@ const App = ({ store }) => (
     <HashRouter>
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/character" component={CharacterDetail} />
+        <Route exact path="/imovel" component={CharacterDetail} />
       </Switch>
     </HashRouter>
   </Provider>
