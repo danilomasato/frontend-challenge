@@ -159,17 +159,6 @@ const Home = ({ character }) => {
     // };
   }, [character, search]);
 
-  const [menu] = useState([
-    {
-      title: "Início",
-      action: "/"
-    },
-    {
-      title: "Contato",
-      action: "/"
-    }
-  ]);
-
    const handleClick = cardID => {
 
    }
@@ -177,7 +166,7 @@ const Home = ({ character }) => {
   return (
     <React.Fragment>
       <TopInfo />
-      <Header menu={menu}/>
+      <Header />
       <TopHeader />
 
       <div className="row center">

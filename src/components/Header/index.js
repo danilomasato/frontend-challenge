@@ -4,8 +4,19 @@ import "../../css/libs/hamburgers.min.css";
 import { NavLink } from "react-router-dom";
 import "./Header.css";
 
-export const Header = data => {
+export const Header = props => {
   const [btStatus, setBtStatus] = useState(true);
+
+  const menu = [
+    {
+      title: "Início",
+      action: "/"
+    },
+    {
+      title: "Contato",
+      action: "/"
+    }
+  ];
 
   return (
     <header id="header" className={`${btStatus ? "" : "header-expanded"} `}>
@@ -28,7 +39,7 @@ export const Header = data => {
         </a>
 
         <ul id="nav">
-          {data.menu.map((movie, index) => (
+          {menu.map((movie, index) => (
         	<li key={index}>
             	<NavLink to={movie.action}>{movie.title}</NavLink>
           	</li>

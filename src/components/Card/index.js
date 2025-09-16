@@ -28,12 +28,12 @@ export default function MultiActionAreaCard(props) {
   }, [props]);
 
   const handleClick = cardID => {
-    // dispatch({
-    //   type: types.RECEIVE_CHARACTER,
-    //   payload: articles.filter(item => item.id === cardID)
-    // })
+    dispatch({
+      type: types.RECEIVE_CHARACTER,
+      payload: articles.filter(item => item.id === cardID)
+    })
 
-    // history.push('/character')
+    history.push('/character')
   };
 
   return (
