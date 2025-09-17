@@ -51,6 +51,10 @@ const rows = [
         <Header />
         <TopHeader />
       <div className="row center">
+        <Stack className="center" direction="row" spacing={10}>
+          <Button onClick={(e) => { history.push('/') } }>Voltar</Button>
+        </Stack>
+
         <CardDetail data={characterDetail} />
 
         <TableContainer component={Paper} style={{ boxShadow: 'none' }}>
@@ -70,12 +74,13 @@ const rows = [
                   key={row.name}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
+                  <TableCell component="th" scope="row" ></TableCell>
                   <TableCell component="th" scope="row">
                     {row.name}
                   </TableCell>
                   <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="right">{row.carbs}</TableCell>
+                  {/* <TableCell align="right">{row.fat}</TableCell>
+                  <TableCell align="right">{row.carbs}</TableCell> */}
                   <TableCell align="right">{row.protein}</TableCell>
                 </TableRow>
               ))}
@@ -85,10 +90,6 @@ const rows = [
       </div>
 
       <Footer />
-
-      <Stack className="center" direction="row" spacing={10}>
-          <Button onClick={(e) => { history.push('/') } }>Voltar</Button>
-      </Stack>
     </React.Fragment>
   );
 };
