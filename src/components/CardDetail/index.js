@@ -1,31 +1,41 @@
+import React, { useState, useEffect } from "react";
+import {useHistory} from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
+import { Button, CardActionArea, CardActions } from '@mui/material';
+import * as types from "../../constants/ActionTypes";
+import ThumbSLider from "../ThumbSlider";
+import "./Card.css";
+
 
 export default function MultiActionAreaCard(props) {
 
   const baseURL = process.env.REACT_APP_URL;
-  const characterDetail = props.data.characterDetail[0]
+  const card = props.data.characterDetail[0]
 
   return (
     <>
-        <Card sx={{ maxWidth: 345 }} >
+
+        <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
           <CardActionArea>
-            <CardMedia
-              component="img"
+            <ThumbSLider 
               height="140"
-              image={`${baseURL}${characterDetail.fotos.url}`}
-              alt={characterDetail.imovel}
-              title={characterDetail.imovel}
+              image={card.fotos}
+              alt={card.imovel}
+              title={card.imovel}
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {characterDetail.imovel} 
+              <Typography className="title-imovel" gutterBottom variant="h5" component="div">
+                {card.imovel} 
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {characterDetail.descricao} <b style={{ fontWeight: 600 }}>{characterDetail.id} </b>
+                {card.descricao} <b style={{ fontWeight: 600 }}>{card.id} </b>
+              </Typography><br />
+              <Typography variant="body2" color="text.secondary">
+                <b style={{ fontWeight: 600 }}>Representante:</b> {card.autor.name} 
               </Typography>
             </CardContent>
           </CardActionArea>
