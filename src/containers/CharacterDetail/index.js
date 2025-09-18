@@ -20,6 +20,7 @@ import Paper from '@mui/material/Paper';
 
 
 const CharacterDetail = ({ characterDetail }) => {
+  
 
   function createData(
     name: string,
@@ -31,16 +32,19 @@ const CharacterDetail = ({ characterDetail }) => {
     return { name, calories, fat, carbs, protein };
   }
 
+const imovel = characterDetail.characterDetail[0]
+
 const rows = [
-  createData('Área útil', '108,00m²'),
-  createData('Área total', '108,00m²'),
-  createData('Área terreno', '108,00m²'),
-  createData('Ano de construção', '2022 (3 anos)'),
-  createData('Condomínio', 'R$ 1.639'),
-  createData('IPTU (anual)', 'R$ 4.605'),
-  createData('Quartos', '2'),
-  createData('Suítes', '1'),
-  createData('Banheiros', '2'),
+  createData('Andar', imovel?.Andar),
+  createData('Área útil', imovel?.Area_util),
+  createData('Área total', imovel?.Area_Total),
+  createData('Área terreno', imovel?.Area_Terreno),
+  createData('Ano de construção', imovel?.Ano_Construcao),
+  createData('Condomínio', imovel?.Condominio),
+  createData('IPTU (anual)', imovel?.IPTU),
+  createData('Quartos', imovel?.Quartos),
+  createData('Suítes', imovel?.Suites),
+  createData('Banheiros', imovel?.Banheiros),
 ];
 
   const history = useHistory();

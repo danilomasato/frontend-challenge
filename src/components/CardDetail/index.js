@@ -39,6 +39,11 @@ export default function MultiActionAreaCard(props) {
               </Typography>
             </CardContent>
           </CardActionArea>
+          <CardActions>
+            <Button className="see-more" variant="contained" style={{ width: "100%" }}>
+              Ver Mais
+            </Button>
+          </CardActions>
         </Card>
     </>
   );
