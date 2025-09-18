@@ -52,8 +52,8 @@ const rows = [
   return (
     <React.Fragment>
       <TopInfo />
-        <Header />
-        <TopHeader />
+      <Header />
+
       <div className="row center">
         <Stack className="center" direction="row" spacing={10}>
           <Button onClick={(e) => { history.push('/') } }>Voltar</Button>
