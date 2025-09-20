@@ -11,3 +11,28 @@
     font-weight: bold;
     font-family: 'quicksand-regular', helvetica, arial;
 }
+
+.card .icon-sale {
+    width: 100%;
+    color: #197b35;
+    font-weight: bold;
+}
+
+.card .icon-card {
+    float: left;
+    line-height: 24px;
+    margin: 0 10px 0 0;
+}
+
+
+.card .icon-card svg:first-child,
+.card .icon-card {
+    margin-left: 0px;
+}
+
+
+.card .icon-card svg {
+    float: left;
+    margin: 0 5px 0 0;
+}
+

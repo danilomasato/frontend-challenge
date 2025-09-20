@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { Container } from "../../components";
 import { getArticles } from "../../actions";
 import "./Home.css";
 import Card from "../../components/Card";
@@ -196,12 +195,12 @@ const Home = ({ character }) => {
         </div>
       </div>
 
-      <Container>
+      
         { realEstate === "" ? 
           <Loading /> : 
           <Card data={realEstate} 
         />}
-      </Container>
+      
 
       <Pagination data={realEstate}  />
       <Footer />
