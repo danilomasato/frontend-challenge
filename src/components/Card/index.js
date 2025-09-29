@@ -18,11 +18,12 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Container } from "../../components";
 
 export default function MultiActionAreaCard(props) {
-
   const [articles, setArticles] = useState([]);
   const history = useHistory();
   const dispatch = useDispatch();
   const baseURL = process.env.REACT_APP_URL;
+  const [rentalValue, setRentalValue] = useState(null);
+  const [salePrice, setSalePrice] = useState(null);
 
   //first load
   useEffect(() => {
@@ -30,6 +31,13 @@ export default function MultiActionAreaCard(props) {
 
     if (character?.length > 0) {
       setArticles(character);
+      character.filter(item => {
+        if(item.valor_venda !== null)
+          setSalePrice(true)
+
+        if(item.valor_aluguel !== null)
+          setRentalValue(true)
+      })
     }
   }, [props]);
 
@@ -44,124 +52,120 @@ export default function MultiActionAreaCard(props) {
 
   return (
     <>
-      <div className="row center"><h2> venda </h2></div>
+      {rentalValue ? ( <div className="row center"><h2 className="title"> Imóveis á Venda </h2></div> ) : '' }
       <Container>
         {articles.map(
           (card, index) => (
             <>
               {card.valor_venda !== null ? (
-                  <div>
-                    
-                    <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
-                      <CardActionArea>
-                        <ThumbSLider 
-                          height="140"
-                          image={card.fotos}
-                          alt={card.imovel}
-                          title={card.imovel}
-                        />
-                        <CardContent>
-                          <Typography className="title-imovel" gutterBottom variant="h5">
-                            {card.descricao}
-                          </Typography>
+                  <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
+                    <CardActionArea>
+                      <ThumbSLider 
+                        height="140"
+                        image={card.fotos}
+                        alt={card.imovel}
+                        title={card.imovel}
+                      />
+                      <CardContent>
+                        <Typography className="title-imovel" gutterBottom variant="h5">
+                          {card.descricao}
+                        </Typography>
 
-                          <Typography variant="body2" color="text.secondary" component="div">
-                            {card.imovel} 
-                          </Typography>
-                          <br />
-              
-                          <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                            {card.valor_venda !== null ? (
-                              <div>
-                                R$ {card.valor_venda}
-                              </div>
-                            )
-                              : ''
-                            }
-                          </Typography>
-                          <Typography className="icon-card" variant="body2" color="text.secondary">
-                            <FullscreenIcon /> {card.Area_Total} 
-                          </Typography>
-                          <Typography className="icon-card" variant="body2" color="text.secondary">
-                            <BedIcon /> {card.Quartos} 
-                          </Typography>
-                          <Typography className="icon-card" variant="body2" color="text.secondary">
-                            <ShowerIcon /> {card.Banheiros} 
-                          </Typography>
-                          <Typography className="icon-card" variant="body2" color="text.secondary">
-                            <DirectionsCarIcon /> {card.Vagas} 
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                      <CardActions>
-                        <Button className="see-more" variant="contained" style={{ width: "100%" }}>
-                          Ver Mais
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </div>
+                        <Typography variant="body2" color="text.secondary" component="div">
+                          {card.imovel} 
+                        </Typography>
+                        <br />
+            
+                        <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
+                          {card.valor_venda !== null ? (
+                            <div>
+                              R$ {card.valor_venda}
+                            </div>
+                          )
+                            : ''
+                          }
+                        </Typography>
+                        <Typography className="icon-card" variant="body2" color="text.secondary">
+                          <FullscreenIcon /> {card.Area_Total} 
+                        </Typography>
+                        <Typography className="icon-card" variant="body2" color="text.secondary">
+                          <BedIcon /> {card.Quartos} 
+                        </Typography>
+                        <Typography className="icon-card" variant="body2" color="text.secondary">
+                          <ShowerIcon /> {card.Banheiros} 
+                        </Typography>
+                        <Typography className="icon-card" variant="body2" color="text.secondary">
+                          <DirectionsCarIcon /> {card.Vagas} 
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                      <Button className="see-more" variant="contained" style={{ width: "100%" }}>
+                        Ver Mais
+                      </Button>
+                    </CardActions>
+                  </Card>
                 )
                 : ''
             }
           </>
         ))}
     </Container>
-      <div className="row center"><h2> aluguel </h2></div>
+
+    {salePrice ? ( <div className="row center"><h2 className="title"> Imóveis para Alugar </h2></div> ) : '' }
+      
     <Container>
       {articles.map(
       (card, index) => (
         <>
         {card.valor_aluguel !== null ? (
-            <div>
-              
-               <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
-                  <CardActionArea>
-                    <ThumbSLider 
-                      height="140"
-                      image={card.fotos}
-                      alt={card.imovel}
-                      title={card.imovel}
-                    />
-                    <CardContent>
-                      <Typography className="title-imovel" gutterBottom variant="h5">
-                        {card.descricao}
-                      </Typography>
+              <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
+                <CardActionArea>
+                  <ThumbSLider 
+                    height="140"
+                    image={card.fotos}
+                    alt={card.imovel}
+                    title={card.imovel}
+                  />
+                  <CardContent>
+                    <Typography className="title-imovel" gutterBottom variant="h5">
+                      {card.descricao}
+                    </Typography>
 
-                      <Typography variant="body2" color="text.secondary" component="div">
-                        {card.imovel} 
-                      </Typography>
-                      <br />
-          
-                      <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                        {card.valor_venda !== null ? (
-                          <div>
-                            R$ {card.valor_aluguel}
-                          </div>
-                        )
-                          : ''
-                        }
-                      </Typography>
-                      <Typography className="icon-card" variant="body2" color="text.secondary">
-                        <FullscreenIcon /> {card.Area_Total} 
-                      </Typography>
-                      <Typography className="icon-card" variant="body2" color="text.secondary">
-                        <BedIcon /> {card.Quartos} 
-                      </Typography>
-                      <Typography className="icon-card" variant="body2" color="text.secondary">
-                        <ShowerIcon /> {card.Banheiros} 
-                      </Typography>
-                      <Typography className="icon-card" variant="body2" color="text.secondary">
-                        <DirectionsCarIcon /> {card.Vagas} 
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                  <CardActions>
-                    <Button className="see-more" variant="contained" style={{ width: "100%" }}>
-                      Ver Mais
-                    </Button>
-                  </CardActions>
-                </Card>
-            </div>
+                    <Typography variant="body2" color="text.secondary" component="div">
+                      {card.imovel} 
+                    </Typography>
+                    <br />
+        
+                    <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
+                      {card.valor_venda !== null ? (
+                        <div>
+                          R$ {card.valor_aluguel}
+                        </div>
+                      )
+                        : ''
+                      }
+                    </Typography>
+                    <Typography className="icon-card" variant="body2" color="text.secondary">
+                      <FullscreenIcon /> {card.Area_Total} 
+                    </Typography>
+                    <Typography className="icon-card" variant="body2" color="text.secondary">
+                      <BedIcon /> {card.Quartos} 
+                    </Typography>
+                    <Typography className="icon-card" variant="body2" color="text.secondary">
+                      <ShowerIcon /> {card.Banheiros} 
+                    </Typography>
+                    <Typography className="icon-card" variant="body2" color="text.secondary">
+                      <DirectionsCarIcon /> {card.Vagas} 
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+                <CardActions>
+                  <Button className="see-more" variant="contained" style={{ width: "100%" }}>
+                    Ver Mais
+                  </Button>
+                </CardActions>
+              </Card>
           )
             : ''
           }

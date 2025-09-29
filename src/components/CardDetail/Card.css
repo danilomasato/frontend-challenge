@@ -23,3 +23,7 @@
     font-size: 22px;
     font-weight: bold;
 }
+
+.ThumbSLider-info .avatar {
+    position: absolute;
+}

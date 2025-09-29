@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { withRouter, useHistory } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect   } from "react-redux";
 import { Container } from "../../components";
 import CardDetail from "../../components/CardDetail";
 import Button from '@mui/material/Button';
@@ -16,11 +16,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { bindActionCreators } from "redux";
+import { getAuthors } from "../../actions";
 
-
-
-const CharacterDetail = ({ characterDetail }) => {
-  
+const CharacterDetail = ({ characterDetail, authors }) => {
 
   function createData(
     name: string,
@@ -32,22 +31,32 @@ const CharacterDetail = ({ characterDetail }) => {
     return { name, calories, fat, carbs, protein };
   }
 
-const imovel = characterDetail.characterDetail[0]
+  const imovel = characterDetail.characterDetail[0]
+  // const [avatar, setAvatar] = useState([]);
 
-const rows = [
-  createData('Andar', imovel?.Andar),
-  createData('Área útil', imovel?.Area_util),
-  createData('Área total', imovel?.Area_Total),
-  createData('Área terreno', imovel?.Area_Terreno),
-  createData('Ano de construção', imovel?.Ano_Construcao),
-  createData('Condomínio', imovel?.Condominio),
-  createData('IPTU (anual)', imovel?.IPTU),
-  createData('Quartos', imovel?.Quartos),
-  createData('Suítes', imovel?.Suites),
-  createData('Banheiros', imovel?.Banheiros),
-];
+  const rows = [
+    createData('Andar', imovel?.Andar),
+    createData('Área útil', imovel?.Area_util),
+    createData('Área total', imovel?.Area_Total),
+    createData('Área terreno', imovel?.Area_Terreno),
+    createData('Ano de construção', imovel?.Ano_Construcao),
+    createData('Condomínio', imovel?.Condominio),
+    createData('IPTU (anual)', imovel?.IPTU),
+    createData('Quartos', imovel?.Quartos),
+    createData('Suítes', imovel?.Suites),
+    createData('Banheiros', imovel?.Banheiros),
+  ];
 
   const history = useHistory();
+    useEffect(() => {
+      authors.data.filter((item, index) =>  {
+        if(imovel.autor.name.includes(item.name)){
+          Object.assign(characterDetail, {
+            avatar: item.avatar.url
+          })
+        }
+      })
+    }, [authors]);
 
   return (
     <React.Fragment>
@@ -99,7 +108,16 @@ const rows = [
 };
 
 const mapStateToProps = state => ({
-  characterDetail: state.character
+  characterDetail: state.character,
+  authors: state.character.authors
 });
 
-export default withRouter(connect(mapStateToProps)(CharacterDetail));
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      getAuthors: dispatch(getAuthors())
+    },
+    dispatch
+  );
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CharacterDetail));

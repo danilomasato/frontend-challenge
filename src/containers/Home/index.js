@@ -23,7 +23,6 @@ const Home = ({ character }) => {
 
   const [ApiDistrict, setApiDistrict] = useState([]);
   const [realEstate, setRealEstate] = useState(character);
-
   const [search, setSearch] = useState([]);
 
   const data = ['Água Rasa',
@@ -91,7 +90,7 @@ const Home = ({ character }) => {
   'Sacomã',
   'Santa Cecília',
   'Santana',
-  'Santo Amaro',
+  'Santo amaro',
   'São Domingos',
   'São Lucas',
   'São Mateus',
@@ -129,6 +128,7 @@ const Home = ({ character }) => {
       setRealEstate(character)
 
     if(search.label?.length > 0 ){
+
       character.character.data.filter((item, index) => {
           if(item.descricao.includes(search.label)){
             //loading
@@ -198,11 +198,10 @@ const Home = ({ character }) => {
       
         { realEstate === "" ? 
           <Loading /> : 
-          <Card data={realEstate} 
-        />}
+          <Card data={realEstate} />
+        }
       
-
-      <Pagination data={realEstate}  />
+      <Pagination data={realEstate} />
       <Footer />
     </React.Fragment>
   );

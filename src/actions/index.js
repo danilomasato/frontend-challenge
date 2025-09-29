@@ -19,3 +19,12 @@ export const getArticles = () => dispatch => {
   );
 };
 
+export const getAuthors = () => dispatch => {
+  return api.getAuthors().then(response =>
+    dispatch({
+      type: types.RECEIVE_AUTHORS,
+      payload: response
+    })
+  );
+};
+
