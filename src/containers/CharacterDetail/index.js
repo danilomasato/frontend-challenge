@@ -49,13 +49,15 @@ const CharacterDetail = ({ characterDetail, authors }) => {
 
   const history = useHistory();
     useEffect(() => {
-      authors.data.filter((item, index) =>  {
-        if(imovel.autor.name.includes(item.name)){
-          Object.assign(characterDetail, {
-            avatar: item.avatar.url
-          })
-        }
-      })
+      if(authors.data?.length > 0){
+        authors.data.filter((item, index) =>  {
+          if(imovel.autor.name.includes(item.name)){
+            Object.assign(characterDetail, {
+              avatar: item.avatar.url
+            })
+          }
+        })
+      }
     }, [authors]);
 
   return (

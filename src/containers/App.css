@@ -15,8 +15,8 @@ time, mark, audio, video {
   padding: 0;
   border: 0;
   font-size: 100%;
-  font: inherit;
   vertical-align: baseline;
+  font-family: 'quicksand-regular', helvetica, arial;
 }
 
 /* make sure to set some focus styles for accessibility */

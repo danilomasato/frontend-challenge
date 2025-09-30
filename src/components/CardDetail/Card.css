@@ -12,6 +12,10 @@
     font-family: 'quicksand-regular', helvetica, arial;
 }
 
+.ThumbSLider-highligh {
+    position: relative;
+}
+
 .ThumbSLider-info {
     position: absolute;
     margin: -70px 0 0 20px;
@@ -24,6 +28,38 @@
     font-weight: bold;
 }
 
-.ThumbSLider-info .avatar {
+.ThumbSLider-author {
     position: absolute;
+    bottom: -80px;
+    right: 0;
+    padding-top: 30px;
+    padding-bottom: 20px;
+}
+
+.ThumbSLider-author .ThumbSLider-description {
+    font-size: 0.9rem;
+}
+
+.ThumbSLider-author .MuiCardActionArea-focusHighlight {
+    background: #fff;
+}
+
+.ThumbSLider-author .ThumbSLider-description Button {
+    float: left;
+    color: initial;
+    border: 1px solid #e5e7eb;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    margin-right: 10px;
+}
+
+.ThumbSLider-author .ThumbSLider-description svg {
+    padding-right: 5px;
+}
+
+
+.ThumbSLider-author .avatar {
+    position: absolute;
+    margin: -65px 0 0 67px;
+    z-index: 9;
 }
