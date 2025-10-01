@@ -3,7 +3,7 @@ import { withRouter, useHistory } from "react-router-dom";
 import { connect   } from "react-redux";
 import { Container } from "../../components";
 import CardDetail from "../../components/CardDetail";
-import Button from '@mui/material/Button';
+// import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { Header } from "../../components/Header";
 import { TopInfo } from "../../components/TopInfo";
@@ -18,17 +18,26 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { bindActionCreators } from "redux";
 import { getAuthors } from "../../actions";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { Button, CardActionArea, CardActions } from '@mui/material';
+import BedIcon from '@mui/icons-material/Bed';
+import ShowerIcon from '@mui/icons-material/Shower';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import SellIcon from '@mui/icons-material/Sell';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';  
+import "./DetailImovel.css";
 
 const CharacterDetail = ({ characterDetail, authors }) => {
 
   function createData(
     name: string,
-    calories: string,
-    fat: string,
-    carbs: string,
-    protein: string,
+    info: string
   ) {
-    return { name, calories, fat, carbs, protein };
+    return { name, info};
   }
 
   const imovel = characterDetail.characterDetail[0]
@@ -59,7 +68,7 @@ const CharacterDetail = ({ characterDetail, authors }) => {
         })
       }
     }, [authors]);
-
+console.log('imovel==============================>', imovel)
   return (
     <React.Fragment>
       <TopInfo />
@@ -72,8 +81,37 @@ const CharacterDetail = ({ characterDetail, authors }) => {
 
         <CardDetail data={characterDetail} />
 
-        <TableContainer component={Paper} style={{ boxShadow: 'none' }}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Card className="card imovel-info" key={imovel.id} sx={{ maxWidth: 345,  background: 'transparent',
+          border: '0', boxShadow: 'none', marginBottom: '40px' }}>
+          <CardActionArea>
+            <CardContent>
+              <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
+                {imovel.valor_venda !== null ? (
+                  <div>
+                    R$ {imovel.valor_venda}
+                  </div>
+                )
+                  : ''
+                }
+              </Typography>
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <FullscreenIcon /> {imovel.Area_Total} 
+              </Typography>
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <BedIcon /> {imovel.Quartos} 
+              </Typography>
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <ShowerIcon /> {imovel.Banheiros} 
+              </Typography>
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <DirectionsCarIcon /> {imovel.Vagas} 
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+
+        <TableContainer style={{ boxShadow: 'none' }}>
+          <Table className="TableInfo-imovel" sx={{ fontSize: "0.5rem" }} aria-label="simple table">
             {/* <TableHead>
               <TableRow>
                 <TableCell>Dessert (100g serving)</TableCell>
@@ -89,14 +127,10 @@ const CharacterDetail = ({ characterDetail, authors }) => {
                   key={row.name}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row" ></TableCell>
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" style={{ paddingLeft: "30px" }}>
                     {row.name}
                   </TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  {/* <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="right">{row.carbs}</TableCell> */}
-                  <TableCell align="right">{row.protein}</TableCell>
+                  <TableCell align="right">{row.info}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

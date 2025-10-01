@@ -1,0 +1,8 @@
+.TableInfo-imovel {
+    width: 60% !important;
+    min-width: initial;
+}
+
+.TableInfo-imovel th, .TableInfo-imovel td {
+    font-size: 0.8rem;
+}
