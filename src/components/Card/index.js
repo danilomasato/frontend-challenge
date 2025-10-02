@@ -138,7 +138,7 @@ export default function MultiActionAreaCard(props) {
                     <br />
         
                     <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                      {card.valor_venda !== null ? (
+                      {card.valor_aluguel !== null ? (
                         <div>
                           R$ {card.valor_aluguel}
                         </div>
