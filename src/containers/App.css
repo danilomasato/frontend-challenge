@@ -35,7 +35,7 @@ body {
   letter-spacing: 0;
   font-family: 'quicksand-regular', helvetica, arial;
   overflow-x: hidden;
-  background: #f4f4f4;
+  /* background: #f4f4f4; */
 }
 
 ol, ul {
@@ -384,3 +384,5 @@ textarea {
    font-family: 'quicksand-bold';
    src: url('../assets/fonts/Quicksand_Bold.otf');
 }
+
+#header { background: #f4f4f4; }

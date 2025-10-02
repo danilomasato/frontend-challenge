@@ -3,7 +3,7 @@
   z-index: 2;
   width: 100%;
   height: 65px;
-  background: #ffffff 0% 0% no-repeat padding-box;
+  /* background: #ffffff 0% 0% no-repeat padding-box; */
 }
 
 #header .row {
@@ -32,7 +32,6 @@
   float: right;
   height: 35px;
   border-bottom: 1px solid #ccc;
-  background: #f1f2fa 0% 0% no-repeat padding-box;
 }
 
 #nav li {
@@ -71,7 +70,6 @@
   #nav {
     float: left;
     width: 700px;
-    background: #fff;
     margin: 30px 0 0 100px;
     border: 0;
   }
