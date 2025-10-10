@@ -13,20 +13,61 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import AspectRatioIcon from '@mui/icons-material/AspectRatio';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 
 export default function MultiActionAreaCard(props) {
   const baseURL = process.env.REACT_APP_URL;
   const card = props.data.characterDetail[0]
-console.log(props.avatar)
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>  
       <div className="ThumbSLider-highligh">
-        <ThumbSLider 
-            height="300"
+      <ThumbSLider 
+        height="300"
+        image={card.fotos}
+        alt={card.imovel}
+        title={card.imovel}
+        onClick={handleClickOpen}
+      />
+
+      <AspectRatioIcon onClick={handleClickOpen} className="expanded" />
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth="lg"
+         maxWidth="lg"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <ThumbSLider
             image={card.fotos}
             alt={card.imovel}
             title={card.imovel}
           />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleClose} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+        
         <div className="ThumbSLider-info">
             <span className="imovel"> {card.imovel} </span>
             <span className="descricao"> {card.descricao} <b style={{ fontWeight: 600 }}>{card.id} </b> </span>

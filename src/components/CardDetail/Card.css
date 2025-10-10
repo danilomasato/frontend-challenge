@@ -16,6 +16,14 @@
     position: relative;
 }
 
+.expanded {
+    color: #fff;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
 .ThumbSLider-info {
     position: absolute;
     margin: -70px 0 0 20px;
