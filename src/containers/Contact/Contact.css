@@ -10,27 +10,8 @@ div[role="alert"] {
 
 }
 
-.search-neighborhoods {
-	width: 300px;
-	margin-left: 15px;
-	border: 0;
-	background: #f1f2fa;
-	border-radius: 5px;
-	height: 45px;
-	line-height: 45px;
+.form {
+	float: right;
+	width: 450px;
 }
 
-.search-neighborhoods input {
-	padding: 0 !important;
-}
-
-.search-neighborhoods label {
-	font-size: 12px;
-	letter-spacing: 0;
-	margin: -3px 0px 0px 5px;
-    font-family: 'quicksand-regular', helvetica, arial;
-} 
-
-.search-neighborhoods fieldset {
-	border: 0;
-}
