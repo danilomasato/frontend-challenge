@@ -14,7 +14,7 @@ export const Header = props => {
     },
     {
       title: "Contato",
-      action: "/"
+      action: "/contato"
     }
   ];
 

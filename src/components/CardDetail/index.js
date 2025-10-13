@@ -15,7 +15,7 @@ import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
+// import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
 export default function MultiActionAreaCard(props) {
@@ -60,12 +60,12 @@ export default function MultiActionAreaCard(props) {
             title={card.imovel}
           />
         </DialogContent>
-        <DialogActions>
+        {/* <DialogActions>
           <Button onClick={handleClose}>Disagree</Button>
           <Button onClick={handleClose} autoFocus>
             Agree
           </Button>
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
         
         <div className="ThumbSLider-info">

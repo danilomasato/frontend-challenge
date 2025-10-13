@@ -3,6 +3,7 @@ import { Switch, Route, HashRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import Home  from "./Home";
 import CharacterDetail from "./CharacterDetail";
+import Contact from "./Contact";
 
 import "./App.css";
 
@@ -12,6 +13,7 @@ const App = ({ store }) => (
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/imovel" component={CharacterDetail} />
+        <Route exact path="/contato" component={Contact} />
       </Switch>
     </HashRouter>
   </Provider>

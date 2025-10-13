@@ -28,7 +28,7 @@ import ShowerIcon from '@mui/icons-material/Shower';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import SellIcon from '@mui/icons-material/Sell';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';  
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import "./DetailImovel.css";
 
 const CharacterDetail = ({ characterDetail, authors }) => {
@@ -41,6 +41,11 @@ const CharacterDetail = ({ characterDetail, authors }) => {
   }
 
   const imovel = characterDetail.characterDetail[0]
+  const history = useHistory();
+
+  if (characterDetail.characterDetail.length === 0) {
+    history.push('/')
+  }
   // const [avatar, setAvatar] = useState([]);
 
   const rows = [
@@ -56,7 +61,6 @@ const CharacterDetail = ({ characterDetail, authors }) => {
     createData('Banheiros', imovel?.Banheiros),
   ];
 
-  const history = useHistory();
     useEffect(() => {
       if(authors.data?.length > 0){
         authors.data.filter((item, index) =>  {
@@ -67,8 +71,8 @@ const CharacterDetail = ({ characterDetail, authors }) => {
           }
         })
       }
-    }, [authors]);
-console.log('imovel==============================>', imovel)
+    }, [authors, imovel]);
+
   return (
     <React.Fragment>
       <TopInfo />
