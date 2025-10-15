@@ -7,8 +7,10 @@ import { Header } from "../../components/Header";
 import { TopInfo } from "../../components/TopInfo";
 import { TopHeader } from "../../components/TopHeader";
 import { Footer } from "../../components/Footer";
+import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import SendIcon from '@mui/icons-material/Send';
 
 const Contact = ({ props }) => {
 
@@ -38,6 +40,9 @@ const Contact = ({ props }) => {
                 rows={4}
                 defaultValue=""
               />
+              <Button variant="contained" endIcon={<SendIcon />}>
+                Enviar
+              </Button>
             </Box>
           </div>
         </div>
