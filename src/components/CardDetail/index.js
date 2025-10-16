@@ -79,12 +79,13 @@ export default function MultiActionAreaCard(props) {
                 <Stack direction="row" spacing={2} className="avatar">
                   <Avatar
                     alt="Remy Sharp"
-                    src={baseURL + props.data.avatar}
-                    sx={{ width: 56, height: 56 }}
+                    src='/static/media/logo_tsa.065f0e6987b69aca20e9.png'
+                    sx={{ width: 66, height: 66, objectFit: 'contain' }}
                   />
                 </Stack>
                 <Typography className="ThumbSLider-description" gutterBottom>
-                  <b style={{ fontWeight: 600 }}>Corretor:</b> {card.autor.name}
+                  <b style={{ fontWeight: 600 }}>Corretor:</b> TSA Imóveis
+                  {/* {card.autor.name} */}
                 </Typography>
                 <Typography className="ThumbSLider-description" gutterBottom>
                   <Button size="small"><PhoneEnabledIcon /> Contato</Button>
