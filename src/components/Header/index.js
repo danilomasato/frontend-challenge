@@ -13,6 +13,10 @@ export const Header = props => {
       action: "/"
     },
     {
+      title: "Sobre Nós",
+      action: "/sobre-nos"
+    },
+    {
       title: "Contato",
       action: "/contato"
     }

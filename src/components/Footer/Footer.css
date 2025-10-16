@@ -1,29 +1,31 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 
 .footer {
-    margin-top: 30px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
 }
 
-footer{
+footer {
     background-color: #0b2c3d;
     padding: 50px 0;
     
 }
-.container-footer{
+.container-footer {
     max-width: 933px;
     padding: 30px 4% 20px 4%;
     margin: auto;
 }
-.row-footer{
+.row-footer {
     display: flex;
     flex-wrap: wrap;
 }
 
-.footer-col{
+.footer-col {
     width: 20%;
     padding: 0 15px;
 }
-.footer-col h4{
+.footer-col h4 {
     font-size: 18px;
     color: white;
     margin-bottom: 20px;
@@ -31,13 +33,13 @@ footer{
     position: relative;
     text-transform: uppercase;
 }
-.footer-col ul{
+.footer-col ul {
     list-style: none;
 }
-.footer-col ul li{
+.footer-col ul li {
     margin: 10px 0;
 }
-.footer-col ul li a{
+.footer-col ul li a {
     font-size: 14px;
     text-transform: capitalize;
     color: white;
@@ -46,14 +48,14 @@ footer{
     display: block;
     transition: all 0.3s ease;
 }
-.footer-col ul li a:hover{
+.footer-col ul li a:hover {
     color: #cecdcd;
     padding-left: 10px;
 }
-.footer-col .medias-socias{
+.footer-col .medias-socias {
     margin-top: 30px;
 }
-.footer-col .medias-socias a{
+.footer-col .medias-socias a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -66,11 +68,11 @@ footer{
     border: 1px solid white;
     transition: all 0.5s ease;
 }
-.footer-col .medias-socias a i{
+.footer-col .medias-socias a i {
     font-size: 20px;
 }
 
-.footer-col .medias-socias a:hover{
+.footer-col .medias-socias a:hover {
     color: #415aca;
     background-color: white;
 }
@@ -83,10 +85,10 @@ footer{
     color: white;
     background-color: #415aca;
 }
-.footer-col .form-sub input::placeholder{
+.footer-col .form-sub input::placeholder {
     color: white;
 }
-.footer-col .form-sub button{
+.footer-col .form-sub button {
     width: 100%;
     margin-top: 10px;
     padding: 10px; 
