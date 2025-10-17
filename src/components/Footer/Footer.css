@@ -1,9 +1,10 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 
 .footer {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
+	float: left;
+  width: 100%;
+  bottom: 0;
+  margin-top: 40px;
 }
 
 footer {

@@ -29,6 +29,7 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import SellIcon from '@mui/icons-material/Sell';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import Box from '@mui/material/Box';
 import "./DetailImovel.css";
 
 const CharacterDetail = ({ characterDetail, authors }) => {
@@ -71,6 +72,7 @@ const CharacterDetail = ({ characterDetail, authors }) => {
           }
         })
       }
+      console.log('imovel==================>', imovel)
     }, [authors, imovel]);
 
   return (
@@ -113,33 +115,50 @@ const CharacterDetail = ({ characterDetail, authors }) => {
             </CardContent>
           </CardActionArea>
         </Card>
+        
+         {imovel.valor_venda !== null ? (
+                  <>
+                    <TableContainer style={{ boxShadow: 'none' }}>
+                      <Table className="TableInfo-imovel" sx={{ fontSize: "0.5rem" }} aria-label="simple table">
+                        {/* <TableHead>
+                          <TableRow>
+                            <TableCell>Dessert (100g serving)</TableCell>
+                            <TableCell align="right">Calories</TableCell>
+                            <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                          </TableRow>
+                        </TableHead> */}
+                        <TableBody>
+                          {rows.map((row) => (
+                            <TableRow
+                              key={row.name}
+                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                              <TableCell component="th" scope="row" style={{ paddingLeft: "30px" }}>
+                                {row.name}
+                              </TableCell>
+                              <TableCell align="right">{row.info}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </>
+                )
+                  : (
+                    <>
+                     <Box sx={{ width: '100%' }}>
+                        <Typography variant="h5" gutterBottom>
+                          Características do Imóvel
+                        </Typography>
 
-        <TableContainer style={{ boxShadow: 'none' }}>
-          <Table className="TableInfo-imovel" sx={{ fontSize: "0.5rem" }} aria-label="simple table">
-            {/* <TableHead>
-              <TableRow>
-                <TableCell>Dessert (100g serving)</TableCell>
-                <TableCell align="right">Calories</TableCell>
-                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                <TableCell align="right">Protein&nbsp;(g)</TableCell>
-              </TableRow>
-            </TableHead> */}
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row" style={{ paddingLeft: "30px" }}>
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.info}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                        {imovel.descricao}
+                      </Box>
+                    </>
+                  )
+                }
+        
       </div>
 
       <Footer />

@@ -68,7 +68,7 @@ export default function MultiActionAreaCard(props) {
                       />
                       <CardContent>
                         <Typography className="title-imovel" gutterBottom variant="h5">
-                          {card.descricao}
+                          {card.regiao}
                         </Typography>
 
                         <Typography variant="body2" color="text.secondary" component="div">
@@ -129,7 +129,7 @@ export default function MultiActionAreaCard(props) {
                   />
                   <CardContent>
                     <Typography className="title-imovel" gutterBottom variant="h5">
-                      {card.descricao}
+                      {card.regiao}
                     </Typography>
 
                     <Typography variant="body2" color="text.secondary" component="div">
