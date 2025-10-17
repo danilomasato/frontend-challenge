@@ -80,7 +80,7 @@ export default function MultiActionAreaCard(props) {
                   <Avatar
                     alt="Remy Sharp"
                     src='/static/media/logo_tsa.065f0e6987b69aca20e9.png'
-                    sx={{ width: 66, height: 66, objectFit: 'contain' }}
+                    sx={{ width: 75, height: 75 }}
                   />
                 </Stack>
                 <Typography className="ThumbSLider-description" gutterBottom>
