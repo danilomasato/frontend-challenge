@@ -6,3 +6,8 @@
 .TableInfo-imovel th, .TableInfo-imovel td {
     font-size: 0.8rem;
 }
+
+.back {
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 20px;
+}

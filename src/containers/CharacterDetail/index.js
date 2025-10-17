@@ -30,6 +30,7 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import SellIcon from '@mui/icons-material/Sell';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import Box from '@mui/material/Box';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import "./DetailImovel.css";
 
 const CharacterDetail = ({ characterDetail, authors }) => {
@@ -72,7 +73,6 @@ const CharacterDetail = ({ characterDetail, authors }) => {
           }
         })
       }
-      console.log('imovel==================>', imovel)
     }, [authors, imovel]);
 
   return (
@@ -81,9 +81,9 @@ const CharacterDetail = ({ characterDetail, authors }) => {
       <Header />
 
       <div className="row center">
-        <Stack className="center" direction="row" spacing={10}>
-          <Button onClick={(e) => { history.push('/') } }>Voltar</Button>
-        </Stack>
+        <Box className="back" sx={{ width: '100%' }}>
+          <Button onClick={(e) => { history.push('/') } }><KeyboardBackspaceIcon />  Voltar</Button>
+        </Box>
 
         <CardDetail data={characterDetail} />
 
