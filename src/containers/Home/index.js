@@ -137,7 +137,7 @@ const Home = ({ character }) => {
                setRealEstate({character: {
                 data: [item]
               }})
-            }, 2500);
+            }, 12500);
           }
         }
       )
