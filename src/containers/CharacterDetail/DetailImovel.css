@@ -8,6 +8,9 @@
 }
 
 .back {
-    color: rgba(0, 0, 0, 0.6);
     margin-bottom: 20px;
+}
+
+.back button {
+    color: rgba(0, 0, 0, 0.6);
 }
