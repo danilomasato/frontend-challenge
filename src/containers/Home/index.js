@@ -149,14 +149,14 @@ const Home = ({ character }) => {
       e.preventDefault(); // Prevent the default context menu
     };
 
-    // Attach the event listener to the document body
+    //Attach the event listener to the document body
     document.body.addEventListener('contextmenu', handleContextMenu);
 
-    // Clean up the event listener when the component unmounts
+    //Clean up the event listener when the component unmounts
     return () => {
       document.body.removeEventListener('contextmenu', handleContextMenu);
     };
-  }, [character, search]);
+    }, [character, search]);
 
    const handleClick = cardID => {
 
