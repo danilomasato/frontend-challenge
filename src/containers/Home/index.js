@@ -144,18 +144,18 @@ const Home = ({ character }) => {
     }
     
 
-    //Disable click right mouse
-    const handleContextMenu = (e) => {
-      e.preventDefault(); // Prevent the default context menu
-    };
+      // //Disable click right mouse
+      // const handleContextMenu = (e) => {
+      //   e.preventDefault(); // Prevent the default context menu
+      // };
 
-    //Attach the event listener to the document body
-    document.body.addEventListener('contextmenu', handleContextMenu);
+      // //Attach the event listener to the document body
+      // document.body.addEventListener('contextmenu', handleContextMenu);
 
-    //Clean up the event listener when the component unmounts
-    return () => {
-      document.body.removeEventListener('contextmenu', handleContextMenu);
-    };
+      // //Clean up the event listener when the component unmounts
+      // return () => {
+      //   document.body.removeEventListener('contextmenu', handleContextMenu);
+      // };
     }, [character, search]);
 
    const handleClick = cardID => {
