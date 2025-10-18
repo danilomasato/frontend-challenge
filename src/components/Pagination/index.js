@@ -23,7 +23,7 @@ export default function CustomIcons(props) {
   };
 
   return (
-    <Stack spacing={2} className="center">
+    <Stack spacing={2} className="center" style={{ marginTop: '30px' }}>
       <Pagination
         count={10}
         onChange={handleChange}
