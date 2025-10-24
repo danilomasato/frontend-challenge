@@ -48,7 +48,6 @@ const CharacterDetail = ({ characterDetail, authors }) => {
   if (characterDetail.characterDetail.length === 0) {
     history.push('/')
   }
-  // const [avatar, setAvatar] = useState([]);
 
   const rows = [
     createData('Andar', imovel?.Andar),
@@ -66,7 +65,7 @@ const CharacterDetail = ({ characterDetail, authors }) => {
     useEffect(() => {
       if(authors.data?.length > 0){
         authors.data.filter((item, index) =>  {
-          if(imovel.autor.name.includes(item.name)){
+          if(imovel.autor !== null && imovel.autor.name.includes(item.name)){
             Object.assign(characterDetail, {
               avatar: item.avatar.url
             })

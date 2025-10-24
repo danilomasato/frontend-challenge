@@ -1,9 +1,7 @@
 import React, { useEffect  } from 'react';
 import "./ThumbSlider.css";
 import CustomSlider from "./ThumbSlider.js";
-
 const baseURL = process.env.REACT_APP_URL;
-
 
 const ThumbSLider = (props) => {
   return (

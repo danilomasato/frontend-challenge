@@ -77,3 +77,10 @@
 .ThumbSLider-author .avatar img {
     object-fit: contain;
 }
+
+.modal-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}

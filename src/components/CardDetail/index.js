@@ -17,6 +17,7 @@ import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import Dialog from '@mui/material/Dialog';
 // import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function MultiActionAreaCard(props) {
   const baseURL = process.env.REACT_APP_URL;
@@ -60,12 +61,7 @@ export default function MultiActionAreaCard(props) {
             title={card.imovel}
           />
         </DialogContent>
-        {/* <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose} autoFocus>
-            Agree
-          </Button>
-        </DialogActions> */}
+        <CloseIcon className="modal-close" onClick={handleClose} />
       </Dialog>
         
         <div className="ThumbSLider-info">
