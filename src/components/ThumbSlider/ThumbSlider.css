@@ -109,7 +109,7 @@
 }
 
 @media only screen and (min-width: 1025px) {
-  .slider__item img {
+  .MuiDialog-container .slider__item img {
     height: 600px;
     object-fit: contain !important;
   }
