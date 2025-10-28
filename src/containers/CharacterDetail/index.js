@@ -154,6 +154,25 @@ const CharacterDetail = ({ characterDetail, authors }) => {
 
                         {imovel.descricao}
                       </Box>
+                      <br />
+
+                      <TableContainer style={{ boxShadow: 'none' }}>
+                        <Table className="TableInfo-imovel" sx={{ fontSize: "0.5rem" }} aria-label="simple table">
+                          <TableBody>
+                            {rows.map((row) => (
+                              <TableRow
+                                key={row.name}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                              >
+                                <TableCell component="th" scope="row" style={{ paddingLeft: "30px" }}>
+                                  {row.name}
+                                </TableCell>
+                                <TableCell align="right">{row.info}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
                     </>
                   )
                 }

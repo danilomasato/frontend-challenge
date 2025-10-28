@@ -21,7 +21,13 @@ import CloseIcon from '@mui/icons-material/Close';
 
 export default function MultiActionAreaCard(props) {
   const baseURL = process.env.REACT_APP_URL;
-  const card = props.data.characterDetail[0]
+  const [card, setCard] = useState([]);
+
+  //useEffect for not loop, and many request's
+  useEffect(() => {
+    props.data.characterDetail[0].descricao = props.data.characterDetail[0].descricao?.substring(0,50);
+    setCard(props.data.characterDetail[0])
+  }, [props.data.characterDetail[0]]);
 
   const [open, setOpen] = React.useState(false);
 
