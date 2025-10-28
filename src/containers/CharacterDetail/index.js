@@ -49,18 +49,32 @@ const CharacterDetail = ({ characterDetail, authors }) => {
     history.push('/')
   }
 
-  const rows = [
-    createData('Andar', imovel?.Andar),
-    createData('Área útil', imovel?.Area_util),
-    createData('Área total', imovel?.Area_Total),
-    createData('Área terreno', imovel?.Area_Terreno),
-    createData('Ano de construção', imovel?.Ano_Construcao),
-    createData('Condomínio', imovel?.Condominio),
-    createData('IPTU (anual)', imovel?.IPTU),
-    createData('Quartos', imovel?.Quartos),
-    createData('Suítes', imovel?.Suites),
-    createData('Banheiros', imovel?.Banheiros),
-  ];
+  let rows = []
+
+  if(imovel.valor_venda !== null) {
+    rows = [
+      createData('Andar', imovel?.Andar),
+      createData('Área útil', imovel?.Area_util),
+      createData('Área total', imovel?.Area_Total),
+      createData('Área terreno', imovel?.Area_Terreno),
+      createData('Ano de construção', imovel?.Ano_Construcao),
+      createData('Condomínio', imovel?.Condominio),
+      createData('IPTU (anual)', imovel?.IPTU),
+      createData('Quartos', imovel?.Quartos),
+      createData('Suítes', imovel?.Suites),
+      createData('Banheiros', imovel?.Banheiros),
+    ]
+  } else {
+    rows = [
+      createData('Andar', imovel?.Andar),
+      createData('Área útil', imovel?.Area_util),
+      createData('Condomínio', imovel?.Condominio),
+      createData('IPTU (anual)', imovel?.IPTU),
+      createData('Quartos', imovel?.Quartos),
+      createData('Suítes', imovel?.Suites),
+      createData('Banheiros', imovel?.Banheiros),
+    ]
+  }
 
     useEffect(() => {
       if(authors.data?.length > 0){
