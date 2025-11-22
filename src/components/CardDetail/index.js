@@ -30,6 +30,12 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 
 export default function MultiActionAreaCard(props) {
   const baseURL = process.env.REACT_APP_BASEURL;
+  //  const params = new URLSearchParams(window.location.hash.substring(8))
+
+//   // You can access specific parameters:
+//   console.log(params.get('teste'))
+
+  const urlShare = window.location.href
 
   const [card, setCard] = useState([]);
 
@@ -70,6 +76,16 @@ export default function MultiActionAreaCard(props) {
     // Alternativamente, para tentar abrir em uma nova janela/tab (o comportamento exato depende do navegador/configurações do usuário)
     window.open(mailtoLink, '_blank'); 
   }
+
+  async function copiarParaAreaDeTransferencia(url) {
+    const textoParaCopiar = url;
+    await navigator.clipboard.writeText(textoParaCopiar);
+    alert("Texto copiado para a área de transferência!");
+  }
+
+  const handleClick = url => {
+      copiarParaAreaDeTransferencia(url);
+  };
 
   return (
     <>  
@@ -139,7 +155,7 @@ export default function MultiActionAreaCard(props) {
 
           <ButtonGroup className="ButtonGroup" variant="contained" aria-label="Basic button group">
             <Button><SlowMotionVideoIcon /> Vídeo </Button>
-            <Button><ShareIcon /> Compartilhar Imóvel </Button>
+            <Button onClick={(e) => {handleClick(urlShare) }}><ShareIcon /> Compartilhar Imóvel </Button>
           </ButtonGroup>
 
           <Card className="ThumbSLider-author" key={card.id} sx={{ maxWidth: 345 }} style={{ overflow: "visible"}}>

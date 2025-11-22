@@ -53,13 +53,13 @@ export default function MultiActionAreaCard(props) {
     }
   }, [props]);
 
-  const handleClick = cardID => {
+  const handleClick = (cardID, card) => {
     dispatch({
       type: types.RECEIVE_CHARACTER,
       payload: articles.filter(item => item.id === cardID)
     })
 
-    history.push('/imovel')
+    history.push(`/imovel/${card.descricao}`)
   };
 
   return (
@@ -86,7 +86,7 @@ export default function MultiActionAreaCard(props) {
                         alt={card.imovel}
                         title={card.imovel}
                       />
-                      <CardContent onClick={(e) => {handleClick(card.id) }}>
+                      <CardContent onClick={(e) => {handleClick(card.id, card) }}>
                         <Typography className="title-imovel" gutterBottom variant="h5">
                           {card.regiao}
                         </Typography>
@@ -120,7 +120,7 @@ export default function MultiActionAreaCard(props) {
                       </CardContent>
                     </CardActionArea>
                     <CardActions>
-                      <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id) }}>
+                      <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
                         Ver Mais
                       </Button>
                     </CardActions>
@@ -153,7 +153,7 @@ export default function MultiActionAreaCard(props) {
                     alt={card.imovel}
                     title={card.imovel}
                   />
-                  <CardContent onClick={(e) => {handleClick(card.id) }}>
+                  <CardContent onClick={(e) => {handleClick(card.id, card) }}>
                     <Typography className="title-imovel" gutterBottom variant="h5">
                       {card.regiao}
                     </Typography>
@@ -187,7 +187,7 @@ export default function MultiActionAreaCard(props) {
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id) }}>
+                  <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
                     Ver Mais
                   </Button>
                 </CardActions>
