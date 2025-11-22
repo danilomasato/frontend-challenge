@@ -12,10 +12,8 @@ export const Footer = data => {
                   <div class="footer-col">
                       <h4>Empresa</h4>
                       <ul>
-                          <li><a href="#"> Quem somos </a></li>
-                          <li><a href=""> nossos serviços </a></li>
-                          <li><a href=""> política de privacidade </a></li>
-                          
+                          <li><a href="http://f12-preview.awardspace.net/tudosobreap.com/#/sobre-nos"> Quem somos </a></li>
+                          <li><a href="http://f12-preview.awardspace.net/tudosobreap.com/#/contato"> Fale Conosco </a></li>
                       </ul>
                   </div>
                  
@@ -23,15 +21,17 @@ export const Footer = data => {
                       <h4>Obter ajuda</h4>
                       <ul>
                           <li><a href="#">FAQ</a></li>
-                          <li><a href="#">Opções De Pagamento</a></li>
+                          <li><a href=""> Política de privacidade </a></li>
                       </ul>
                   </div>
                 
                   <div class="footer-col">
                       <h4>Afiliados</h4>
                       <ul>
-                          <li><a href=""> programa de afiliados</a></li>
-                          <li><a href="#"> Venha ser um Corretor </a></li>
+                          <li><a href="https://sublime-bat-ad2fca1255.strapiapp.com/admin/auth/register-admin"> Programa de afiliados</a></li>
+                          <li><a href="https://sublime-bat-ad2fca1255.strapiapp.com/admin/auth/register-admin"> Venha ser um Corretor </a></li>
+                          <li><a href="https://sublime-bat-ad2fca1255.strapiapp.com/admin/auth/login"> Acesso para Corretores </a></li>
+                          
                       </ul>
                   </div>
                   

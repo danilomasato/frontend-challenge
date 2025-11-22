@@ -16,6 +16,9 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import SellIcon from '@mui/icons-material/Sell';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Container } from "../../components";
+import { styled } from '@mui/material/styles';
+import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
 
 export default function MultiActionAreaCard(props) {
   const [articles, setArticles] = useState([]);
@@ -24,6 +27,15 @@ export default function MultiActionAreaCard(props) {
   const baseURL = process.env.REACT_APP_URL;
   const [rentalValue, setRentalValue] = useState(null);
   const [salePrice, setSalePrice] = useState(null);
+
+  const Root = styled('div')(({ theme }) => ({
+    width: '100%',
+    ...theme.typography.body2,
+    color: (theme.vars || theme).palette.text.secondary,
+    '& > :not(style) ~ :not(style)': {
+      marginTop: theme.spacing(2),
+    },
+  }));
 
   //first load
   useEffect(() => {
@@ -52,13 +64,21 @@ export default function MultiActionAreaCard(props) {
 
   return (
     <>
-      {rentalValue ? ( <div className="row center"><h2 className="title"> Imóveis á Venda </h2></div> ) : '' }
+    
+      {rentalValue ? ( 
+        <Root>
+          <Divider style={{ marginTop: "40px"}}>
+            <Chip label="Imóveis á Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff" }} />
+          </Divider>
+        </Root> 
+      ) : '' }
+ 
       <Container>
         {articles.map(
           (card, index) => (
             <>
               {card.valor_venda !== null ? (
-                  <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
+                  <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
                     <CardActionArea>
                       <ThumbSLider 
                         height="140"
@@ -66,7 +86,7 @@ export default function MultiActionAreaCard(props) {
                         alt={card.imovel}
                         title={card.imovel}
                       />
-                      <CardContent>
+                      <CardContent onClick={(e) => {handleClick(card.id) }}>
                         <Typography className="title-imovel" gutterBottom variant="h5">
                           {card.regiao}
                         </Typography>
@@ -100,7 +120,7 @@ export default function MultiActionAreaCard(props) {
                       </CardContent>
                     </CardActionArea>
                     <CardActions>
-                      <Button className="see-more" variant="contained" style={{ width: "100%" }}>
+                      <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id) }}>
                         Ver Mais
                       </Button>
                     </CardActions>
@@ -112,14 +132,20 @@ export default function MultiActionAreaCard(props) {
         ))}
     </Container>
 
-    {salePrice ? ( <div className="row center"><h2 className="title"> Imóveis para Alugar </h2></div> ) : '' }
-      
+    {salePrice ? (
+      <Root>
+          <Divider style={{ marginTop: "40px"}}>
+            <Chip label="Imóveis para Alugar" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff" }} />
+          </Divider>
+        </Root> 
+    ) : '' }
+
     <Container>
       {articles.map(
       (card, index) => (
         <>
         {card.valor_aluguel !== null ? (
-              <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id) } }>
+              <Card className="card" key={card.id} sx={{ maxWidth: 345 }} >
                 <CardActionArea>
                   <ThumbSLider 
                     height="140"
@@ -127,7 +153,7 @@ export default function MultiActionAreaCard(props) {
                     alt={card.imovel}
                     title={card.imovel}
                   />
-                  <CardContent>
+                  <CardContent onClick={(e) => {handleClick(card.id) }}>
                     <Typography className="title-imovel" gutterBottom variant="h5">
                       {card.regiao}
                     </Typography>
@@ -161,7 +187,7 @@ export default function MultiActionAreaCard(props) {
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button className="see-more" variant="contained" style={{ width: "100%" }}>
+                  <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id) }}>
                     Ver Mais
                   </Button>
                 </CardActions>

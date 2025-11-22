@@ -27,6 +27,7 @@ const Home = ({ character }) => {
 
   const data = ['Água Rasa',
   'Alto de Pinheiros',
+  'Alto da Boa Vista',
   'Anhanguera',
   'Aricanduva',
   'Artur Alvim',
@@ -90,12 +91,13 @@ const Home = ({ character }) => {
   'Sacomã',
   'Santa Cecília',
   'Santana',
-  'Santo amaro',
+  'Santo Amaro',
   'São Domingos',
   'São Lucas',
   'São Mateus',
   'São Miguel Paulista',
   'São Rafael',
+  'Socorro',
   'Sapopemba',
   'Saúde',
   'Sé',
@@ -114,6 +116,7 @@ const Home = ({ character }) => {
   'Vila Medeiros',
   'Vila Prudente',
   'Vila Sônia',
+  'Vila Sonia',
   'Vila Nova Conceição'
 ]
 

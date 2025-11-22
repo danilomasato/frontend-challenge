@@ -4,6 +4,8 @@ import "../../css/libs/hamburgers.min.css";
 import { NavLink } from "react-router-dom";
 import "./Header.css";
 
+const baseURL = process.env.REACT_APP_BASEURL;
+
 export const Header = props => {
   const [btStatus, setBtStatus] = useState(true);
 
@@ -39,7 +41,7 @@ export const Header = props => {
         </div>
 
         <a className="header-logo" href="/">
-          <img src={logo} alt="logo" />
+          <img src={`${baseURL}${logo}`} alt="logo" />
         </a>
 
         <ul id="nav">

@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.78457248.css",
+    "main.js": "/static/js/main.8904f193.js",
+    "static/media/logo_tsa.png": "/static/media/logo_tsa.065f0e6987b69aca20e9.png",
+    "static/media/kleber.jpg": "/static/media/kleber.991123644ed0a717076c.jpg",
+    "static/media/vania.jpg": "/static/media/vania.de685a05096cb2b32bae.jpg",
+    "index.html": "/index.html",
+    "main.78457248.css.map": "/static/css/main.78457248.css.map",
+    "main.8904f193.js.map": "/static/js/main.8904f193.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.78457248.css",
+    "static/js/main.8904f193.js"
+  ]
+}

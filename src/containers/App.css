@@ -372,17 +372,17 @@ textarea {
 
 @font-face {
    font-family: 'quicksand-regular';
-   src: url('../assets/fonts/Quicksand_Book.otf');
+   src: url('http://f12-preview.awardspace.net/tudosobreap.com/static/media/Quicksand_Book.otf');
 }
 
 @font-face {
    font-family: 'quicksand-light';
-   src: url('../assets/fonts/Quicksand_Light.otf');
+   src: url('http://f12-preview.awardspace.net/tudosobreap.com/static/media/Quicksand_Light.otf');
 }
 
 @font-face {
    font-family: 'quicksand-bold';
-   src: url('../assets/fonts/Quicksand_Bold.otf');
+   src: url('http://f12-preview.awardspace.net/tudosobreap.com/tatic/media/Quicksand_Bold.otf');
 }
 
 #header { background: #f4f4f4; }

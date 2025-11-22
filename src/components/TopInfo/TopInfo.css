@@ -1,14 +1,9 @@
 .top-info {
-    height: 40px;
     color: #fff;
 }
 
 .top-info li  {
     float: left;
-}
-
-.top-info li:nth-child(2) {
-    margin-left: 35px;
 }
 
 .top-info span {
@@ -38,3 +33,39 @@
     margin-right: 10px;
 }
 
+
+@media (min-width: 1025px) {
+    .top-info {
+        height: 40px;
+        color: #fff;
+    }
+
+    .top-info li:nth-child(2) {
+        margin-left: 35px;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 1024px) {
+    .top-info {
+        float: left;
+        background: rgb(11, 44, 61);
+    }
+
+    .top-info li {
+        margin: 0 20px;
+    }
+
+    .top-info li:nth-child(3),
+    .top-info li:nth-child(4) {
+        display: none;
+    }
+
+    .row {
+        padding: 20px 0;
+        float: left;
+    }
+
+    .top-info span {
+        letter-spacing: -1px;
+    }
+}

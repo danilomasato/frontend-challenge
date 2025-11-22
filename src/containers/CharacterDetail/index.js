@@ -23,10 +23,6 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
-import BedIcon from '@mui/icons-material/Bed';
-import ShowerIcon from '@mui/icons-material/Shower';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import SellIcon from '@mui/icons-material/Sell';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import Box from '@mui/material/Box';
@@ -98,37 +94,7 @@ const CharacterDetail = ({ characterDetail, authors }) => {
           <Button onClick={(e) => { history.push('/') } }><KeyboardBackspaceIcon />  Voltar</Button>
         </Box>
 
-        <CardDetail data={characterDetail} />
-
-        <Card className="card imovel-info" key={imovel.id} sx={{ maxWidth: 345,  background: 'transparent',
-          border: '0', boxShadow: 'none', marginBottom: '40px' }}>
-          <CardActionArea>
-            <CardContent>
-              <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                {imovel.valor_venda !== null ? (
-                  <div>
-                    R$ {imovel.valor_venda}
-                  </div>
-                )
-                  : ''
-                }
-              </Typography>
-              <Typography className="icon-card" variant="body2" color="text.secondary">
-                <FullscreenIcon /> {imovel.Area_Total} 
-              </Typography>
-              <Typography className="icon-card" variant="body2" color="text.secondary">
-                <BedIcon /> {imovel.Quartos} 
-              </Typography>
-              <Typography className="icon-card" variant="body2" color="text.secondary">
-                <ShowerIcon /> {imovel.Banheiros} 
-              </Typography>
-              <Typography className="icon-card" variant="body2" color="text.secondary">
-                <DirectionsCarIcon /> {imovel.Vagas} 
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-        
+        <CardDetail data={characterDetail} imovel={imovel} />
          {imovel.valor_venda !== null ? (
                   <>
                     <TableContainer style={{ boxShadow: 'none' }}>

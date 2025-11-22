@@ -16,6 +16,8 @@ import CardActionArea from '@mui/material/CardActionArea';
 import vania from '../../assets/images/vania.jpg';
 import kleber from '../../assets/images/kleber.jpg';
 
+const baseURL = process.env.REACT_APP_BASEURL;
+
 const About = ({ props }) => {
 
   return (
@@ -38,7 +40,7 @@ const About = ({ props }) => {
               <CardMedia
                 component="img"
                 height="140"
-                image={vania}
+                image={`${baseURL}${vania}`}
                 alt="green iguana"
               />
               <CardContent>
@@ -58,7 +60,7 @@ const About = ({ props }) => {
               <CardMedia
                 component="img"
                 height="140"
-                image={kleber}
+                image={`${baseURL}${kleber}`}
                 alt="green iguana"
               />
               <CardContent>

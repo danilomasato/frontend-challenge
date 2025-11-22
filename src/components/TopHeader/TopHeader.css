@@ -1,7 +1,31 @@
 .topHeader {
     width: 100%;
-    height: 210px;
+    height: 150px;
     margin: 0 auto;
-    background: #f7f7fa url('../../assets/images/bg-top-header.jpg') no-repeat center;
-    background-position-x: 60%;
+    background: #f7f7fa url('http://f12-preview.awardspace.net/tudosobreap.com/static/media/bg-top-header.d78c9ac8ab69989b1bd5.jpg') no-repeat center;
+    background-position-x: 66%;
+    background-position-y: 90%;
+}
+
+@media (min-width: 320px) and (max-width: 1024px) {
+    .topHeader {
+        display: none;
+    }
+
+    .MuiGrid-container {
+        margin: 0 auto;
+        margin: 0 !important;
+        width: 100% !important;
+        grid-gap: 10px;
+    }
+
+     .MuiGrid-container .MuiGrid-root:nth-child(1),
+    .MuiGrid-container .MuiGrid-root:nth-child(2) {
+        width: 100%;
+    }
+
+    .search-neighborhoods {
+        width: 100%;
+        margin-left: 0;
+    }
 }

@@ -40,6 +40,9 @@
 }
 
 .container__slider__links {
+  width: 72px;
+  height: 18px;
+  overflow: hidden;
   position: absolute;
   bottom: 5%;
   left: 50%;

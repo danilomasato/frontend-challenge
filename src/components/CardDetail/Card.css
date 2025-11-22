@@ -22,6 +22,11 @@
     top: 10px;
     right: 10px;
     cursor: pointer;
+    width: 1.5rem;
+    height: auto;
+    background: rgb(11, 44, 61);
+    border-radius: 50%;
+    padding: 8px;
 }
 
 .ThumbSLider-info {
@@ -65,8 +70,16 @@
 
 .ThumbSLider-author .ThumbSLider-description svg {
     padding-right: 5px;
+    width: 17px;
 }
 
+.ThumbSLider-author p:nth-child(2) svg {
+    color: #838282;
+}
+
+.ThumbSLider-author p:nth-child(3) svg {
+    color: #25D366;
+}
 
 .ThumbSLider-author .avatar {
     position: absolute;
@@ -83,4 +96,32 @@
     top: 5px;
     right: 5px;
     cursor: pointer;
+}
+
+.GroupBelowHighligh {
+
+}
+
+.GroupBelowHighligh .imovel-info,
+.GroupBelowHighligh .ButtonGroup,
+.GroupBelowHighligh .ThumbSLider-author {
+    float: left;
+}
+
+.GroupBelowHighligh .imovel-info {
+    width: 240px;
+}
+
+.GroupBelowHighligh .ButtonGroup {
+    margin: 20px 0 0 70px;
+}
+
+.GroupBelowHighligh .ButtonGroup button {
+    background: rgb(11, 44, 61);
+    border-color: rgb(37 79 101);
+}
+
+.GroupBelowHighligh .ButtonGroup svg {
+    width: 18px;
+    margin-right: 5px;
 }
