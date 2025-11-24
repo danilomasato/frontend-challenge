@@ -27,23 +27,42 @@ import BedIcon from '@mui/icons-material/Bed';
 import ShowerIcon from '@mui/icons-material/Shower';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import { withRouter } from "react-router-dom";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { getArticles } from "../../actions";
 
-export default function MultiActionAreaCard(props) {
+const CardDetail = ({ data, character }) => {
   const baseURL = process.env.REACT_APP_BASEURL;
-  //  const params = new URLSearchParams(window.location.hash.substring(8))
-
-//   // You can access specific parameters:
-//   console.log(params.get('teste'))
-
   const urlShare = window.location.href
-
+  const idMount = window.location.hash.substring(0,11).replace('#/imovel/', '')
+  const [imovel, setImovel] = useState();
   const [card, setCard] = useState([]);
+  const [dataImovel, setDataImovel] = useState(character);
 
   //useEffect for not loop, and many request's
   useEffect(() => {
-    props.data.characterDetail[0].descricao = props.data.characterDetail[0].descricao?.substring(0,50);
-    setCard(props.data.characterDetail[0])
-  }, [props.data.characterDetail[0]]);
+    const characterDetail = data.characterDetail
+
+    if(characterDetail?.length > 0) {    
+      data.characterDetail[0].descricao = data.characterDetail[0].descricao?.substring(0,50);
+      setImovel(characterDetail[0])
+      setCard(characterDetail[0])
+    }
+
+    if(character.character.data?.length > 0) {
+        console.log("card filter================>", character.character.data)
+
+        character.character.data.filter(card => {
+          if(card.id === parseInt(idMount)){
+            setCard(card)
+            console.log("card filter================>", card)
+          }
+        })
+      }
+
+  }, [data, imovel, card, character]);
+  
 
   const [open, setOpen] = React.useState(false);
 
@@ -78,9 +97,21 @@ export default function MultiActionAreaCard(props) {
   }
 
   async function copiarParaAreaDeTransferencia(url) {
-    const textoParaCopiar = url;
-    await navigator.clipboard.writeText(textoParaCopiar);
-    alert("Texto copiado para a área de transferência!");
+    try {
+      navigator.permissions.query({ name: "clipboard-write" }).then((result) => {
+        if (result.state === "granted" || result.state === "prompt") {
+            navigator.clipboard.writeText(url);
+            alert("Link copiado para a área de transferência!");
+        }
+      });
+      await navigator.permissions.query({ name: "clipboard" });
+        if(navigator.clipboard){
+          await navigator.clipboard.writeText(url);
+          alert("Link copiado para a área de transferência!");
+        }
+      } catch (e) {
+          console.log(e);
+      }
   }
 
   const handleClick = url => {
@@ -124,30 +155,30 @@ export default function MultiActionAreaCard(props) {
         </div>
 
         <box className="GroupBelowHighligh">
-          <Card className="card imovel-info" key={props.imovel.id} sx={{ maxWidth: 300,  background: 'transparent',
+          <Card className="card imovel-info" key={imovel?.id} sx={{ maxWidth: 300,  background: 'transparent',
             border: '0', boxShadow: 'none', marginBottom: '40px' }}>
             <CardActionArea>
               <CardContent>
                 <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                  {props.imovel.valor_venda !== null ? (
+                  {imovel?.valor_venda !== null ? (
                     <div>
-                      R$ {props.imovel.valor_venda}
+                      R$ {imovel?.valor_venda}
                     </div>
                   )
                     : ''
                   }
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
-                  <FullscreenIcon /> {props.imovel.Area_Total} 
+                  <FullscreenIcon /> {imovel?.Area_Total} 
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
-                  <BedIcon /> {props.imovel.Quartos} 
+                  <BedIcon /> {imovel?.Quartos} 
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
-                  <ShowerIcon /> {props.imovel.Banheiros} 
+                  <ShowerIcon /> {imovel?.Banheiros} 
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
-                  <DirectionsCarIcon /> {props.imovel.Vagas} 
+                  <DirectionsCarIcon /> {imovel?.Vagas} 
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -191,3 +222,17 @@ export default function MultiActionAreaCard(props) {
     </>
   );
 }
+
+const mapStateToProps = state => ({
+  character: state.home
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      getArticles: dispatch(getArticles())
+    },
+    dispatch
+  );
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CardDetail));

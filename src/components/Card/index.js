@@ -59,7 +59,7 @@ export default function MultiActionAreaCard(props) {
       payload: articles.filter(item => item.id === cardID)
     })
 
-    history.push(`/imovel/${card.descricao}`)
+    history.push(`/imovel/${card.id}/${card.descricao}`)
   };
 
   return (

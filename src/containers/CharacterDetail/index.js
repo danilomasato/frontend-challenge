@@ -41,13 +41,13 @@ const CharacterDetail = ({ characterDetail, authors }) => {
   const imovel = characterDetail.characterDetail[0]
   const history = useHistory();
 
-  if (characterDetail.characterDetail.length === 0) {
-    history.push('/')
-  }
+  // if (characterDetail.characterDetail.length === 0) {
+  //   history.push('/')
+  // }
 
   let rows = []
 
-  if(imovel.valor_venda !== null) {
+  if(imovel?.valor_venda !== null) {
     rows = [
       createData('Andar', imovel?.Andar),
       createData('Área útil', imovel?.Area_util),
@@ -75,7 +75,7 @@ const CharacterDetail = ({ characterDetail, authors }) => {
     useEffect(() => {
       if(authors.data?.length > 0){
         authors.data.filter((item, index) =>  {
-          if(imovel.autor !== null && imovel.autor.name.includes(item.name)){
+          if(imovel?.autor !== null && imovel?.autor.name.includes(item.name)){
             Object.assign(characterDetail, {
               avatar: item.avatar.url
             })
@@ -95,7 +95,7 @@ const CharacterDetail = ({ characterDetail, authors }) => {
         </Box>
 
         <CardDetail data={characterDetail} imovel={imovel} />
-         {imovel.valor_venda !== null ? (
+         {imovel?.valor_venda !== null ? (
                   <>
                     <TableContainer style={{ boxShadow: 'none' }}>
                       <Table className="TableInfo-imovel" sx={{ fontSize: "0.5rem" }} aria-label="simple table">
