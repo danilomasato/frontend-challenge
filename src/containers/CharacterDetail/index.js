@@ -39,7 +39,7 @@ const CharacterDetail = ({ data, realRstate, authors }) => {
     return { name, info};
   }
 
-  const imovel = realRstate
+  let imovel = realRstate
   const history = useHistory();
   const urlShare = window.location.href
   const idMount = window.location.hash.substring(0,11).replace('#/imovel/', '')
@@ -47,11 +47,12 @@ const CharacterDetail = ({ data, realRstate, authors }) => {
   // if (characterDetail.characterDetail.length === 0) {
   //   history.push('/')
   // }
+  
   if(data?.length > 0) {
     data.filter(card => {
       if(card.id === parseInt(idMount)){
-        // console.log("imovel==============>", card)
         realRstate = card
+        imovel = card
       }
     })
   }
