@@ -127,7 +127,7 @@ const CharacterDetail = ({ characterDetail, authors }) => {
                 )
                   : (
                     <>
-                     <Box sx={{ width: '100%' }}>
+                     <Box style={{ float: "left", width: "100%", marginBottom: "20px" }} sx={{ width: '100%' }}>
                         <Typography variant="h5" gutterBottom>
                           Características do Imóvel
                         </Typography>
