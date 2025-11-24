@@ -28,9 +28,10 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import Box from '@mui/material/Box';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import "./DetailImovel.css";
+import { getArticles } from "../../actions";
 
-const CharacterDetail = ({ characterDetail, authors }) => {
-
+const CharacterDetail = ({ data, realRstate, authors }) => {
+// console.log("data==============>", data)
   function createData(
     name: string,
     info: string
@@ -38,12 +39,22 @@ const CharacterDetail = ({ characterDetail, authors }) => {
     return { name, info};
   }
 
-  const imovel = characterDetail.characterDetail[0]
+  const imovel = realRstate
   const history = useHistory();
+  const urlShare = window.location.href
+  const idMount = window.location.hash.substring(0,11).replace('#/imovel/', '')
 
   // if (characterDetail.characterDetail.length === 0) {
   //   history.push('/')
   // }
+  if(data?.length > 0) {
+    data.filter(card => {
+      if(card.id === parseInt(idMount)){
+        // console.log("imovel==============>", card)
+        realRstate = card
+      }
+    })
+  }
 
   let rows = []
 
@@ -76,7 +87,7 @@ const CharacterDetail = ({ characterDetail, authors }) => {
       if(authors.data?.length > 0){
         authors.data.filter((item, index) =>  {
           if(imovel?.autor !== null && imovel?.autor.name.includes(item.name)){
-            Object.assign(characterDetail, {
+            Object.assign(realRstate, {
               avatar: item.avatar.url
             })
           }
@@ -94,7 +105,8 @@ const CharacterDetail = ({ characterDetail, authors }) => {
           <Button onClick={(e) => { history.push('/') } }><KeyboardBackspaceIcon />  Voltar</Button>
         </Box>
 
-        <CardDetail data={characterDetail} imovel={imovel} />
+        <CardDetail data={realRstate} imovel={imovel} />
+
          {imovel?.valor_venda !== null ? (
                   <>
                     <TableContainer style={{ boxShadow: 'none' }}>
@@ -165,14 +177,16 @@ const CharacterDetail = ({ characterDetail, authors }) => {
 };
 
 const mapStateToProps = state => ({
-  characterDetail: state.character,
+  data: state.home.character.data,
+  realRstate: state.character.characterDetail[0],
   authors: state.character.authors
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      getAuthors: dispatch(getAuthors())
+      getAuthors: dispatch(getAuthors()),
+      getArticles: dispatch(getArticles())
     },
     dispatch
   );

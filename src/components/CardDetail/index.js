@@ -39,33 +39,16 @@ const CardDetail = ({ data, character }) => {
   const [imovel, setImovel] = useState();
   const [card, setCard] = useState([]);
   const [dataImovel, setDataImovel] = useState(character);
+  const [open, setOpen] = React.useState(false);
+  const property = data
 
   //useEffect for not loop, and many request's
   useEffect(() => {
-    const characterDetail = data.characterDetail
-
-    if(characterDetail?.length > 0) {    
-      data.characterDetail[0].descricao = data.characterDetail[0].descricao?.substring(0,50);
-      setImovel(characterDetail[0])
-      setCard(characterDetail[0])
-    }
-
-    if(character.character.data?.length > 0) {
-        console.log("card filter================>", character.character.data)
-
-        character.character.data.filter(card => {
-          if(card.id === parseInt(idMount)){
-            setCard(card)
-            console.log("card filter================>", card)
-          }
-        })
-      }
-
-  }, [data, imovel, card, character]);
+      property.descricao = property.descricao?.substring(0,50);
+      setImovel(property)
+      setCard(property)
+  }, [property, imovel, card]);
   
-
-  const [open, setOpen] = React.useState(false);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
