@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import "./Contact.css";
+import "./Register.css";
 import { Header } from "../../components/Header";
 import { TopInfo } from "../../components/TopInfo";
 import { TopHeader } from "../../components/TopHeader";
@@ -12,23 +12,45 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
 import Typography from '@mui/material/Typography';
+import axios from 'axios';
 
-const Contact = ({ props }) => {
+const Register = ({ props }) => {
+const JWTToken = "b80e112ff544e1a8399201e6edb52393854b6e3e4903eaba176fcf52bd258c37b7b81454bdfb131181390d65727d8ca64e71e6c12112426d984513f29930d14444ca2a694bb62dd9cab3501ae120642fbb17235558ae03a1ee15a665476a80b39ddc22159169bbb71aacc90f8be07d2bfe867886ccbf2b037069a3c69635ac04"
+  axios
+  .post('http://localhost:1337/admin/users', {
+    firstname: "jose",
+    lastname: "silva",
+    roles: ["2", "3"]
+  }, {
+  headers: {
+    'Authorization': `Bearer ${JWTToken}`
+  }
+  })
+  .then(response => {
+    // Handle success.
+    console.log('Well done!');
+    console.log('User profile', response.data.user);
+    console.log('User token', response.data.jwt);
+  })
+  .catch(error => {
+    // Handle error.
+    console.log('An error occurred:', error.response);
+  });
 
   return (
     <React.Fragment>
       <TopInfo />
       <Header />
+      <TopHeader />
 
       <div className="row center">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>
           <Box sx={{ width: '100%' }}>
             <Typography variant="h5" gutterBottom>
-              Fale Conosco
+              Teste
             </Typography>
           </Box>
           <br />
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3653.9601015474373!2d-46.71441682392875!3d-23.677384778720306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce51cc54634aaf%3A0x1b38a6c93014816c!2sR.%20Cassino%2C%2013%20-%20Jardim%20dos%20Lagos%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2004768-200!5e0!3m2!1spt-BR!2sbr!4v1763751155851!5m2!1spt-BR!2sbr" width="450" height="450" style={{ border: "0" }} allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           <div className="form">
             <Box
               component="form"
@@ -58,4 +80,4 @@ const Contact = ({ props }) => {
   );
 };
 
-export default Contact;
+export default Register;

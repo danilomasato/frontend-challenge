@@ -16,7 +16,6 @@ import Grid from '@mui/material/Grid';
 import { Header } from "../../components/Header";
 import { Loading } from "../../components/Loading";
 import { TopInfo } from "../../components/TopInfo";
-import { TopHeader } from "../../components/TopHeader";
 import { Footer } from "../../components/Footer";
 
 const Home = ({ character }) => {
@@ -147,18 +146,18 @@ const Home = ({ character }) => {
     }
     
 
-      // //Disable click right mouse
-      // const handleContextMenu = (e) => {
-      //   e.preventDefault(); // Prevent the default context menu
-      // };
+      //Disable click right mouse
+      const handleContextMenu = (e) => {
+        e.preventDefault(); // Prevent the default context menu
+      };
 
-      // //Attach the event listener to the document body
-      // document.body.addEventListener('contextmenu', handleContextMenu);
+      //Attach the event listener to the document body
+      document.body.addEventListener('contextmenu', handleContextMenu);
 
-      // //Clean up the event listener when the component unmounts
-      // return () => {
-      //   document.body.removeEventListener('contextmenu', handleContextMenu);
-      // };
+      //Clean up the event listener when the component unmounts
+      return () => {
+        document.body.removeEventListener('contextmenu', handleContextMenu);
+      };
     }, [character, search]);
 
    const handleClick = cardID => {
@@ -169,7 +168,6 @@ const Home = ({ character }) => {
     <React.Fragment>
       <TopInfo />
       <Header />
-      <TopHeader />
 
       <div className="row center">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>

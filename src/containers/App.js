@@ -5,6 +5,7 @@ import Home  from "./Home";
 import CharacterDetail from "./CharacterDetail";
 import Contact from "./Contact";
 import About from "./About";
+import Register from "./Register";
 import "./App.css";
 
 const App = ({ store }) => (
@@ -15,6 +16,7 @@ const App = ({ store }) => (
         <Route exact path="/imovel/:id/:id" component={CharacterDetail} />
         <Route exact path="/contato" component={Contact} />
         <Route exact path="/sobre-nos" component={About} />
+        <Route exact path="/Register" component={Register} />
       </Switch>
     </HashRouter>
   </Provider>

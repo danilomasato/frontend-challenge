@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/static/css/main.afaf7779.css",
+    "main.js": "/static/js/main.d81175b5.js",
+    "static/media/logo_tsa.png": "/static/media/logo_tsa.065f0e6987b69aca20e9.png",
+    "static/media/Quicksand_Bold.otf": "/static/media/Quicksand_Bold.90bf44d43965116d771b.otf",
+    "static/media/Quicksand_Book.otf": "/static/media/Quicksand_Book.c86e224d3dd24efee96a.otf",
+    "static/media/Quicksand_Light.otf": "/static/media/Quicksand_Light.beba9db7b80e69e3e3e9.otf",
+    "static/media/kleber.jpg": "/static/media/kleber.991123644ed0a717076c.jpg",
+    "static/media/vania.jpg": "/static/media/vania.de685a05096cb2b32bae.jpg",
+    "index.html": "/index.html",
+    "main.afaf7779.css.map": "/static/css/main.afaf7779.css.map",
+    "main.d81175b5.js.map": "/static/js/main.d81175b5.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.afaf7779.css",
+    "static/js/main.d81175b5.js"
+  ]
+}

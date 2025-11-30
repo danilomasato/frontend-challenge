@@ -133,8 +133,8 @@ const CardDetail = ({ data, character }) => {
         </Dialog>
         
         <div className="ThumbSLider-info">
-            <span className="imovel"> {card.imovel} </span>
-            <span className="descricao"> {card.descricao} <b style={{ fontWeight: 600 }}>{card.id} </b> </span>
+            <span className="imovel"> {card.imovel || ''} </span>
+            <span className="descricao"> {card.descricao || ''} <b style={{ fontWeight: 600 }}>{card.id} </b> </span>
         </div>
 
         <box className="GroupBelowHighligh">
@@ -152,16 +152,16 @@ const CardDetail = ({ data, character }) => {
                   }
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
-                  <FullscreenIcon /> {imovel?.Area_Total} 
+                  <FullscreenIcon /> {imovel?.Area_Total || ''} 
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
-                  <BedIcon /> {imovel?.Quartos} 
+                  <BedIcon /> {imovel?.Quartos || ''} 
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
-                  <ShowerIcon /> {imovel?.Banheiros} 
+                  <ShowerIcon /> {imovel?.Banheiros || ''} 
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
-                  <DirectionsCarIcon /> {imovel?.Vagas} 
+                  <DirectionsCarIcon /> {imovel?.Vagas || ''} 
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -182,21 +182,23 @@ const CardDetail = ({ data, character }) => {
                       sx={{ width: 75, height: 75 }}
                     />
                   </Stack>
-                  <Typography className="ThumbSLider-description" gutterBottom>
+                  {/* <Typography className="ThumbSLider-description" gutterBottom>
                     <b style={{ fontWeight: 600 }}>Corretor:</b> TSA Imóveis
-                    {/* {card.autor.name} */}
-                  </Typography>
-                  <Typography className="ThumbSLider-description" gutterBottom>
-                    <a target={"_blank"} href="https://wa.me/11961803698?text=Bem Vindo A TSA Imóveis, em que podemos Ajudar?">
-                      <Button size="small"><WhatsAppIcon /> Contato</Button>
-                    </a>
-                    {/* <b style={{ fontWeight: 600 }}>Contato:</b> {card.autor.contato}*/}
-                  </Typography>
-                  <Typography className="ThumbSLider-description" gutterBottom>
-                    <Button size="small" onClick={(e) => {abrirEmail() }}><MailOutlineIcon /> Email</Button>
-                    {/* <b style={{ fontWeight: 600 }}>Email:</b> {card.autor.email} */}
-                  </Typography>
+                    {card.autor.name}
+                  </Typography> */}
 
+                  <Box className="contact">
+                    <Typography className="ThumbSLider-description" gutterBottom>
+                      <a target={"_blank"} href="https://wa.me/11961803698?text=Bem Vindo A TSA Imóveis, em que podemos Ajudar?">
+                        <Button size="small"><WhatsAppIcon /> Contato</Button>
+                      </a>
+                      {/* <b style={{ fontWeight: 600 }}>Contato:</b> {card.autor.contato}*/}
+                    </Typography>
+                    <Typography className="ThumbSLider-description" gutterBottom>
+                      <Button size="small" onClick={(e) => {abrirEmail() }}><MailOutlineIcon /> Email</Button>
+                      {/* <b style={{ fontWeight: 600 }}>Email:</b> {card.autor.email} */}
+                    </Typography>
+                  </Box>
                 </CardContent>
               </CardActionArea>
           </Card>

@@ -7,7 +7,6 @@ import CardDetail from "../../components/CardDetail";
 import Stack from '@mui/material/Stack';
 import { Header } from "../../components/Header";
 import { TopInfo } from "../../components/TopInfo";
-import { TopHeader } from "../../components/TopHeader";
 import { Footer } from "../../components/Footer";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -31,15 +30,9 @@ import "./DetailImovel.css";
 import { getArticles } from "../../actions";
 
 const CharacterDetail = ({ data, realRstate, authors }) => {
-// console.log("data==============>", data)
-  function createData(
-    name: string,
-    info: string
-  ) {
-    return { name, info};
-  }
 
-  let imovel = realRstate
+  const [infoImoveis, setInfoImoveis] = useState(realRstate);
+  const [imoveis, setImoveis] = useState([]);
   const history = useHistory();
   const urlShare = window.location.href
   const idMount = window.location.hash.substring(0,11).replace('#/imovel/', '')
@@ -47,54 +40,62 @@ const CharacterDetail = ({ data, realRstate, authors }) => {
   // if (characterDetail.characterDetail.length === 0) {
   //   history.push('/')
   // }
-  
-  if(data?.length > 0) {
-    data.filter(card => {
-      if(card.id === parseInt(idMount)){
-        realRstate = card
-        imovel = card
-      }
-    })
-  }
 
   let rows = []
 
-  if(imovel?.valor_venda !== null) {
+  useEffect(() => {
+    // if(authors.data?.length > 0){
+    //   authors.data.filter((item, index) =>  {
+    //     if(infoImoveis?.autor !== null && infoImoveis?.autor.name.includes(item.name)){
+    //       Object.assign(realRstate, {
+    //         avatar: item.avatar.url
+    //       })
+    //     }
+    //   })
+    // }
+
+    if(data?.length > 0) {
+      data.filter(item => {
+        if(item.id === parseInt(idMount)){
+          realRstate = item
+          setInfoImoveis(item)
+          setImoveis(item)
+        }
+      })
+    }
+  }, [authors, infoImoveis, data, realRstate]);
+
+  function createData(
+    name: string,
+    info: string
+  ) {
+    return { name, info};
+  }
+
+  if(infoImoveis?.valor_venda !== null) {
     rows = [
-      createData('Andar', imovel?.Andar),
-      createData('Área útil', imovel?.Area_util),
-      createData('Área total', imovel?.Area_Total),
-      createData('Área terreno', imovel?.Area_Terreno),
-      createData('Ano de construção', imovel?.Ano_Construcao),
-      createData('Condomínio', imovel?.Condominio),
-      createData('IPTU (anual)', imovel?.IPTU),
-      createData('Quartos', imovel?.Quartos),
-      createData('Suítes', imovel?.Suites),
-      createData('Banheiros', imovel?.Banheiros),
+      createData('Andar', infoImoveis?.Andar || ''),
+      createData('Área útil', infoImoveis?.Area_util || ''),
+      createData('Área total', infoImoveis?.Area_Total || ''),
+      createData('Área terreno', infoImoveis?.Area_Terreno || ''),
+      createData('Ano de construção', infoImoveis?.Ano_Construcao || ''),
+      createData('Condomínio', infoImoveis?.Condominio || ''),
+      createData('IPTU (anual)', infoImoveis?.IPTU || ''),
+      createData('Quartos', infoImoveis?.Quartos || ''),
+      createData('Suítes', infoImoveis?.Suites || ''),
+      createData('Banheiros', infoImoveis?.Banheiros || ''),
     ]
   } else {
     rows = [
-      createData('Andar', imovel?.Andar),
-      createData('Área útil', imovel?.Area_util),
-      createData('Condomínio', imovel?.Condominio),
-      createData('IPTU (anual)', imovel?.IPTU),
-      createData('Quartos', imovel?.Quartos),
-      createData('Suítes', imovel?.Suites),
-      createData('Banheiros', imovel?.Banheiros),
+      createData('Andar', infoImoveis?.Andar),
+      createData('Área útil', infoImoveis?.Area_util),
+      createData('Condomínio', infoImoveis?.Condominio),
+      createData('IPTU (anual)', infoImoveis?.IPTU),
+      createData('Quartos', infoImoveis?.Quartos),
+      createData('Suítes', infoImoveis?.Suites),
+      createData('Banheiros', infoImoveis?.Banheiros),
     ]
   }
-
-    useEffect(() => {
-      if(authors.data?.length > 0){
-        authors.data.filter((item, index) =>  {
-          if(imovel?.autor !== null && imovel?.autor.name.includes(item.name)){
-            Object.assign(realRstate, {
-              avatar: item.avatar.url
-            })
-          }
-        })
-      }
-    }, [authors, imovel]);
 
   return (
     <React.Fragment>
@@ -106,21 +107,12 @@ const CharacterDetail = ({ data, realRstate, authors }) => {
           <Button onClick={(e) => { history.push('/') } }><KeyboardBackspaceIcon />  Voltar</Button>
         </Box>
 
-        <CardDetail data={realRstate} imovel={imovel} />
+        <CardDetail data={imoveis} imovel={infoImoveis} />
 
-         {imovel?.valor_venda !== null ? (
+         {infoImoveis?.valor_venda !== null ? (
                   <>
                     <TableContainer style={{ boxShadow: 'none' }}>
                       <Table className="TableInfo-imovel" sx={{ fontSize: "0.5rem" }} aria-label="simple table">
-                        {/* <TableHead>
-                          <TableRow>
-                            <TableCell>Dessert (100g serving)</TableCell>
-                            <TableCell align="right">Calories</TableCell>
-                            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                          </TableRow>
-                        </TableHead> */}
                         <TableBody>
                           {rows.map((row) => (
                             <TableRow
@@ -145,7 +137,7 @@ const CharacterDetail = ({ data, realRstate, authors }) => {
                           Características do Imóvel
                         </Typography>
 
-                        {imovel.descricao}
+                        {infoImoveis.descricao}
                       </Box>
                       <br />
 

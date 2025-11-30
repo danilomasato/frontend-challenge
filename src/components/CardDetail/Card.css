@@ -73,11 +73,11 @@
     width: 17px;
 }
 
-.ThumbSLider-author p:nth-child(2) svg {
+.ThumbSLider-author .contact p:nth-child(2) svg {
     color: #838282;
 }
 
-.ThumbSLider-author p:nth-child(3) svg {
+.ThumbSLider-author .contact p:nth-child(1) svg {
     color: #25D366;
 }
 
@@ -124,4 +124,16 @@
 .GroupBelowHighligh .ButtonGroup svg {
     width: 18px;
     margin-right: 5px;
+}
+
+.ThumbSLider-highligh .container__slider .slider__item:after {
+	content: "";
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-image: url("https://tudosobreap.com.br/static/media/logo_tsa.065f0e6987b69aca20e9.png");
+    top: 15px;
+    left: 15px;
+    opacity: 0.5;
+    background-size: cover;
 }

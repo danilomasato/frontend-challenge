@@ -1,0 +1,17 @@
+div[role="alert"] {
+	margin-bottom: 20px;
+}
+
+@media only screen and (min-width: 1025px) {
+	
+}
+
+@media only screen and (max-width: 1024px) {
+
+}
+
+.form {
+	float: right;
+	width: 450px;
+}
+

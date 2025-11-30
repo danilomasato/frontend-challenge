@@ -6,6 +6,7 @@
 }
 
 .card .title-imovel {
+    margin-bottom: 0;
     font-size: 1rem;
     letter-spacing: -1px;
     font-weight: bold;
@@ -33,7 +34,7 @@
 
 .card .icon-card svg {
     float: left;
-    margin: 0 5px 0 0;
+    margin: 0 4px 0 0;
 }
 
 .row .title {
@@ -45,4 +46,12 @@
     width: 300px;
     padding-bottom: 10px;
 }
+
+.mcubico {
+    top: -5px;
+    left: 1px;
+    position: relative;
+    font-size: 0.7rem;
+}
+    
 

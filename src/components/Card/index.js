@@ -68,7 +68,7 @@ export default function MultiActionAreaCard(props) {
       {rentalValue ? ( 
         <Root>
           <Divider style={{ marginTop: "40px"}}>
-            <Chip label="Imóveis á Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff" }} />
+            <Chip label="Imóveis á Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff",  fontSize: "1.1rem", padding: "1rem" }} />
           </Divider>
         </Root> 
       ) : '' }
@@ -81,7 +81,7 @@ export default function MultiActionAreaCard(props) {
                   <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
                     <CardActionArea>
                       <ThumbSLider 
-                        height="140"
+                        height="180"
                         image={card.fotos}
                         alt={card.imovel}
                         title={card.imovel}
@@ -91,11 +91,10 @@ export default function MultiActionAreaCard(props) {
                           {card.regiao}
                         </Typography>
 
-                        <Typography variant="body2" color="text.secondary" component="div">
+                        <Typography variant="body2" color="text.secondary" component="div" style={{ marginBottom: "5px" }}>
                           {card.imovel} 
                         </Typography>
-                        <br />
-            
+
                         <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                           {card.valor_venda !== null ? (
                             <div>
@@ -106,10 +105,24 @@ export default function MultiActionAreaCard(props) {
                           }
                         </Typography>
                         <Typography className="icon-card" variant="body2" color="text.secondary">
-                          <FullscreenIcon /> {card.Area_Total} 
+                          {card.Area_Total !== null ? (
+                            <div>
+                              <FullscreenIcon />
+                              {card.Area_Total} m<span className="mcubico">2</span>
+                            </div>
+                          )
+                            : ''
+                          }
                         </Typography>
                         <Typography className="icon-card" variant="body2" color="text.secondary">
-                          <BedIcon /> {card.Quartos} 
+                          
+                          {card.Quartos !== null ? (
+                            <div>
+                              <BedIcon /> {card.Quartos}
+                            </div>
+                          )
+                            : ''
+                          }
                         </Typography>
                         <Typography className="icon-card" variant="body2" color="text.secondary">
                           <ShowerIcon /> {card.Banheiros} 
@@ -135,7 +148,7 @@ export default function MultiActionAreaCard(props) {
     {salePrice ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
-            <Chip label="Imóveis para Alugar" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff" }} />
+            <Chip label="Imóveis para Alugar" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
           </Divider>
         </Root> 
     ) : '' }

@@ -22,8 +22,8 @@
     color: #ff5a3c;
 }
 
-.top-info li:nth-child(3),
-.top-info li:nth-child(4) {
+.top-info li:nth-child(4),
+.top-info li:nth-child(5) {
     float: right;
 }
 
@@ -33,7 +33,6 @@
     margin-right: 10px;
 }
 
-
 @media (min-width: 1025px) {
     .top-info {
         height: 40px;
@@ -42,6 +41,10 @@
 
     .top-info li:nth-child(2) {
         margin-left: 35px;
+    }
+
+    .top-info .CRECI {
+        margin-left: 50px;
     }
 }
 
@@ -55,8 +58,8 @@
         margin: 0 20px;
     }
 
-    .top-info li:nth-child(3),
-    .top-info li:nth-child(4) {
+    .top-info li:nth-child(4),
+    .top-info li:nth-child(5) {
         display: none;
     }
 
@@ -66,6 +69,12 @@
     }
 
     .top-info span {
-        letter-spacing: -1px;
+        letter-spacing: -1.6px;
+        line-height: 18px;
+        font-size: 0.8rem;
+    }
+
+    .top-info .icon {
+        margin-top: 0px;
     }
 }
