@@ -173,7 +173,7 @@ const Home = ({ character }) => {
                 <Autocomplete
                   className="search-neighborhoods"
                   disablePortal
-                  options={imoveis.map(((item, index) => (
+                  options={imoveis?.length > 0 &&imoveis.map(((item, index) => (
                   {
                     "label": item.regiao, 
                     "id": index
