@@ -119,32 +119,28 @@ const Home = ({ character }) => {
   'Vila Nova Conceição'
 ]
 
+  const imoveis = character.character.data
+
   //useEffect for not loop, and many request's
   useEffect(() => {
-    setApiDistrict(data.map((item, index) => ({
-      label: item, 
-      id: index
-    })))
 
-    if(character.character.data?.length > 0 )
+    if(imoveis?.length > 0 )
       setRealEstate(character)
 
-    if(search.label?.length > 0 ){
-
-      character.character.data.filter((item, index) => {
-          if(item.regiao.includes(search.label)){
-            //loading
-            setRealEstate("")
-            setTimeout(() => {
-               setRealEstate({character: {
-                data: [item]
-              }})
-            }, 2500);
+      if(imoveis?.length > 0 ){
+        imoveis.filter((item, index) => {
+            if(item.regiao.includes(search.label)){
+              //loading
+              setRealEstate("")
+              setTimeout(() => {
+                setRealEstate({character: {
+                  data: [item]
+                }})
+              }, 2500);
+            }
           }
-        }
-      )
-    }
-    
+        )
+      }      
 
       //Disable click right mouse
       const handleContextMenu = (e) => {
@@ -158,7 +154,7 @@ const Home = ({ character }) => {
       return () => {
         document.body.removeEventListener('contextmenu', handleContextMenu);
       };
-    }, [character, search]);
+    }, [character, search, imoveis]);
 
    const handleClick = cardID => {
 
@@ -177,7 +173,12 @@ const Home = ({ character }) => {
                 <Autocomplete
                   className="search-neighborhoods"
                   disablePortal
-                  options={ApiDistrict}
+                  options={imoveis.map(((item, index) => (
+                  {
+                    "label": item.regiao, 
+                    "id": index
+                  }
+                )))}
                   InputProps={{
                     className: 'search-neighborhoods',
                     style: { backgroundColor: 'lightgray' }, // Estilo inline para o input
