@@ -137,3 +137,35 @@
     opacity: 0.5;
     background-size: cover;
 }
+
+.ThumbSLider-highligh .slick-track,
+.ThumbSLider-highligh .slick-slider {
+  height: 300px !important;
+}
+
+.ThumbSLider-highligh .slick-track img {
+  height: 300px;
+  object-fit: cover;
+}
+.ThumbSLider-highligh .slick-dots  {
+    width: 400px;
+    bottom: -0;
+    overflow: hidden;
+    height: 30px;
+    margin-left: 25%;
+    position: absolute;
+}
+
+.ThumbSLider-highligh .slick-dots li {
+    width: 10px;
+}
+
+.ThumbSLider-highligh .slick-dots li button:before {
+    opacity: .65;
+    color: #ffffff;
+}
+
+.ThumbSLider-highligh .slick-dots li.slick-active button:before {
+    opacity: 1;
+    color: #ffffff;
+}

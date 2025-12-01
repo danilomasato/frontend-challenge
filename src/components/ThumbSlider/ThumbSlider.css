@@ -1,3 +1,10 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css");
+
+/* .slick-prev:before,.slick-next:before {
+  color: red;
+} */
+
 .container__slider {
   position: relative;
   width: 100%;
@@ -11,19 +18,34 @@
   background-color: black;
 }
 
-.container__slider > button {
+.slick-slider > button,
+.slick-prev,
+.slick-next,
+.slick-next:hover, 
+.slick-prev:hover {
   background-color: rgba(0, 0, 0, 0.5);
   outline: none;
   border: 0;
   color: whitesmoke;
-  font-size: 24px;
+  font-size: 0;
+  height: 40px;
 }
 
+.slick-prev:before {
+ content: "‹";
+ line-height: 0;
+}
+
+.slick-next:before {
+ content: "›";
+ line-height: 0;
+}
+    
 .container__slider > button:active {
   color: black;
 }
 
-.slider__btn-next {
+.slick-next {
   position: absolute;
   right: 0;
   border-radius: 0;
@@ -31,9 +53,10 @@
   border-bottom-left-radius: 5px;
 }
 
-.slider__btn-prev {
+.slick-prev {
   position: absolute;
   left: 0;
+  z-index: 9;
   border-radius: 0;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;

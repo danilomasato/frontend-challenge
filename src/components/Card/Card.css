@@ -53,5 +53,37 @@
     position: relative;
     font-size: 0.7rem;
 }
+
+.card .slick-track,
+.card .slick-slider {
+  height: 200px !important;
+}
+
+.card .slick-track img {
+  height: 200px;
+  object-fit: cover;
+}
+.card .slick-dots  {
+    width: 230px;
+    bottom: -0;
+    overflow: hidden;
+    height: 30px;
+    margin-left: 15%;
+    position: absolute;
+}
+
+.card .slick-dots li {
+    width: 10px;
+}
+
+.card .slick-dots li button:before {
+    opacity: .65;
+    color: #ffffff;
+}
+
+.card .slick-dots li.slick-active button:before {
+    opacity: 1;
+    color: #ffffff;
+}
     
 

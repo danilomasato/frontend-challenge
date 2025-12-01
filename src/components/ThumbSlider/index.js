@@ -1,18 +1,32 @@
 import React, { useEffect  } from 'react';
 import "./ThumbSlider.css";
-import CustomSlider from "./ThumbSlider.js";
+// import CustomSlider from "./ThumbSlider.js";
+import Slider from "react-slick";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
 const baseURL = process.env.REACT_APP_URL;
 
 const ThumbSLider = (props) => {
 
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+  };
+
   return (
     <>
         {props.image?.length > 0 ? (
-          <CustomSlider>
+          <>
+          <Slider {...settings} style={{ height: "400px"}}>
             {props.image.map((image, index) => {
-              return <img key={index} src={ props.home === "true" ? image.formats.small.url : image.url } style={{ width: "100%", height: props.height + 'px', objectFit: 'cover' }} alt={image.imgAlt} />;
+              return <img key={index} src={ props.home === "true" ? image.formats.small.url : image.url } style={{ width: "100%", height: props.height + '400px', objectFit: 'cover' }} alt={image.imgAlt} />;
             })}
-          </CustomSlider>  
+          </Slider>
+          </>
         )
       : ( 
       <>
