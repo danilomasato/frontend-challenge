@@ -4,12 +4,13 @@ import CustomSlider from "./ThumbSlider.js";
 const baseURL = process.env.REACT_APP_URL;
 
 const ThumbSLider = (props) => {
+
   return (
     <>
         {props.image?.length > 0 ? (
           <CustomSlider>
             {props.image.map((image, index) => {
-              return <img key={index} src={`${image.url}`} style={{ width: "100%", height: props.height + 'px', objectFit: 'cover' }} alt={image.imgAlt} />;
+              return <img key={index} src={ props.home === "true" ? image.formats.small.url : image.url } style={{ width: "100%", height: props.height + 'px', objectFit: 'cover' }} alt={image.imgAlt} />;
             })}
           </CustomSlider>  
         )

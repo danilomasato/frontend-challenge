@@ -40,6 +40,7 @@ const CardDetail = ({ data, character }) => {
   const [card, setCard] = useState([]);
   const [dataImovel, setDataImovel] = useState(character);
   const [open, setOpen] = React.useState(false);
+  const [openShare, setOpenShare] = React.useState(false);
   const property = data
 
   //useEffect for not loop, and many request's
@@ -55,6 +56,7 @@ const CardDetail = ({ data, character }) => {
 
   const handleClose = () => {
     setOpen(false);
+    setOpenShare(false);
   };
 
   const abrirEmail = () => {
@@ -84,13 +86,13 @@ const CardDetail = ({ data, character }) => {
       navigator.permissions.query({ name: "clipboard-write" }).then((result) => {
         if (result.state === "granted" || result.state === "prompt") {
             navigator.clipboard.writeText(url);
-            alert("Link copiado para a área de transferência!");
+            // alert("Link copiado para a área de transferência!");
         }
       });
       await navigator.permissions.query({ name: "clipboard" });
         if(navigator.clipboard){
           await navigator.clipboard.writeText(url);
-          alert("Link copiado para a área de transferência!");
+          // alert("Link copiado para a área de transferência!");
         }
       } catch (e) {
           console.log(e);
@@ -98,7 +100,11 @@ const CardDetail = ({ data, character }) => {
   }
 
   const handleClick = url => {
-      copiarParaAreaDeTransferencia(url);
+    setOpenShare(true)
+    copiarParaAreaDeTransferencia(url);
+    setTimeout(() => {
+    setOpenShare(false)
+    }, 3500)
   };
 
   return (
@@ -131,6 +137,27 @@ const CardDetail = ({ data, character }) => {
           </DialogContent>
           <CloseIcon className="modal-close" onClick={handleClose} />
         </Dialog>
+
+        <Dialog
+          open={openShare}
+          onClose={handleClose}
+          fullWidth="lg"
+          maxWidth="lg"
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogContent>
+              <div className="row center">
+              <div className="content" style={{ minHeight: "auto",  display: "block", width: "340px" }}>
+                 <img src="https://tudosobreap.com.br/assets/images/animated-checked.gif" width="200" />
+                  Link Copiado
+              </div>
+            </div>
+          </DialogContent>
+          <CloseIcon className="modal-close" onClick={handleClose} />
+        </Dialog>
+
+        
         
         <div className="ThumbSLider-info">
             <span className="imovel"> {card.imovel || ''} </span>
