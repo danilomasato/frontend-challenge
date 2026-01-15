@@ -21,9 +21,9 @@ const ThumbSLider = (props) => {
     <>
         {props.image?.length > 0 ? (
           <>
-          <Slider {...settings} style={{ height: "400px"}}>
+          <Slider {...settings} className="container__slider">
             {props.image.map((image, index) => {
-              return <img key={index} src={ props.home === "true" ? image.formats.small.url : image.url } style={{ width: "100%", height: props.height + '400px', objectFit: 'cover' }} alt={image.imgAlt} />;
+              return <img key={index} src={ props.home === "true" ? image.formats.small.url : (image.width > 1980 ? image.formats.large.url : image.url ) } style={{ width: "100%", height: props.height + '400px', objectFit: 'cover' }} alt={image.imgAlt} />;
             })}
           </Slider>
           </>

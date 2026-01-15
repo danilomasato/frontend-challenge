@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { getArticles } from "../../actions";
+import { getArticles, getImoveisCache } from "../../actions";
 import "./Home.css";
 import Card from "../../components/Card";
 import Pagination from "../../components/Pagination";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import { GetApiDistrict } from '../../utils';
 import { Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
@@ -17,148 +16,102 @@ import { Header } from "../../components/Header";
 import { Loading } from "../../components/Loading";
 import { TopInfo } from "../../components/TopInfo";
 import { Footer } from "../../components/Footer";
+import { GetAPI } from "../../utils";
 
-const Home = ({ character }) => {
+const Home = ({ character, imoveisCache }) => {
 
-  const [ApiDistrict, setApiDistrict] = useState([]);
-  const [realEstate, setRealEstate] = useState(character);
+  const [realEstate, setRealEstate] = useState([]);
   const [search, setSearch] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [imoveis, setImoveis] = useState(false);
+  const [error, setError] = useState(null);
 
-  const data = ['Água Rasa',
-  'Alto de Pinheiros',
-  'Alto da Boa Vista',
-  'Anhanguera',
-  'Aricanduva',
-  'Artur Alvim',
-  'Barra Funda',
-  'Bela Vista',
-  'Belém',
-  'Bom Retir',
-  'Brasilândia',
-  'Butantã',
-  'Cachoeirinha',
-  'Cambuci',
-  'Campo Belo',
-  'Campo Grande',
-  'Campo Limpo',
-  'Cangaíba',
-  'Capão Redondo',
-  'Carrão',
-  'Casa Verde',
-  'Cidade Ademar',
-  'Cidade Dutra',
-  'Cidade Líder',
-  'Cidade Tiradentes',
-  'Consolação',
-  'Cursino',
-  'Ermelino Matarazzo',
-  'Freguesia do Ó',
-  'Grajaú',
-  'Guaianases',
-  'Iguatemi',
-  'Ipiranga',
-  'Itaim Bibi',
-  'Itaim Paulista',
-  'Itaquera',
-  'Jabaquara',
-  'Jaçanã',
-  'Jaguara',
-  'Jaguaré',
-  'Jaraguá',
-  'Jardim Ângela',
-  'Jardim Helena',
-  'Jardim Paulista',
-  'Jardim São Luís',
-  'Lapa',
-  'Liberdade',
-  'Limão',
-  'Mandaqui',
-  'Marsilac',
-  'Moema',
-  'Mooca',
-  'Morumbi',
-  'Parelheiros',
-  'Pari',
-  'Parque do Carmo',
-  'Penha',
-  'Perdizes',
-  'Pinheiros',
-  'Ponte Rasa',
-  'Raposo Tavares',
-  'República',
-  'Rio Pequeno',
-  'Sacomã',
-  'Santa Cecília',
-  'Santana',
-  'Santo Amaro',
-  'São Domingos',
-  'São Lucas',
-  'São Mateus',
-  'São Miguel Paulista',
-  'São Rafael',
-  'Socorro',
-  'Sapopemba',
-  'Saúde',
-  'Sé',
-  'Tatuapé',
-  'Tremembé',
-  'Tucuruvi',
-  'Vila Andrade',
-  'Vila Curuçá',
-  'Vila Formosa',
-  'Vila Guilherme',
-  'Vila Jacuí',
-  'Vila Leopoldina',
-  'Vila Maria',
-  'Vila Mariana',
-  'Vila Matilde',
-  'Vila Medeiros',
-  'Vila Prudente',
-  'Vila Sônia',
-  'Vila Sonia',
-  'Vila Nova Conceição'
-]
+  //atualiza o json cache dos imoveis
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Await the fetch call
+        const response = await fetch(process.env.REACT_APP_API_URL + "Articles?pagination[page]=1&pagination[pageSize]=10&populate=fotos&populate=autor");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        // Await the response.json() call, which also returns a promise
+        const result = await response.json();
+        setTimeout(() => {
+          // setRealEstate(result)
+          setRealEstate({character: {
+            data: result.data
+          }})
+        }, 60000)
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const imoveis = character.character.data
+    fetchData();
+  }, [realEstate]); // Empty dependency array ensures this runs once
+
+  useEffect(() => {
+    character.character?.length > 0 ? setImoveis(character.character?.data) : setImoveis(imoveisCache.data)
+    setRealEstate({character: { data: imoveisCache.data }})
+    
+  }, [character, imoveisCache]);
+  
+  let research= [];
 
   //useEffect for not loop, and many request's
   useEffect(() => {
 
-    if(imoveis?.length > 0 )
-      setRealEstate(character)
+    //data for card
+    if(imoveis?.length > 0 ){
 
-      if(imoveis?.length > 0 ){
-        imoveis.filter((item, index) => {
-            if(item.regiao.includes(search.label)){
-              //loading
+      imoveis.filter((item, index) => {
+
+          if(item.regiao.includes(search.label)){
+
+            //loading
+            setLoading(true)
+
+            if(search.label !== "" && item.regiao.includes(search.label)){
               setRealEstate("")
-              setTimeout(() => {
-                setRealEstate({character: {
-                  data: [item]
-                }})
-              }, 2500);
             }
+
+            research = research.concat(item)
+
+            setTimeout(() => {
+              
+              setRealEstate({character: {
+                data: research
+              }})
+              setLoading(false)
+              setSearch(false)
+            }, 2500);
+
           }
-        )
-      }      
+        }
+      )
+    } 
 
-      //Disable click right mouse
-      const handleContextMenu = (e) => {
-        e.preventDefault(); // Prevent the default context menu
-      };
+    //Disable click right mouse
+    const handleContextMenu = (e) => {
+      e.preventDefault(); // Prevent the default context menu
+    };
 
-      //Attach the event listener to the document body
-      document.body.addEventListener('contextmenu', handleContextMenu);
+    //Attach the event listener to the document body
+    document.body.addEventListener('contextmenu', handleContextMenu);
 
-      //Clean up the event listener when the component unmounts
-      return () => {
-        document.body.removeEventListener('contextmenu', handleContextMenu);
-      };
-    }, [character, search, imoveis]);
+    //Clean up the event listener when the component unmounts
+    return () => {
+      document.body.removeEventListener('contextmenu', handleContextMenu);
+    };
 
-   const handleClick = cardID => {
+      // console.log("realEstate===============================>", realEstate)
 
-   }
+  }, [imoveis, search, realEstate]);
+
+  const handleClick = cardID => { }
 
   return (
     <React.Fragment>
@@ -170,22 +123,28 @@ const Home = ({ character }) => {
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={2} style={{ gridColumnGap: "20px" }}>
               <Grid size={8}>
-                <Autocomplete
-                  className="search-neighborhoods"
-                  disablePortal
-                  options={imoveis?.length > 0 &&imoveis.map(((item, index) => (
-                  {
-                    "label": item.regiao, 
-                    "id": index
-                  }
-                )))}
-                  InputProps={{
-                    className: 'search-neighborhoods',
-                    style: { backgroundColor: 'lightgray' }, // Estilo inline para o input
-                  }}
-                  onChange={(event, value) => setSearch(value)}
-                  renderInput={(params) => <TextField {...params} label="Pesquise por Bairros..." />}
-                />
+                { imoveis?.length > 0 ? (<>
+                  <Autocomplete
+                    className="search-neighborhoods"
+                    disablePortal
+                    options={imoveis.map(((item, index) => (
+                    {
+                      "label": item.regiao, 
+                      "id": index
+                    }
+                    )))}
+                    InputProps={{
+                      className: 'search-neighborhoods',
+                      style: { backgroundColor: 'lightgray' }, // Estilo inline para o input
+                    }}
+                    onChange={(event, value) => { setSearch(value) }}
+                    renderInput={(params) => <TextField {...params} label="Pesquise por Bairros..." />}
+                  />
+                </>)
+                : 
+                ""
+                }
+                
               </Grid>
               <Grid size={4}>
                 <Button variant="contained" style={{ width: "100%" }}>
@@ -197,12 +156,16 @@ const Home = ({ character }) => {
         </div>
       </div>
 
-      
-        { realEstate === "" ? 
+      { realEstate?.character?.data?.length > 0 ? 
+          <Card data={realEstate} /> : 
+          <Loading />
+      }
+
+      { loading ? 
           <Loading /> : 
-          <Card data={realEstate} />
-        }
-      
+          ""
+      }
+
       <Pagination data={realEstate} />
       <Footer />
     </React.Fragment>
@@ -210,13 +173,15 @@ const Home = ({ character }) => {
 };
 
 const mapStateToProps = state => ({
-  character: state.home
+  character: state.home,
+  imoveisCache: state.home.imoveisCache
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      getArticles: dispatch(getArticles())
+      getArticles: dispatch(getArticles()),
+      getImoveisCache: dispatch(getImoveisCache())
     },
     dispatch
   );

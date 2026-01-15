@@ -10,6 +10,16 @@ export const GetAPI = async (url, id) => {
 		});
 };
 
+export const GetNewAPI = async (url) => {
+	return fetch(url)
+		.then(function (response) {
+			return response.json()
+		})
+		.catch(function (err) {
+			return err
+		});
+};
+
 // export const GetApiDistrict = async () => {
 // 	return fetch('https://parseapi.back4app.com/classes/Bairro?limit=482&order=distrito,nome,cidade',
 //     {

@@ -36,22 +36,42 @@ export default function MultiActionAreaCard(props) {
       marginTop: theme.spacing(2),
     },
   }));
+  
+  let character
+//first load
+  useEffect(() => {
+    if(props.data.character?.data?.length > 0) {
+      setArticles(props.data.character.data)
+
+    } else {
+      setArticles(props.data.imoveisCache?.data)
+    }
+ }, [articles, props]);
 
   //first load
   useEffect(() => {
-    let character = props.data.character.data
+    if (articles?.length > 0) {
+      // setArticles(articles);
+      articles.filter(item => {
 
-    if (character?.length > 0) {
-      setArticles(character);
-      character.filter(item => {
         if(item.valor_venda !== null)
           setSalePrice(true)
 
         if(item.valor_aluguel !== null)
           setRentalValue(true)
       })
+    } else {
+      if(articles?.length > 0){
+        articles.filter(item => {
+          if(item.valor_venda !== null)
+            setSalePrice(true)
+
+          if(item.valor_aluguel !== null)
+            setRentalValue(true)
+        })
+      }
     }
-  }, [props]);
+  }, [props, articles]);
 
   const handleClick = (cardID, card) => {
     dispatch({
@@ -73,7 +93,7 @@ export default function MultiActionAreaCard(props) {
       ) : '' }
  
       <Container>
-        {articles.map(
+        {articles?.length > 0 && articles.map(
           (card, index) => (
             <>
               {card.valor_venda !== null ? (
@@ -154,7 +174,7 @@ export default function MultiActionAreaCard(props) {
     ) : '' }
 
     <Container>
-      {articles.map(
+      {articles?.length > 0 && articles.map(
       (card, index) => (
         <>
         {card.valor_aluguel !== null ? (

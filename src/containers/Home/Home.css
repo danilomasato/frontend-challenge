@@ -7,7 +7,11 @@ div[role="alert"] {
 }
 
 @media only screen and (max-width: 1024px) {
+	.css-pztpmr {
+		display: grid;
+	}
 
+	.css-1sazv7p-MuiStack-root { display: none !important; }
 }
 
 .search-neighborhoods {
@@ -35,7 +39,7 @@ div[role="alert"] {
 	border: 0;
 }
 
-.card .container__slider .slider__item:after {
+.card .container__slider .slick-slide:after {
 	content: "";
     position: absolute;
     width: 50px;

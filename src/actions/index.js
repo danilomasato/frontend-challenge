@@ -12,8 +12,6 @@ export const getCharacterData = () => dispatch => {
 
 export const getArticles = () => dispatch => {
   return api.getArticles().then(response => {
-    console.log("getArticles API==============>",  response )
-
     dispatch({
       type: types.RECEIVE_HOME,
       home: response
@@ -28,5 +26,14 @@ export const getAuthors = () => dispatch => {
       payload: response
     })
   );
+};
+
+export const getImoveisCache = () => dispatch => {
+  return api.getImoveisCache().then(response => {
+    dispatch({
+      type: types.RECEIVE_IMOVEISCACHE,
+      payload: response
+    })
+  });
 };
 

@@ -42,7 +42,7 @@ const CardDetail = ({ data, character }) => {
   const [open, setOpen] = React.useState(false);
   const [openShare, setOpenShare] = React.useState(false);
   const property = data
-
+// console.log("property------------------------>", data)
   //useEffect for not loop, and many request's
   useEffect(() => {
       property.descricao = property.descricao?.substring(0,50);
@@ -128,7 +128,7 @@ const CardDetail = ({ data, character }) => {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogContent>
+          <DialogContent style={{ height: "660px" }}>
             <ThumbSLider
               image={card.fotos}
               alt={card.imovel}
@@ -179,7 +179,7 @@ const CardDetail = ({ data, character }) => {
                   }
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
-                  <FullscreenIcon /> {imovel?.Area_Total || ''} 
+                  <FullscreenIcon /> {imovel?.Area_Total || ''}  m<span className="mcubico">2</span>
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
                   <BedIcon /> {imovel?.Quartos || ''} 

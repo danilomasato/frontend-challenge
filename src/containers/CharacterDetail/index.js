@@ -16,7 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { bindActionCreators } from "redux";
-import { getAuthors } from "../../actions";
+import { getAuthors, getImoveisCache } from "../../actions";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -29,7 +29,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import "./DetailImovel.css";
 import { getArticles } from "../../actions";
 
-const CharacterDetail = ({ data, realRstate, authors }) => {
+const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
   const [infoImoveis, setInfoImoveis] = useState(realRstate);
   const [imoveis, setImoveis] = useState([]);
@@ -62,8 +62,20 @@ const CharacterDetail = ({ data, realRstate, authors }) => {
           setImoveis(item)
         }
       })
+    } else {
+      if(imoveisCache?.data?.length > 0 ){
+        imoveisCache.data.filter(item => {
+            if(item.id === parseInt(idMount)){
+              realRstate = item
+              setInfoImoveis(item)
+              setImoveis(item)
+              // console.log("imoveisCache------------------------------->", item)
+            }
+        })
+      }
     }
-  }, [authors, infoImoveis, data, realRstate]);
+
+  }, [authors, infoImoveis, data, realRstate, imoveisCache, imoveis]);
 
   function createData(
     name: string,
@@ -170,6 +182,7 @@ const CharacterDetail = ({ data, realRstate, authors }) => {
 };
 
 const mapStateToProps = state => ({
+  imoveisCache: state.home.imoveisCache,
   data: state.home.character.data,
   realRstate: state.character.characterDetail[0],
   authors: state.character.authors
@@ -179,7 +192,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       getAuthors: dispatch(getAuthors()),
-      getArticles: dispatch(getArticles())
+      getArticles: dispatch(getArticles()),
+      getImoveisCache: dispatch(getImoveisCache())
     },
     dispatch
   );

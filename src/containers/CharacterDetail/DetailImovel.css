@@ -14,3 +14,9 @@
 .back button {
     color: rgba(0, 0, 0, 0.6);
 }
+
+@media only screen and (max-width: 1024px) {
+    .TableInfo-imovel {
+        width: 100%  !important;
+    }
+}

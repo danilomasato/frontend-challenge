@@ -10,7 +10,7 @@
   width: 100%;
   padding: 0;
   overflow: hidden;
-  display: flex;
+  /* display: flex; */
   justify-content: flex-start;
   align-items: center;
   flex-direction: row;
@@ -23,12 +23,21 @@
 .slick-next,
 .slick-next:hover, 
 .slick-prev:hover {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5) !important;
   outline: none;
   border: 0;
   color: whitesmoke;
   font-size: 0;
   height: 40px;
+  width: 30px;
+}
+
+.slick-slide {
+    position: relative;
+}
+
+.slick-dots li {
+    margin: 0 2px;
 }
 
 .slick-prev:before {
