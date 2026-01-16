@@ -159,7 +159,7 @@ const CardDetail = ({ data, character }) => {
             border: '0', boxShadow: 'none', marginBottom: '40px' }}>
             <CardActionArea>
               <CardContent>
-                <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
+                <Typography className="icon-card icon-sale" variant="h6" color="text.secondary">
                   {imovel?.valor_venda !== null ? (
                     <div>
                       R$ {imovel?.valor_venda}
