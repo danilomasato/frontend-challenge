@@ -108,13 +108,6 @@ const CardDetail = ({ data, character }) => {
   return (
     <>  
       <div className="ThumbSLider-highligh">
-        <ThumbSLider 
-          height="300"
-          image={imovel?.fotos}
-          alt={imovel?.descricao }
-          title={imovel?.descricao}
-          onClick={handleClickOpen}
-        />
 
         <AspectRatioIcon onClick={handleClickOpen} className="expanded" />
 

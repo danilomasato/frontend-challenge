@@ -29,6 +29,7 @@ import Box from '@mui/material/Box';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import "./DetailImovel.css";
 import { getArticles } from "../../actions";
+import ThumbSLider from "../../components/ThumbSlider";
 
 const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
@@ -36,7 +37,8 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   const [imoveis, setImoveis] = useState([]);
   const history = useHistory();
   const urlShare = window.location.href
-  const idMount = window.location.hash.substring(0,11).replace('#/imovel/', '')
+  const idMount = window.location.pathname.substring(0, 10).replace('/imovel/', '')
+
 
   // if (characterDetail.characterDetail.length === 0) {
   //   history.push('/')
@@ -54,29 +56,20 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
     //     }
     //   })
     // }
+    const imoveis = data?.length > 0 ? data : imoveisCache.data;
 
-    if(data?.length > 0) {
-      data.filter(item => {
-        if(item.id === parseInt(idMount)){
-          realRstate = item
-          setInfoImoveis(item)
-          setImoveis(item)
-        }
-      })
-    } else {
-      if(imoveisCache?.data?.length > 0 ){
-        imoveisCache.data.filter(item => {
-            if(item.id === parseInt(idMount)){
-              realRstate = item
-              setInfoImoveis(item)
-              setImoveis(item)
-              console.log("imoveisCache------------------------------->", item)
-            }
+    setImoveis(imoveis)
+
+      if(imoveis?.length > 0) {
+        imoveis.filter(item => {
+          if(item.id === parseInt(idMount)){
+            realRstate = item
+            setInfoImoveis(item)
+            setImoveis(item)
+          }
         })
       }
-    }
-
-  }, [authors, infoImoveis, data, realRstate, imoveisCache, imoveis]);
+  }, []);
 
   function createData(
     name: string,
@@ -111,11 +104,26 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   }
 
   const [openToggle, setOpenToggle] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
   return (
     <React.Fragment>
       <TopInfo />
       <Header />
+
+        <div className="ThumbSLider-highligh">
+          <ThumbSLider
+            height="300"
+            image={imoveis?.fotos}
+            alt={imoveis?.descricao }
+            title={imoveis?.descricao}
+            onClick={handleClickOpen}
+          />
+        </div>
 
       <div className="row center">
         <Box className="back" sx={{ width: '100%' }}>

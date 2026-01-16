@@ -33,7 +33,7 @@
 
 .ThumbSLider-info {
     position: absolute;
-    margin: -50px 0 0 20px;
+    margin: -70px 0 0 20px;
     color: #fff;
     text-shadow: 1px 1px 2px black;
 }
@@ -93,11 +93,10 @@
     object-fit: contain;
 }
 
-.modal-close {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    cursor: pointer;
+.ThumbSLider-info .imovel {
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
 }
 
 .GroupBelowHighligh {

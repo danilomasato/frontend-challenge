@@ -15,6 +15,50 @@
     color: rgba(0, 0, 0, 0.6);
 }
 
+.ThumbSLider-highligh .container__slider .slick-slide:after {
+	content: "";
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-image: url("https://tudosobreap.com.br/static/media/logo_tsa.065f0e6987b69aca20e9.png");
+    top: 15px;
+    left: 15px;
+    opacity: 0.7;
+    background-size: cover;
+}
+
+.ThumbSLider-highligh .slick-track,
+.ThumbSLider-highligh .slick-slider {
+  height: 300px !important;
+}
+
+.ThumbSLider-highligh .slick-track img {
+  height: 300px;
+  object-fit: cover;
+}
+.ThumbSLider-highligh .slick-dots  {
+    width: 400px;
+    bottom: -0;
+    overflow: hidden;
+    height: 30px;
+    margin-left: 25%;
+    position: absolute;
+}
+
+.ThumbSLider-highligh .slick-dots li {
+    width: 10px;
+}
+
+.ThumbSLider-highligh .slick-dots li button:before {
+    opacity: .65;
+    color: #ffffff;
+}
+
+.ThumbSLider-highligh .slick-dots li.slick-active button:before {
+    opacity: 1;
+    color: #ffffff;
+}
+
 @media only screen and (max-width: 1024px) {
     .TableInfo-imovel {
         width: 100%  !important;
