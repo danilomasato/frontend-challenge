@@ -45,9 +45,9 @@ export const Header = props => {
         </a>
 
         <ul id="nav">
-          {menu.map((movie, index) => (
+          {menu.map((item, index) => (
         	<li key={index}>
-            	<NavLink to={movie.action}>{movie.title}</NavLink>
+            	<NavLink to={item.action}>{item.title}</NavLink>
           	</li>
           ))}
         </ul>

@@ -6,7 +6,7 @@ const Container = props => {
   
   return (
     <>
-      <div className="row center">
+      <div className={`row center ${props.className}`}>
         <div className="content">{props.children}</div>
       </div>
     </>

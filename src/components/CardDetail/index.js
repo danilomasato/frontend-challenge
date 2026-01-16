@@ -35,20 +35,23 @@ import { getArticles } from "../../actions";
 const CardDetail = ({ data, character }) => {
   const baseURL = process.env.REACT_APP_BASEURL;
   const urlShare = window.location.href
-  const idMount = window.location.hash.substring(0,11).replace('#/imovel/', '')
+  const idMount = window.location.pathname.substring(0, 10).replace('/imovel/', '')
   const [imovel, setImovel] = useState();
   const [card, setCard] = useState([]);
   const [dataImovel, setDataImovel] = useState(character);
   const [open, setOpen] = React.useState(false);
   const [openShare, setOpenShare] = React.useState(false);
-  const property = data
-// console.log("property------------------------>", data)
+  
+  const property = data?.length > 0 ? data : character.imoveisCache.data
   //useEffect for not loop, and many request's
   useEffect(() => {
       property.descricao = property.descricao?.substring(0,50);
       setImovel(property)
-      setCard(property)
   }, [property, imovel, card]);
+
+   useEffect(() => {
+      setCard(property.filter(item => item.id === parseInt(idMount))[0])
+    }, []);
   
   const handleClickOpen = () => {
     setOpen(true);

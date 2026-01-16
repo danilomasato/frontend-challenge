@@ -92,7 +92,7 @@ export default function MultiActionAreaCard(props) {
         </Root> 
       ) : '' }
  
-      <Container>
+      <Container className="home">
         {articles?.length > 0 && articles.map(
           (card, index) => (
             <>
@@ -173,7 +173,7 @@ export default function MultiActionAreaCard(props) {
         </Root> 
     ) : '' }
 
-    <Container>
+    <Container className="home">
       {articles?.length > 0 && articles.map(
       (card, index) => (
         <>
@@ -191,8 +191,8 @@ export default function MultiActionAreaCard(props) {
                       {card.regiao}
                     </Typography>
 
-                    <Typography variant="body2" color="text.secondary" component="div">
-                      {card.imovel} 
+                    <Typography className="descripition" variant="body2" color="text.secondary" component="div">
+                      {card.imovel}
                     </Typography>
                     <br />
         

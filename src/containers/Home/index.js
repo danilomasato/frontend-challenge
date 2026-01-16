@@ -118,7 +118,7 @@ const Home = ({ character, imoveisCache }) => {
       <TopInfo />
       <Header />
 
-      <div className="row center">
+      <div className="row center home">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={2} style={{ gridColumnGap: "20px" }}>

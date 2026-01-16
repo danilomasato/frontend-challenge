@@ -2,10 +2,6 @@ div[role="alert"] {
 	margin-bottom: 20px;
 }
 
-@media only screen and (min-width: 1025px) {
-	
-}
-
 @media only screen and (max-width: 1024px) {
 	.css-pztpmr {
 		display: grid;
@@ -50,3 +46,13 @@ div[role="alert"] {
     opacity: 0.6;
     background-size: cover;
 }
+
+
+@media only screen and (min-width: 1025px) {
+	.home.center {
+		width: 1230px;
+	}
+}
+  
+
+

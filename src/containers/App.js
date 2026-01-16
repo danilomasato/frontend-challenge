@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, HashRouter } from "react-router-dom";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import Home  from "./Home";
 import CharacterDetail from "./CharacterDetail";
@@ -10,7 +10,7 @@ import "./App.css";
 
 const App = ({ store }) => (
   <Provider store={store}>
-    <HashRouter>
+    <Router>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/imovel/:id/:id" component={CharacterDetail} />
@@ -18,7 +18,7 @@ const App = ({ store }) => (
         <Route exact path="/sobre-nos" component={About} />
         <Route exact path="/Register" component={Register} />
       </Switch>
-    </HashRouter>
+    </Router>
   </Provider>
 );
 
