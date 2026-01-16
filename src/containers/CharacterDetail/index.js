@@ -70,7 +70,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
               realRstate = item
               setInfoImoveis(item)
               setImoveis(item)
-              // console.log("imoveisCache------------------------------->", item)
+              console.log("imoveisCache------------------------------->", item)
             }
         })
       }
@@ -129,7 +129,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
             Características do Imóvel
           </h2>
 
-          <span className={(openToggle ? 'active' : '')}>{infoImoveis.descricao}</span>
+          <span className={(openToggle ? 'active' : '')}>{infoImoveis?.descricao}</span>
           <button onClick={(e) => setOpenToggle(!openToggle) }>Saiba mais Sobre <KeyboardArrowDownIcon style={{ float: "right" }}/></button>
         </Box>
         <br />

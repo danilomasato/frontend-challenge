@@ -43,15 +43,10 @@ const CardDetail = ({ data, character }) => {
   const [openShare, setOpenShare] = React.useState(false);
   
   const property = data?.length > 0 ? data : character.imoveisCache.data
-  //useEffect for not loop, and many request's
-  useEffect(() => {
-      property.descricao = property.descricao?.substring(0,50);
-      setImovel(property)
-  }, [property, imovel, card]);
 
-   useEffect(() => {
-      setCard(property.filter(item => item.id === parseInt(idMount))[0])
-    }, []);
+  useEffect(() => {
+    setImovel(property?.length > 0 && property.filter(item => item.id === parseInt(idMount))[0])
+  }, [property]);
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -115,9 +110,9 @@ const CardDetail = ({ data, character }) => {
       <div className="ThumbSLider-highligh">
         <ThumbSLider 
           height="300"
-          image={card.fotos}
-          alt={card.imovel}
-          title={card.imovel}
+          image={imovel?.fotos}
+          alt={imovel?.descricao }
+          title={imovel?.descricao}
           onClick={handleClickOpen}
         />
 
