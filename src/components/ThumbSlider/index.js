@@ -16,7 +16,7 @@ const ThumbSLider = (props) => {
     slidesToScroll: 1,
     arrows: true,
   };
-console.log("IMAGE=====================================>", props.image)
+
   return (
     <>
         {props.image?.length > 0 ? (

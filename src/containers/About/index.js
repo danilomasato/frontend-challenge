@@ -24,7 +24,6 @@ const About = ({ props }) => {
     <React.Fragment>
       <TopInfo />
       <Header />
-      <TopHeader />
 
       <div className="row center">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>

@@ -51,6 +51,8 @@ const Home = ({ character, imoveisCache }) => {
     };
 
     fetchData();
+      console.log("realEstate===============================>", realEstate)
+
   }, [realEstate]); // Empty dependency array ensures this runs once
 
   useEffect(() => {
@@ -107,7 +109,7 @@ const Home = ({ character, imoveisCache }) => {
       document.body.removeEventListener('contextmenu', handleContextMenu);
     };
 
-      // console.log("realEstate===============================>", realEstate)
+      console.log("realEstate===============================>", realEstate)
 
   }, [imoveis, search, realEstate]);
 

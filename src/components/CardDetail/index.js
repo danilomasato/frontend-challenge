@@ -164,7 +164,6 @@ const CardDetail = ({ data, character }) => {
         
         <div className="ThumbSLider-info">
             <span className="imovel"> {card.imovel || ''} </span>
-            <span className="descricao"> {card.descricao || ''} <b style={{ fontWeight: 600 }}>{card.id} </b> </span>
         </div>
 
         <box className="GroupBelowHighligh">

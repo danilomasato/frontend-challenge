@@ -14,6 +14,8 @@
 
 .ThumbSLider-highligh {
     position: relative;
+    float: left;
+    width: 100%;
 }
 
 .expanded {
@@ -31,7 +33,7 @@
 
 .ThumbSLider-info {
     position: absolute;
-    margin: -70px 0 0 20px;
+    margin: -50px 0 0 20px;
     color: #fff;
     text-shadow: 1px 1px 2px black;
 }

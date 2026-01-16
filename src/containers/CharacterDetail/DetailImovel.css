@@ -20,3 +20,43 @@
         width: 100%  !important;
     }
 }
+
+@media only screen and (min-width: 1024px) {
+		.caracteristicas {
+    	float: left;
+			width: 500px;
+			max-width: 500px;
+			
+			margin-bottom: 10px;
+		}
+
+    .caracteristicas h2 {
+    	float: left;
+    }
+
+    .caracteristicas span {
+    	float: left;
+    	font-size: 0.9rem;
+    	margin-top: 10px;
+    	line-height: 1.1rem;
+    	color: #525050;
+			height: 50px;
+			overflow: hidden;
+    }
+
+		.caracteristicas span.active {
+			height: 110px;
+			transition: height 0.5s ease-in-out;
+		}
+
+		.caracteristicas button {
+			float: left;
+			margin-top: 10px;
+			width: 100%;
+		}
+
+		.caracteristicas button svg {
+			float: right !important;
+		}
+
+}

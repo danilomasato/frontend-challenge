@@ -24,6 +24,7 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import SellIcon from '@mui/icons-material/Sell';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Box from '@mui/material/Box';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import "./DetailImovel.css";
@@ -109,6 +110,8 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
     ]
   }
 
+  const [openToggle, setOpenToggle] = React.useState(false);
+
   return (
     <React.Fragment>
       <TopInfo />
@@ -121,59 +124,33 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
         <CardDetail data={imoveis} imovel={infoImoveis} />
 
-         {infoImoveis?.valor_venda !== null ? (
-                  <>
-                    <TableContainer style={{ boxShadow: 'none' }}>
-                      <Table className="TableInfo-imovel" sx={{ fontSize: "0.5rem" }} aria-label="simple table">
-                        <TableBody>
-                          {rows.map((row) => (
-                            <TableRow
-                              key={row.name}
-                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                              <TableCell component="th" scope="row" style={{ paddingLeft: "30px" }}>
-                                {row.name}
-                              </TableCell>
-                              <TableCell align="right">{row.info}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </>
-                )
-                  : (
-                    <>
-                     <Box style={{ float: "left", width: "100%", marginBottom: "20px" }} sx={{ width: '100%' }}>
-                        <Typography variant="h5" gutterBottom>
-                          Características do Imóvel
-                        </Typography>
+        <Box className="caracteristicas" sx={{ width: '100%' }}>
+          <h2>
+            Características do Imóvel
+          </h2>
 
-                        {infoImoveis.descricao}
-                      </Box>
-                      <br />
+          <span className={(openToggle ? 'active' : '')}>{infoImoveis.descricao}</span>
+          <button onClick={(e) => setOpenToggle(!openToggle) }>Saiba mais Sobre <KeyboardArrowDownIcon style={{ float: "right" }}/></button>
+        </Box>
+        <br />
 
-                      <TableContainer style={{ boxShadow: 'none' }}>
-                        <Table className="TableInfo-imovel" sx={{ fontSize: "0.5rem" }} aria-label="simple table">
-                          <TableBody>
-                            {rows.map((row) => (
-                              <TableRow
-                                key={row.name}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                              >
-                                <TableCell component="th" scope="row" style={{ paddingLeft: "30px" }}>
-                                  {row.name}
-                                </TableCell>
-                                <TableCell align="right">{row.info}</TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </>
-                  )
-                }
-        
+        <TableContainer style={{ boxShadow: 'none' }}>
+          <Table className="TableInfo-imovel" sx={{ fontSize: "0.5rem" }} aria-label="simple table">
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow
+                  key={row.name}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row" style={{ paddingLeft: "30px" }}>
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="right">{row.info}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
 
       <Footer />

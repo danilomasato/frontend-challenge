@@ -11,10 +11,6 @@ export const Header = props => {
 
   const menu = [
     {
-      title: "Início",
-      action: "/"
-    },
-    {
       title: "Sobre Nós",
       action: "/sobre-nos"
     },
@@ -45,6 +41,7 @@ export const Header = props => {
         </a>
 
         <ul id="nav">
+          <li><NavLink to="/">Início</NavLink></li>
           {menu.map((item, index) => (
         	<li key={index}>
             	<NavLink to={item.action}>{item.title}</NavLink>
