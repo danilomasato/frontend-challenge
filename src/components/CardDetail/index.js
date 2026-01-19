@@ -165,7 +165,7 @@ const CardDetail = ({ data, character }) => {
                       R$ {imovel?.valor_venda}
                     </div>
                   )
-                    : ''
+                    : <div>R$ {imovel?.valor_aluguel}</div>
                   }
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
