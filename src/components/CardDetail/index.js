@@ -35,8 +35,8 @@ import { getArticles } from "../../actions";
 const CardDetail = ({ data, character }) => {
   const baseURL = process.env.REACT_APP_BASEURL;
   const urlShare = window.location.href
-  const idMount = window.location.pathname.substring(0, 10).replace('/imovel/', '')
-  const [imovel, setImovel] = useState();
+  const idMount = window.location.hash.substring(0, 11).replace('#/imovel/', '')
+  const [imovel, setImovel] = useState([]);
   const [card, setCard] = useState([]);
   const [dataImovel, setDataImovel] = useState(character);
   const [open, setOpen] = React.useState(false);
