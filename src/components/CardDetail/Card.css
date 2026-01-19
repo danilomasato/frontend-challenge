@@ -1,10 +1,3 @@
-.card .see-more {
-    background: #00be9c;
-    box-shadow: none;
-    font-size: 14px;
-    text-transform: initial;
-}
-
 .card .title-imovel {
     font-size: 1rem;
     letter-spacing: -1px;
@@ -130,56 +123,6 @@
 .GroupBelowHighligh .ButtonGroup svg {
     width: 18px;
     margin-right: 5px;
-}
-
-.ThumbSLider-highligh .container__slider .slick-slide:after {
-	content: "";
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background-image: url("https://tudosobreap.com.br/static/media/logo_tsa.065f0e6987b69aca20e9.png");
-    top: 15px;
-    left: 15px;
-    opacity: 0.7;
-    background-size: cover;
-}
-
-.ThumbSLider-highligh .slick-track,
-.ThumbSLider-highligh .slick-slider {
-  height: 300px !important;
-}
-
-.ThumbSLider-highligh .slick-track img {
-  height: 300px;
-  object-fit: cover;
-}
-.ThumbSLider-highligh .slick-dots  {
-    width: 400px;
-    bottom: -0;
-    overflow: hidden;
-    height: 30px;
-    margin-left: 25%;
-    position: absolute;
-}
-
-.ThumbSLider-highligh .slick-dots li {
-    width: 10px;
-}
-
-.ThumbSLider-highligh .slick-dots li button:before {
-    opacity: .65;
-    color: #ffffff;
-}
-
-.ThumbSLider-highligh .slick-dots li.slick-active button:before {
-    opacity: 1;
-    color: #ffffff;
-}
-
-.MuiDialog-container .slick-slide img {
-    display: block;
-    object-fit: contain;
-    height: 660px;
 }
 
 @media only screen and (max-width: 1024px) {

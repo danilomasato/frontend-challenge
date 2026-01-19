@@ -30,11 +30,11 @@
 
 .ThumbSLider-highligh .slick-track,
 .ThumbSLider-highligh .slick-slider {
-  height: 300px !important;
+  height: 340px !important;
 }
 
 .ThumbSLider-highligh .slick-track img {
-  height: 300px;
+  height: 340px;
   object-fit: cover;
 }
 .ThumbSLider-highligh .slick-dots  {
@@ -58,6 +58,12 @@
 .ThumbSLider-highligh .slick-dots li.slick-active button:before {
     opacity: 1;
     color: #ffffff;
+}
+
+.MuiDialog-container .slick-slide img {
+    display: block;
+    object-fit: contain;
+    height: 660px;
 }
 
 @media only screen and (max-width: 1024px) {
