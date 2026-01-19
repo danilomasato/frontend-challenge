@@ -25,6 +25,7 @@ const Home = ({ character, imoveisCache }) => {
   const [loading, setLoading] = useState(false);
   const [imoveis, setImoveis] = useState(false);
   const [error, setError] = useState(null);
+  const [options, setOptions] = useState([]);
 
   //atualiza o json cache dos imoveis
   useEffect(() => {
@@ -51,7 +52,6 @@ const Home = ({ character, imoveisCache }) => {
     };
 
     fetchData();
-      console.log("realEstate===============================>", realEstate)
 
   }, [realEstate]); // Empty dependency array ensures this runs once
 
@@ -69,10 +69,22 @@ const Home = ({ character, imoveisCache }) => {
     //data for card
     if(imoveis?.length > 0 ){
 
+      const mapa = new Map();
+      imoveis.forEach(obj => {
+          mapa.set(obj.regiao, obj); // Define o ID como chave e o objeto como valor
+      });
+
+      const objetosUnicosPorId = Array.from(mapa.values());
+      setOptions(objetosUnicosPorId.map(((item, index) => (
+        {
+          "label": item.regiao, 
+          "id": index
+        }
+      ))))
+ 
       imoveis.filter((item, index) => {
 
           if(item.regiao.includes(search.label)){
-
             //loading
             setLoading(true)
 
@@ -109,9 +121,7 @@ const Home = ({ character, imoveisCache }) => {
       document.body.removeEventListener('contextmenu', handleContextMenu);
     };
 
-      console.log("realEstate===============================>", realEstate)
-
-  }, [imoveis, search, realEstate]);
+  }, [imoveis, search]);
 
   const handleClick = cardID => { }
 
@@ -129,12 +139,7 @@ const Home = ({ character, imoveisCache }) => {
                   <Autocomplete
                     className="search-neighborhoods"
                     disablePortal
-                    options={imoveis.map(((item, index) => (
-                    {
-                      "label": item.regiao, 
-                      "id": index
-                    }
-                    )))}
+                    options={options}
                     InputProps={{
                       className: 'search-neighborhoods',
                       style: { backgroundColor: 'lightgray' }, // Estilo inline para o input

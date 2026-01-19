@@ -37,7 +37,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   const [imoveis, setImoveis] = useState([]);
   const history = useHistory();
   const urlShare = window.location.href
-  const idMount = window.location.pathname.substring(0, 10).replace('/imovel/', '')
+  const idMount = window.location.hash.substring(0, 11).replace('#/imovel/', '')
 
 
   // if (characterDetail.characterDetail.length === 0) {
@@ -59,7 +59,6 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
     const imoveis = data?.length > 0 ? data : imoveisCache.data;
 
     setImoveis(imoveis)
-
       if(imoveis?.length > 0) {
         imoveis.filter(item => {
           if(item.id === parseInt(idMount)){
@@ -69,7 +68,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
           }
         })
       }
-  }, []);
+  }, [imoveisCache]);
 
   function createData(
     name: string,
