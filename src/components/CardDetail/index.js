@@ -121,9 +121,9 @@ const CardDetail = ({ data, character }) => {
         >
           <DialogContent style={{ height: "660px" }}>
             <ThumbSLider
-              image={card.fotos}
-              alt={card.imovel}
-              title={card.imovel}
+              image={imovel.fotos}
+              alt={imovel.imovel}
+              title={imovel.imovel}
             />
           </DialogContent>
           <CloseIcon className="modal-close" onClick={handleClose} />

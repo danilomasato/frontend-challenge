@@ -60,7 +60,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
     setImoveis(imoveis)
       if(imoveis?.length > 0) {
-        imoveis.filter(item => {
+        imoveis.filter((item, index) => {
           if(item.id === parseInt(idMount)){
             realRstate = item
             setInfoImoveis(item)
@@ -79,28 +79,36 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
   if(infoImoveis?.valor_venda !== null) {
     rows = [
-      createData('Andar', infoImoveis?.Andar || ''),
-      createData('Área útil', infoImoveis?.Area_util || ''),
-      createData('Área total', infoImoveis?.Area_Total || ''),
-      createData('Área terreno', infoImoveis?.Area_Terreno || ''),
+      infoImoveis?.Andar !== null ? createData('Andar', infoImoveis?.Andar || '') : '',
+      infoImoveis?.Area_util !== null ? createData('Área útil', infoImoveis?.Area_util + ' (m²)' || '') : '',
+      createData('Área total', infoImoveis?.Area_Total + ' (m²)' || ''),
+      infoImoveis?.Area_Terreno !== null ? createData('Área terreno', infoImoveis?.Area_Terreno  || '') : '',
       createData('Ano de construção', infoImoveis?.Ano_Construcao || ''),
-      createData('Condomínio', infoImoveis?.Condominio || ''),
-      createData('IPTU (anual)', infoImoveis?.IPTU || ''),
-      createData('Quartos', infoImoveis?.Quartos || ''),
-      createData('Suítes', infoImoveis?.Suites || ''),
-      createData('Banheiros', infoImoveis?.Banheiros || ''),
+      createData('Condomínio', 'R$' + infoImoveis?.Condominio || ''),
+      createData('IPTU (anual)', 'R$' + infoImoveis?.IPTU || ''),
+      infoImoveis?.Quartos !== null ? createData('Quartos', infoImoveis?.Quartos || '') : '',
+      infoImoveis?.Suites !== null ? createData('Suítes', infoImoveis?.Suites || '') : '',
+      infoImoveis?.Banheiros !== null ? createData('Banheiros', infoImoveis?.Banheiros || '') : '',
     ]
   } else {
     rows = [
       createData('Andar', infoImoveis?.Andar),
-      createData('Área útil', infoImoveis?.Area_util),
-      createData('Condomínio', infoImoveis?.Condominio),
-      createData('IPTU (anual)', infoImoveis?.IPTU),
+      createData('Área útil', infoImoveis?.Area_util + ' (m²)'),
+      createData('Condomínio', 'R$' + infoImoveis?.Condominio),
+      createData('IPTU (anual)', 'R$' + infoImoveis?.IPTU),
       createData('Quartos', infoImoveis?.Quartos),
       createData('Suítes', infoImoveis?.Suites),
       createData('Banheiros', infoImoveis?.Banheiros),
     ]
   }
+  useEffect(() => {
+    // rows.map((row, i) => {
+    //   if(row.info !== '' && row.info !== "R$undefined" && row.info !== "undefined (m²)")
+    //   console.log("rowss===================================>", row)
+    // })
+
+    
+  }, []);
 
   const [openToggle, setOpenToggle] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -137,7 +145,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
           </h2>
 
           <span className={(openToggle ? 'active' : '')}>{infoImoveis?.descricao}</span>
-          <button onClick={(e) => setOpenToggle(!openToggle) }>Saiba mais Sobre <KeyboardArrowDownIcon style={{ float: "right" }}/></button>
+          <button onClick={(e) => setOpenToggle(!openToggle) }>Saiba mais <KeyboardArrowDownIcon style={{ float: "right" }}/></button>
         </Box>
         <br />
 

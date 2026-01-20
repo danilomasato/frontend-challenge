@@ -24,6 +24,17 @@
     padding: 8px;
 }
 
+.ThumbSLider-highligh .expanded {
+    top: -370px;
+}
+
+.modal-close {
+	top: 3px;
+	position: absolute;
+	right: 4px;
+    cursor: pointer;
+}
+
 .ThumbSLider-info {
     position: absolute;
     margin: -70px 0 0 20px;
@@ -77,10 +88,15 @@
 }
 
 .ThumbSLider-author .avatar {
+    margin: -102px 0 0 48px;
     position: absolute;
-    margin: -75px 0 0 67px;
     z-index: 9;
 }
+
+.ThumbSLider-author	.MuiAvatar-circular {
+	border: 1px solid #ccc;
+  padding: 5px;
+}  
 
 .ThumbSLider-author .avatar img {
     object-fit: contain;
