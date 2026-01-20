@@ -58,7 +58,6 @@ const Home = ({ character, imoveisCache }) => {
   useEffect(() => {
     character.character?.length > 0 ? setImoveis(character.character?.data) : setImoveis(imoveisCache.data)
     setRealEstate({character: { data: imoveisCache.data }})
-    console.log("DATA========================================================>", imoveisCache.data)
   }, [character, imoveisCache]);
   
   let research= [];
@@ -74,7 +73,8 @@ const Home = ({ character, imoveisCache }) => {
           mapa.set(obj.regiao, obj); // Define o ID como chave e o objeto como valor
       });
 
-      const objetosUnicosPorId = Array.from(mapa.values());
+      let objetosUnicosPorId = Array.from(mapa.values());
+
       setOptions(objetosUnicosPorId.map(((item, index) => (
         {
           "label": item.regiao, 

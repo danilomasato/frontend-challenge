@@ -169,7 +169,15 @@ const CardDetail = ({ data, character }) => {
                   }
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
-                  <FullscreenIcon /> {imovel?.Area_Total || ''}  m<span className="mcubico">2</span>
+
+                  {imovel?.Area_Total !== null ? (
+                    <div>
+                      <FullscreenIcon />
+                      {imovel?.Area_Total} m<span className="mcubico">2</span>
+                    </div>
+                    )
+                    : ''
+                  }
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
                   <BedIcon /> {imovel?.Quartos || ''} 

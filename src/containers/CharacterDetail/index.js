@@ -33,7 +33,7 @@ import ThumbSLider from "../../components/ThumbSlider";
 
 const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
-  const [infoImoveis, setInfoImoveis] = useState(realRstate);
+  const [infoImoveis, setInfoImoveis] = useState([]);
   const [imoveis, setImoveis] = useState([]);
   const history = useHistory();
   const urlShare = window.location.href
@@ -47,6 +47,10 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   let rows = []
 
   useEffect(() => {
+    const imoveis = data?.length > 0 ? data : imoveisCache.data;
+    setImoveis(imoveis)
+  }, [imoveisCache]);
+  useEffect(() => {
     // if(authors.data?.length > 0){
     //   authors.data.filter((item, index) =>  {
     //     if(infoImoveis?.autor !== null && infoImoveis?.autor.name.includes(item.name)){
@@ -56,19 +60,41 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
     //     }
     //   })
     // }
-    const imoveis = data?.length > 0 ? data : imoveisCache.data;
-
-    setImoveis(imoveis)
+    
       if(imoveis?.length > 0) {
         imoveis.filter((item, index) => {
           if(item.id === parseInt(idMount)){
             realRstate = item
             setInfoImoveis(item)
+            // for (let prop in item) {
+            //   if(item[prop] !== null){
+            //      console.log("infoImoveis=========================>", item[prop])
+
+            //     setInfoImoveis(item)
+            //   }
+            // }
+
+            // setImoveis({
+            //   Andar,
+            //   Ano_Construcao,
+            //   Area_Terreno,
+            //   Area_Total,
+            //   Area_util,
+            //   Banheiros,
+            //   Condominio,
+            //   IPTU,
+            //   Quartos,
+            //   Suites,
+            //   Vagas: "1"
+            // })
             setImoveis(item)
           }
         })
       }
-  }, [imoveisCache]);
+
+  }, [imoveis, infoImoveis]);
+
+
 
   function createData(
     name: string,
@@ -79,17 +105,18 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
   if(infoImoveis?.valor_venda !== null) {
     rows = [
-      infoImoveis?.Andar !== null ? createData('Andar', infoImoveis?.Andar || '') : '',
-      infoImoveis?.Area_util !== null ? createData('Área útil', infoImoveis?.Area_util + ' (m²)' || '') : '',
+      createData('Andar', infoImoveis?.Andar || ''),
+      createData('Área útil', infoImoveis?.Area_util + ' (m²)' || '') ,
       createData('Área total', infoImoveis?.Area_Total + ' (m²)' || ''),
-      infoImoveis?.Area_Terreno !== null ? createData('Área terreno', infoImoveis?.Area_Terreno  || '') : '',
+      createData('Área terreno', infoImoveis?.Area_Terreno || '') ,
       createData('Ano de construção', infoImoveis?.Ano_Construcao || ''),
       createData('Condomínio', 'R$' + infoImoveis?.Condominio || ''),
       createData('IPTU (anual)', 'R$' + infoImoveis?.IPTU || ''),
-      infoImoveis?.Quartos !== null ? createData('Quartos', infoImoveis?.Quartos || '') : '',
-      infoImoveis?.Suites !== null ? createData('Suítes', infoImoveis?.Suites || '') : '',
-      infoImoveis?.Banheiros !== null ? createData('Banheiros', infoImoveis?.Banheiros || '') : '',
+      createData('Quartos', infoImoveis?.Quartos || ''),
+      createData('Suítes', infoImoveis?.Suites || ''),
+      createData('Banheiros', infoImoveis?.Banheiros || ''),
     ]
+    rows = rows.filter(item => item.info !== '');
   } else {
     rows = [
       createData('Andar', infoImoveis?.Andar),
@@ -100,15 +127,8 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
       createData('Suítes', infoImoveis?.Suites),
       createData('Banheiros', infoImoveis?.Banheiros),
     ]
+    rows = rows.filter(item => item.info !== '');
   }
-  useEffect(() => {
-    // rows.map((row, i) => {
-    //   if(row.info !== '' && row.info !== "R$undefined" && row.info !== "undefined (m²)")
-    //   console.log("rowss===================================>", row)
-    // })
-
-    
-  }, []);
 
   const [openToggle, setOpenToggle] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -183,7 +203,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      getAuthors: dispatch(getAuthors()),
+      // getAuthors: dispatch(getAuthors()),
       getArticles: dispatch(getArticles()),
       getImoveisCache: dispatch(getImoveisCache())
     },
