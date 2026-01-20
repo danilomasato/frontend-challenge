@@ -206,7 +206,14 @@ export default function MultiActionAreaCard(props) {
                       }
                     </Typography>
                     <Typography className="icon-card" variant="body2" color="text.secondary">
-                      <FullscreenIcon /> {card.Area_Total} 
+                       {card.Area_Total !== null ? (
+                            <div>
+                              <FullscreenIcon />
+                              {card.Area_Total} m<span className="mcubico">2</span>
+                            </div>
+                          )
+                            : ''
+                          }
                     </Typography>
                     <Typography className="icon-card" variant="body2" color="text.secondary">
                       <BedIcon /> {card.Quartos} 

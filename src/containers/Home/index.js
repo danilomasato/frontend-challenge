@@ -28,37 +28,37 @@ const Home = ({ character, imoveisCache }) => {
   const [options, setOptions] = useState([]);
 
   //atualiza o json cache dos imoveis
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Await the fetch call
-        const response = await fetch(process.env.REACT_APP_API_URL + "Articles?pagination[page]=1&pagination[pageSize]=10&populate=fotos&populate=autor");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        // Await the response.json() call, which also returns a promise
-        const result = await response.json();
-        setTimeout(() => {
-          // setRealEstate(result)
-          setRealEstate({character: {
-            data: result.data
-          }})
-        }, 60000)
-      } catch (e) {
-        setError(e.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       // Await the fetch call
+  //       const response = await fetch(process.env.REACT_APP_API_URL + "Articles?pagination[page]=1&pagination[pageSize]=10&populate=fotos&populate=autor");
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! status: ${response.status}`);
+  //       }
+  //       // Await the response.json() call, which also returns a promise
+  //       const result = await response.json();
+  //       setTimeout(() => {
+  //         // setRealEstate(result)
+  //         setRealEstate({character: {
+  //           data: result.data
+  //         }})
+  //       }, 60000)
+  //     } catch (e) {
+  //       setError(e.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
+  //   fetchData();
 
-  }, [realEstate]); // Empty dependency array ensures this runs once
+  // }, [realEstate]); // Empty dependency array ensures this runs once
 
   useEffect(() => {
     character.character?.length > 0 ? setImoveis(character.character?.data) : setImoveis(imoveisCache.data)
     setRealEstate({character: { data: imoveisCache.data }})
-    
+    console.log("DATA========================================================>", imoveisCache.data)
   }, [character, imoveisCache]);
   
   let research= [];
