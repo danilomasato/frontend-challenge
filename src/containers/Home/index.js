@@ -75,12 +75,17 @@ const Home = ({ character, imoveisCache }) => {
 
       let objetosUnicosPorId = Array.from(mapa.values());
 
+      //monta array options bairros e ordena por ordem alfabetica
       setOptions(objetosUnicosPorId.map(((item, index) => (
-        {
-          "label": item.regiao, 
-          "id": index
-        }
-      ))))
+              {
+                "label": item.regiao, 
+                "id": index
+              }
+            ))).sort(function(a,b) {
+          if(a.label < b.label) return -1;
+          if(a.label > b.label) return 1;
+          return 0;
+      }))
  
       imoveis.filter((item, index) => {
 
@@ -122,7 +127,7 @@ const Home = ({ character, imoveisCache }) => {
     };
 
   }, [imoveis, search]);
-
+  
   const handleClick = cardID => { }
 
   return (
