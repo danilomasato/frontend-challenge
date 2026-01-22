@@ -61,13 +61,13 @@ const Home = ({ character, imoveisCache }) => {
   }, [character, imoveisCache]);
   
   let research= [];
+console.log("imoveis=========================>", imoveisCache)
 
   //useEffect for not loop, and many request's
   useEffect(() => {
 
     //data for card
     if(imoveis?.length > 0 ){
-
       const mapa = new Map();
       imoveis.forEach(obj => {
           mapa.set(obj.regiao, obj); // Define o ID como chave e o objeto como valor

@@ -25,7 +25,7 @@
 }
 
 .ThumbSLider-highligh .expanded {
-    top: -370px;
+    top: -420px;
 }
 
 .modal-close {
@@ -33,19 +33,6 @@
 	position: absolute;
 	right: 4px;
     cursor: pointer;
-}
-
-.ThumbSLider-info {
-    position: absolute;
-    margin: -70px 0 0 20px;
-    color: #fff;
-    text-shadow: 1px 1px 2px black;
-}
-
-.ThumbSLider-info .imovel {
-    display: block;
-    font-size: 22px;
-    font-weight: bold;
 }
 
 .ThumbSLider-author {

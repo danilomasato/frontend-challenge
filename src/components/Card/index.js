@@ -181,7 +181,7 @@ export default function MultiActionAreaCard(props) {
               <Card className="card" key={card.id} sx={{ maxWidth: 345 }} >
                 <CardActionArea>
                   <ThumbSLider 
-                    height="140"
+                    height="200"
                     image={card.fotos}
                     alt={card.imovel}
                     title={card.imovel}

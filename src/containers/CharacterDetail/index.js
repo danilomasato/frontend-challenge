@@ -66,31 +66,23 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
           if(item.id === parseInt(idMount)){
             realRstate = item
             setInfoImoveis(item)
-            // for (let prop in item) {
-            //   if(item[prop] !== null){
-            //      console.log("infoImoveis=========================>", item[prop])
-
-            //     setInfoImoveis(item)
-            //   }
-            // }
-
-            // setImoveis({
-            //   Andar,
-            //   Ano_Construcao,
-            //   Area_Terreno,
-            //   Area_Total,
-            //   Area_util,
-            //   Banheiros,
-            //   Condominio,
-            //   IPTU,
-            //   Quartos,
-            //   Suites,
-            //   Vagas: "1"
-            // })
             setImoveis(item)
           }
         })
       }
+
+    //Disable click right mouse
+    const handleContextMenu = (e) => {
+      e.preventDefault(); // Prevent the default context menu
+    };
+
+    //Attach the event listener to the document body
+    document.body.addEventListener('contextmenu', handleContextMenu);
+
+    //Clean up the event listener when the component unmounts
+    return () => {
+      document.body.removeEventListener('contextmenu', handleContextMenu);
+    };
 
   }, [imoveis, infoImoveis]);
 
@@ -150,6 +142,9 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
             title={imoveis?.descricao}
             onClick={handleClickOpen}
           />
+          <div className="ThumbSLider-info">
+              <span className="imovel"> {imoveis?.imovel || ''} </span>
+          </div>
         </div>
 
       <div className="row center">
@@ -161,7 +156,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
         <Box className="caracteristicas" sx={{ width: '100%' }}>
           <h2>
-            Características do Imóvel
+            Descrição
           </h2>
 
           <span className={(openToggle ? 'active' : '')}>{infoImoveis?.descricao}</span>

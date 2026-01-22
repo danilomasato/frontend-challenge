@@ -121,9 +121,9 @@ const CardDetail = ({ data, character }) => {
         >
           <DialogContent style={{ height: "660px" }}>
             <ThumbSLider
-              image={imovel.fotos}
-              alt={imovel.imovel}
-              title={imovel.imovel}
+              image={imovel?.fotos}
+              alt={imovel?.imovel}
+              title={imovel?.imovel}
             />
           </DialogContent>
           <CloseIcon className="modal-close" onClick={handleClose} />
@@ -147,12 +147,6 @@ const CardDetail = ({ data, character }) => {
           </DialogContent>
           <CloseIcon className="modal-close" onClick={handleClose} />
         </Dialog>
-
-        
-        
-        <div className="ThumbSLider-info">
-            <span className="imovel"> {card.imovel || ''} </span>
-        </div>
 
         <box className="GroupBelowHighligh">
           <Card className="card imovel-info" key={imovel?.id} sx={{ maxWidth: 300,  background: 'transparent',
