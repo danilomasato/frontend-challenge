@@ -56,12 +56,15 @@ const Home = ({ character, imoveisCache }) => {
   // }, [realEstate]); // Empty dependency array ensures this runs once
 
   useEffect(() => {
-    character.character?.length > 0 ? setImoveis(character.character?.data) : setImoveis(imoveisCache.data)
-    setRealEstate({character: { data: imoveisCache.data }})
+    character.character?.data?.length > 0 ? setImoveis(character.character?.data) : setImoveis(imoveisCache.data)
+
   }, [character, imoveisCache]);
+
+  useEffect(() => {
+    character.character.data?.length > 0 ? setRealEstate({character: { data: character.character.data }}) : setRealEstate(imoveisCache.data)
+  }, [character]);
   
   let research= [];
-console.log("imoveis=========================>", imoveisCache)
 
   //useEffect for not loop, and many request's
   useEffect(() => {
