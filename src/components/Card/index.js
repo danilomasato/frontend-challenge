@@ -51,7 +51,6 @@ export default function MultiActionAreaCard(props) {
   //first load
   useEffect(() => {
     if (articles?.length > 0) {
-      console.log("articles============================>", articles)
         articles.filter(item => { item.valor_venda !== null ? setSalePrice(true) : setRentalValue(true)
       })
     }
