@@ -39,18 +39,12 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   const urlShare = window.location.href
   const idMount = window.location.hash.substring(0, 11).replace('#/imovel/', '')
 
-
-  // if (characterDetail.characterDetail.length === 0) {
-  //   history.push('/')
-  // }
-
   let rows = []
 
   useEffect(() => {
     const imoveis = data?.length > 0 ? data : imoveisCache.data;
     if(imoveis?.length > 0){
       setImoveis(imoveis)
-            console.log("item===================>", imoveis)
     }
   }, [imoveisCache, data]);
   useEffect(() => {
