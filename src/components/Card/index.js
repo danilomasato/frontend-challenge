@@ -51,25 +51,9 @@ export default function MultiActionAreaCard(props) {
   //first load
   useEffect(() => {
     if (articles?.length > 0) {
-      // setArticles(articles);
-      articles.filter(item => {
-
-        if(item.valor_venda !== null)
-          setSalePrice(true)
-
-        if(item.valor_aluguel !== null)
-          setRentalValue(true)
+      console.log("articles============================>", articles)
+        articles.filter(item => { item.valor_venda !== null ? setSalePrice(true) : setRentalValue(true)
       })
-    } else {
-      if(articles?.length > 0){
-        articles.filter(item => {
-          if(item.valor_venda !== null)
-            setSalePrice(true)
-
-          if(item.valor_aluguel !== null)
-            setRentalValue(true)
-        })
-      }
     }
   }, [props, articles]);
 
@@ -111,9 +95,13 @@ export default function MultiActionAreaCard(props) {
                           {card.regiao}
                         </Typography>
 
-                        <Typography variant="body2" color="text.secondary" component="div" style={{ marginBottom: "5px" }}>
-                          {card.imovel} 
-                        </Typography>
+                         {card.imovel !== null ? (
+                          <Typography className="descripition" variant="body2" color="text.secondary" component="div">
+                            {card.descricao}  
+                          </Typography>
+                          )
+                            : ''
+                          }
 
                         <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                           {card.valor_venda !== null ? (
@@ -191,11 +179,14 @@ export default function MultiActionAreaCard(props) {
                       {card.regiao}
                     </Typography>
 
-                    <Typography className="descripition" variant="body2" color="text.secondary" component="div">
-                      {card.imovel}
-                    </Typography>
-                    <br />
-        
+                    {card.imovel !== null ? (
+                      <Typography className="descripition" variant="body2" color="text.secondary" component="div">
+                        {card.descricao}  
+                      </Typography>
+                      )
+                        : ''
+                      }
+
                     <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                       {card.valor_aluguel !== null ? (
                         <div>
