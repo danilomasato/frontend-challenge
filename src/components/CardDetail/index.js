@@ -32,21 +32,19 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { getArticles } from "../../actions";
 
-const CardDetail = ({ data, character }) => {
+const CardDetail = ({ data }) => {
   const baseURL = process.env.REACT_APP_BASEURL;
   const urlShare = window.location.href
   const idMount = window.location.hash.substring(0, 11).replace('#/imovel/', '')
   const [imovel, setImovel] = useState([]);
   const [card, setCard] = useState([]);
-  const [dataImovel, setDataImovel] = useState(character);
   const [open, setOpen] = React.useState(false);
   const [openShare, setOpenShare] = React.useState(false);
   
-  const property = data?.length > 0 ? data : character.imoveisCache.data
-
   useEffect(() => {
-    setImovel(property?.length > 0 && property.filter(item => item.id === parseInt(idMount))[0])
-  }, [property]);
+    if( data?.length > 0)
+    setImovel(data?.length > 0 && data.filter(item => item.id === parseInt(idMount))[0])
+  }, [data]);
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -227,16 +225,4 @@ const CardDetail = ({ data, character }) => {
   );
 }
 
-const mapStateToProps = state => ({
-  character: state.home
-});
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      getArticles: dispatch(getArticles())
-    },
-    dispatch
-  );
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CardDetail));
+export default CardDetail;

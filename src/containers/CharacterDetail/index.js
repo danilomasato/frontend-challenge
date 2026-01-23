@@ -48,8 +48,11 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
   useEffect(() => {
     const imoveis = data?.length > 0 ? data : imoveisCache.data;
-    setImoveis(imoveis)
-  }, [imoveisCache]);
+    if(imoveis?.length > 0){
+      setImoveis(imoveis)
+            console.log("item===================>", imoveis)
+    }
+  }, [imoveisCache, data]);
   useEffect(() => {
     // if(authors.data?.length > 0){
     //   authors.data.filter((item, index) =>  {
