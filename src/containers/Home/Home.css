@@ -2,6 +2,10 @@ div[role="alert"] {
 	margin-bottom: 20px;
 }
 
+.home .slick-slider > button {
+	background: rgb(20 20 20 / 70%) !important;
+}
+
 @media only screen and (max-width: 1024px) {
 	.css-pztpmr {
 		display: grid;

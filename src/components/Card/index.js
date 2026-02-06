@@ -46,14 +46,14 @@ export default function MultiActionAreaCard(props) {
     } else {
       setArticles(props.data.imoveisCache?.data)
     }
- }, [props]);
+ }, [articles, props]);
 
   //first load
   useEffect(() => {
     if (articles?.length > 0) {
       // setArticles(articles);
       articles.filter(item => {
-console.log("item=============================>", item)
+
         if(item.valor_venda !== null)
           setSalePrice(true)
 

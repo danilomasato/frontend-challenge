@@ -38,11 +38,10 @@ const CardDetail = ({ data, character }) => {
   const idMount = parseInt(window.location.hash.substring(0, 11).replace('#/imovel/',''))
   const [imovel, setImovel] = useState([]);
   const [card, setCard] = useState([]);
-  const [dataImovel, setDataImovel] = useState(character);
   const [open, setOpen] = React.useState(false);
   const [openShare, setOpenShare] = React.useState(false);
 
-  const property = character.character?.data?.length > 0 ? character.character.data : character.imoveisCache.data
+  const property = character && character.character?.data?.length > 0 ? character.character.data : character?.imoveisCache.data
   
   useEffect(() => {
     if(property?.length > 0){
@@ -233,16 +232,4 @@ const CardDetail = ({ data, character }) => {
   );
 }
 
-const mapStateToProps = state => ({
-  character: state.home
-});
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      getArticles: dispatch(getArticles())
-    },
-    dispatch
-  );
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CardDetail));
+export default CardDetail;
