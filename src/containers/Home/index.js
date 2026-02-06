@@ -57,7 +57,7 @@ const Home = ({ character, imoveisCache }) => {
 
   useEffect(() => {
     character.character?.data?.length > 0 ? setImoveis(character.character?.data) : setImoveis(imoveisCache.data)
-  }, [character, imoveisCache]);
+  }, []);
 
   useEffect(() => {
     character.character.data?.length > 0 ? setRealEstate({character: { data: character.character.data }}) : setRealEstate(imoveisCache.data)
@@ -72,7 +72,7 @@ const Home = ({ character, imoveisCache }) => {
     if(imoveis?.length > 0 ){
       const mapa = new Map();
       imoveis.forEach(obj => {
-          mapa.set(obj.regiao, obj); // Define o ID como chave e o objeto como valor
+          mapa.set(obj.Bairro, obj); // Define o ID como chave e o objeto como valor
       });
 
       let objetosUnicosPorId = Array.from(mapa.values());
@@ -80,7 +80,7 @@ const Home = ({ character, imoveisCache }) => {
       //monta array options bairros e ordena por ordem alfabetica
       setOptions(objetosUnicosPorId.map(((item, index) => (
               {
-                "label": item.regiao, 
+                "label": item.Bairro, 
                 "id": index
               }
             ))).sort(function(a,b) {
@@ -90,12 +90,11 @@ const Home = ({ character, imoveisCache }) => {
       }))
  
       imoveis.filter((item, index) => {
-
-          if(item.regiao.includes(search.label)){
+          if(item.Bairro.includes(search.label)){
             //loading
             setLoading(true)
 
-            if(search.label !== "" && item.regiao.includes(search.label)){
+            if(search.label !== "" && item.Bairro.includes(search.label)){
               setRealEstate("")
             }
 

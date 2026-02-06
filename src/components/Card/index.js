@@ -54,19 +54,19 @@ export default function MultiActionAreaCard(props) {
       // setArticles(articles);
       articles.filter(item => {
 
-        if(item.valor_venda !== null)
+        if(item.Valor_Venda !== null)
           setSalePrice(true)
 
-        if(item.valor_aluguel !== null)
+        if(item.Valor_Aluguel !== null)
           setRentalValue(true)
       })
     } else {
       if(articles?.length > 0){
         articles.filter(item => {
-          if(item.valor_venda !== null)
+          if(item.Valor_Venda !== null)
             setSalePrice(true)
 
-          if(item.valor_aluguel !== null)
+          if(item.Valor_Aluguel !== null)
             setRentalValue(true)
         })
       }
@@ -96,7 +96,7 @@ export default function MultiActionAreaCard(props) {
         {articles?.length > 0 && articles.map(
           (card, index) => (
             <>
-              {card.valor_venda !== null ? (
+              {card.Valor_Venda !== null ? (
                   <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
                     <CardActionArea>
                       <ThumbSLider 
@@ -108,7 +108,10 @@ export default function MultiActionAreaCard(props) {
                       />
                       <CardContent onClick={(e) => {handleClick(card.id, card) }}>
                         <Typography className="title-imovel" gutterBottom variant="h5">
-                          {card.regiao}
+                          {card.titulo}
+                        </Typography>
+                        <Typography className="title-imovel" gutterBottom variant="h5">
+                          {card.Bairro}
                         </Typography>
 
                         <Typography variant="body2" color="text.secondary" component="div" style={{ marginBottom: "5px" }}>
@@ -116,9 +119,9 @@ export default function MultiActionAreaCard(props) {
                         </Typography>
 
                         <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                          {card.valor_venda !== null ? (
+                          {card.Valor_Venda !== null ? (
                             <div>
-                              R$ {card.valor_venda}
+                              R$ {card.Valor_Venda}
                             </div>
                           )
                             : ''
@@ -177,7 +180,7 @@ export default function MultiActionAreaCard(props) {
       {articles?.length > 0 && articles.map(
       (card, index) => (
         <>
-        {card.valor_aluguel !== null ? (
+        {card.Valor_Aluguel !== null ? (
               <Card className="card" key={card.id} sx={{ maxWidth: 345 }} >
                 <CardActionArea>
                   <ThumbSLider 
@@ -188,7 +191,10 @@ export default function MultiActionAreaCard(props) {
                   />
                   <CardContent onClick={(e) => {handleClick(card.id, card) }}>
                     <Typography className="title-imovel" gutterBottom variant="h5">
-                      {card.regiao}
+                      {card.titulo}
+                    </Typography>
+                    <Typography className="title-imovel" gutterBottom variant="h5">
+                      {card.Bairro}
                     </Typography>
 
                     <Typography className="descripition" variant="body2" color="text.secondary" component="div">
@@ -197,9 +203,9 @@ export default function MultiActionAreaCard(props) {
                     <br />
         
                     <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                      {card.valor_aluguel !== null ? (
+                      {card.Valor_Aluguel !== null ? (
                         <div>
-                          R$ {card.valor_aluguel}
+                          R$ {card.Valor_Aluguel}
                         </div>
                       )
                         : ''
