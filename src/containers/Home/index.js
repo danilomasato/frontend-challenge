@@ -57,7 +57,6 @@ const Home = ({ character, imoveisCache }) => {
 
   useEffect(() => {
     character.character?.data?.length > 0 ? setImoveis(character.character?.data) : setImoveis(imoveisCache.data)
-
   }, [character, imoveisCache]);
 
   useEffect(() => {

@@ -37,19 +37,14 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   const [imoveis, setImoveis] = useState([]);
   const history = useHistory();
   const urlShare = window.location.href
-  const idMount = window.location.hash.substring(0, 11).replace('#/imovel/', '')
-
-
-  // if (characterDetail.characterDetail.length === 0) {
-  //   history.push('/')
-  // }
+  const idMount = parseInt(window.location.hash.substring(0, 11).replace('#/imovel/',''))
 
   let rows = []
 
   useEffect(() => {
     const imoveis = data?.length > 0 ? data : imoveisCache.data;
     setImoveis(imoveis)
-  }, [imoveisCache]);
+  }, [imoveisCache, data]);
   useEffect(() => {
     // if(authors.data?.length > 0){
     //   authors.data.filter((item, index) =>  {
@@ -63,7 +58,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
     
       if(imoveis?.length > 0) {
         imoveis.filter((item, index) => {
-          if(item.id === parseInt(idMount)){
+          if(item.id === idMount){
             realRstate = item
             setInfoImoveis(item)
             setImoveis(item)
@@ -135,13 +130,14 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
       <Header />
 
         <div className="ThumbSLider-highligh">
-          <ThumbSLider
-            height="300"
-            image={imoveis?.fotos}
-            alt={imoveis?.descricao }
-            title={imoveis?.descricao}
-            onClick={handleClickOpen}
-          />
+              <ThumbSLider
+                height="300"
+                image={imoveis?.fotos?.length > 0 && imoveis?.fotos}
+                alt={imoveis?.descricao }
+                title={imoveis?.descricao}
+                onClick={handleClickOpen}
+              />
+  
           <div className="ThumbSLider-info">
               <span className="imovel"> {imoveis?.imovel || ''} </span>
           </div>

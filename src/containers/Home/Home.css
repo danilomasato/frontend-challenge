@@ -38,7 +38,7 @@ div[role="alert"] {
 .card .container__slider .slick-slide:after {
 	content: "";
     position: absolute;
-    width: 50px;
+    width: 84px;
     height: 50px;
     background-image: url("https://tudosobreap.com.br/static/media/logo_tsa.065f0e6987b69aca20e9.png");
     bottom: 15px;
