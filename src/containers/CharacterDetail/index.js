@@ -43,7 +43,9 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
   useEffect(() => {
     const imoveis = data?.length > 0 ? data : imoveisCache.data;
-    setImoveis(imoveis)
+    if(imoveis?.length > 0){
+      setImoveis(imoveis)
+    }
   }, [imoveisCache, data]);
   useEffect(() => {
     // if(authors.data?.length > 0){
@@ -58,7 +60,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
     
       if(imoveis?.length > 0) {
         imoveis.filter((item, index) => {
-          if(item.id === idMount){
+          if(item.id === parseInt(idMount)){
             realRstate = item
             setInfoImoveis(item)
             setImoveis(item)
@@ -130,14 +132,13 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
       <Header />
 
         <div className="ThumbSLider-highligh">
-              <ThumbSLider
-                height="300"
-                image={imoveis?.fotos?.length > 0 && imoveis?.fotos}
-                alt={imoveis?.descricao }
-                title={imoveis?.descricao}
-                onClick={handleClickOpen}
-              />
-  
+          <ThumbSLider
+            height="300"
+            image={imoveis?.fotos}
+            alt={imoveis?.descricao }
+            title={imoveis?.descricao}
+            onClick={handleClickOpen}
+          />
           <div className="ThumbSLider-info">
               <span className="imovel"> {imoveis?.imovel || ''} </span>
           </div>

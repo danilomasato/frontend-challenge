@@ -32,26 +32,19 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { getArticles } from "../../actions";
 
-const CardDetail = ({ data, character }) => {
+const CardDetail = ({ data }) => {
   const baseURL = process.env.REACT_APP_BASEURL;
   const urlShare = window.location.href
-  const idMount = parseInt(window.location.hash.substring(0, 11).replace('#/imovel/',''))
+  const idMount = window.location.hash.substring(0, 11).replace('#/imovel/', '')
   const [imovel, setImovel] = useState([]);
   const [card, setCard] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [openShare, setOpenShare] = React.useState(false);
-
-  const property = character && character.character?.data?.length > 0 ? character.character.data : character?.imoveisCache.data
   
   useEffect(() => {
-    if(property?.length > 0){
-      property.filter(item => {
-        if (item.id === idMount){
-          setImovel(item)
-        }
-      })
-    }
-  }, [property]);
+    if( data?.length > 0)
+    setImovel(data?.length > 0 && data.filter(item => item.id === parseInt(idMount))[0])
+  }, [data]);
   
   const handleClickOpen = () => {
     setOpen(true);
