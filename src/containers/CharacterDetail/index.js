@@ -31,6 +31,7 @@ import "./DetailImovel.css";
 import { getArticles } from "../../actions";
 import ThumbSLider from "../../components/ThumbSlider";
 
+
 const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
   const [infoImoveis, setInfoImoveis] = useState([]);
@@ -64,6 +65,18 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
             realRstate = item
             setInfoImoveis(item)
             setImoveis(item)
+
+            item?.descricao?.length > 0 && item.descricao.map((desc, index) => {
+
+               if(desc.type == "list"){
+                desc?.children?.length > 0 && desc.children.map(
+                  (listItem, index) => (
+                    
+                      console.log("listItem==================>", listItem.children[0].text)
+                    
+                ))
+              }
+            })
           }
         })
       }
@@ -134,9 +147,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
         <div className="ThumbSLider-highligh">
           <ThumbSLider
             height="300"
-            image={imoveis?.fotos}
-            alt={imoveis?.descricao }
-            title={imoveis?.descricao}
+            image={imoveis?.Fotos}
             onClick={handleClickOpen}
           />
           <div className="ThumbSLider-info">
@@ -156,7 +167,40 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
             Descrição
           </h2>
 
-          <span className={(openToggle ? 'active' : '')}>{infoImoveis?.descricao}</span>
+          {imoveis?.descricao?.length > 0 && imoveis.descricao.map(
+            (desc, index) => (
+              <>
+                {desc.type == "paragraph" ? (
+                  <>
+                    <Box key={index} className={(openToggle ? 'active' : '')}>
+                      <Typography gutterBottom variant="h5">{desc.children[0].text}</Typography>
+                    </Box>
+                  </>
+                )
+                  : ''
+                }
+              </>
+            ))}
+
+            {imoveis?.descricao?.length > 0 && imoveis.descricao.map(
+            (desc, index) => (
+              <>
+                {desc.type == "list" ? (
+                  <>
+                    <ol className="list">
+                    {desc?.children?.length > 0 && desc.children.map(
+                      (listItem, index) => (
+                        <li key={index} gutterBottom variant="h5" style={{  }}>
+                          {listItem.children[0].text}
+                        </li>
+                    ))}
+                    </ol>
+                  </>
+                )
+                  : ''
+                }
+              </>
+            ))}
           <button onClick={(e) => setOpenToggle(!openToggle) }>Saiba mais <KeyboardArrowDownIcon style={{ float: "right" }}/></button>
         </Box>
         <br />
