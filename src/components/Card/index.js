@@ -101,7 +101,7 @@ export default function MultiActionAreaCard(props) {
                     <CardActionArea>
                       <ThumbSLider 
                         height="180"
-                        image={card.fotos}
+                        image={card.Fotos}
                         alt={card.imovel}
                         title={card.imovel}
                         home="true"
@@ -185,7 +185,7 @@ export default function MultiActionAreaCard(props) {
                 <CardActionArea>
                   <ThumbSLider 
                     height="200"
-                    image={card.fotos}
+                    image={card.Fotos}
                     alt={card.imovel}
                     title={card.imovel}
                   />
