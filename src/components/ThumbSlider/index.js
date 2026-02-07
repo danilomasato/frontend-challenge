@@ -30,7 +30,7 @@ const baseURL = process.env.REACT_APP_URL;
         )
       : ( 
       <>
-        <img src={`https://www2.camara.leg.br/atividade-legislativa/comissoes/comissoes-permanentes/cindra/imagens/sem.jpg.gif/image`} style={{ width: "100%", height: image.height + 'px', objectFit: 'contain' }} alt='sem imagem' />
+        <img src={`https://www2.camara.leg.br/atividade-legislativa/comissoes/comissoes-permanentes/cindra/imagens/sem.jpg.gif/image`} style={{ width: "100%", height:'200px', objectFit: 'contain' }} alt='sem imagem' />
       </>
       )
       }
