@@ -161,7 +161,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
         <CardDetail data={imoveis} imovel={infoImoveis} />
 
         <Box className="propertyDetails" sx={{ width: '100%' }} >
-          <Box sx={{ width: '100%' }} className={`caracteristicas ${(openToggle ? 'active' : '')}`}>
+          <Box sx={{ width: '100%' }} className={`caracteristicas ${(openToggle ? 'active' : '')}`} style={{height: imoveis?.descricao?.length > 0 ? '' : '0' }}>
 						<h2>
 							Descrição
 						</h2>
