@@ -107,27 +107,25 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
   if(infoImoveis?.valor_venda !== null) {
     rows = [
-      createData('Andar', infoImoveis?.Andar || ''),
-      createData('Área útil', infoImoveis?.Area_util + ' (m²)' || '') ,
-      createData('Área total', infoImoveis?.Area_Total + ' (m²)' || ''),
-      createData('Área terreno', infoImoveis?.Area_Terreno || '') ,
-      createData('Ano de construção', infoImoveis?.Ano_Construcao || ''),
-      createData('Condomínio', 'R$' + infoImoveis?.Condominio || ''),
-      createData('IPTU (anual)', 'R$' + infoImoveis?.IPTU || ''),
-      createData('Quartos', infoImoveis?.Quartos || ''),
-      createData('Suítes', infoImoveis?.Suites || ''),
-      createData('Banheiros', infoImoveis?.Banheiros || ''),
+      createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar  : ''),
+      createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
+      createData('Ano de construção', infoImoveis?.Ano_de_Construcao !== null ? infoImoveis.Ano_de_Construcao  : 'Sem Informação'),
+      createData('Condomínio', infoImoveis?.Condominio !== null ? 'R$' + infoImoveis.Condominio  : ''),
+      createData('IPTU (anual)', infoImoveis?.IPTU !== null ? 'R$' + infoImoveis.IPTU  : ''),
+      createData('Quartos', infoImoveis?.Quartos !== null ? infoImoveis.Quartos  : ''),
+      createData('Suítes', infoImoveis?.Suites !== null ? infoImoveis.Suites  : ''),
+      createData('Banheiros', infoImoveis?.Banheiros !== null ? infoImoveis.Banheiros  : ''),
     ]
     rows = rows.filter(item => item.info !== '');
   } else {
     rows = [
-      createData('Andar', infoImoveis?.Andar),
-      createData('Área útil', infoImoveis?.Area_util + ' (m²)'),
-      createData('Condomínio', 'R$' + infoImoveis?.Condominio),
-      createData('IPTU (anual)', 'R$' + infoImoveis?.IPTU),
-      createData('Quartos', infoImoveis?.Quartos),
-      createData('Suítes', infoImoveis?.Suites),
-      createData('Banheiros', infoImoveis?.Banheiros),
+      createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar  : ''),
+      createData('Área útil', infoImoveis?.Area_util !== null ? infoImoveis.Area_util + ' (m²)' : 'Sem Informação'),
+      createData('Condomínio', infoImoveis?.Condominio !== null ? 'R$' + infoImoveis?.Condominio  : ''),
+      createData('IPTU (anual)', infoImoveis?.IPTU !== null ? 'R$' + infoImoveis.IPTU  : ''),
+      createData('Quartos', infoImoveis?.Quartos !== null ? infoImoveis.Quartos  : ''),
+      createData('Suítes', infoImoveis?.Suites !== null ? infoImoveis.Suites  : ''),
+      createData('Banheiros', infoImoveis?.Banheiros !== null ?infoImoveis.Banheiros  : ''),
     ]
     rows = rows.filter(item => item.info !== '');
   }
