@@ -94,6 +94,8 @@
 
 .caracteristicas {
 	float: left;
+    height: 330px;
+    overflow: hidden;
 	width: 500px;
 	max-width: 500px;
 	margin-bottom: 10px;
@@ -121,15 +123,15 @@
 	padding: 5px 0;
 }
 
-.caracteristicas span.active {
-	height: 110px;
+.caracteristicas.active {
+	height: 770px;
 	transition: height 0.5s ease-in-out;
 }
 
-.caracteristicas button {
+.propertyDetails button {
 	float: left;
 	margin-top: 10px;
-	width: 100%;
+	width: 60%;
 }
 
 .caracteristicas button svg {

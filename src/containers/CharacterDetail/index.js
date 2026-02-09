@@ -162,46 +162,46 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
         <CardDetail data={imoveis} imovel={infoImoveis} />
 
-        <Box className="caracteristicas" sx={{ width: '100%' }}>
-          <h2>
-            Descrição
-          </h2>
+        <Box className="propertyDetails" sx={{ width: '100%' }} >
+          <Box sx={{ width: '100%' }} className={`caracteristicas ${(openToggle ? 'active' : '')}`}>
+						<h2>
+							Descrição
+						</h2>
 
-          {imoveis?.descricao?.length > 0 && imoveis.descricao.map(
-            (desc, index) => (
-              <>
-                {desc.type == "paragraph" ? (
-                  <>
-                    <Box key={index} className={(openToggle ? 'active' : '')}>
-                      <Typography gutterBottom variant="h5">{desc.children[0].text}</Typography>
-                    </Box>
-                  </>
-                )
-                  : ''
-                }
-              </>
-            ))}
+						{imoveis?.descricao?.length > 0 && imoveis.descricao.map(
+							(desc, index) => (
+								<>
+									{desc.type == "paragraph" ? (
+										<>
+											<Typography gutterBottom variant="h5">{desc.children[0].text}</Typography>
+										</>
+									)
+										: ''
+									}
+								</>
+							))}
 
-            {imoveis?.descricao?.length > 0 && imoveis.descricao.map(
-            (desc, index) => (
-              <>
-                {desc.type == "list" ? (
-                  <>
-                    <ol className="list">
-                    {desc?.children?.length > 0 && desc.children.map(
-                      (listItem, index) => (
-                        <li key={index} gutterBottom variant="h5" style={{  }}>
-                          {listItem.children[0].text}
-                        </li>
-                    ))}
-                    </ol>
-                  </>
-                )
-                  : ''
-                }
-              </>
-            ))}
-          <button onClick={(e) => setOpenToggle(!openToggle) }>Saiba mais <KeyboardArrowDownIcon style={{ float: "right" }}/></button>
+							{imoveis?.descricao?.length > 0 && imoveis.descricao.map(
+							(desc, index) => (
+								<>
+									{desc.type == "list" ? (
+										<>
+											<ol className="list">
+											{desc?.children?.length > 0 && desc.children.map(
+												(listItem, index) => (
+													<li key={index} gutterBottom variant="h5" style={{  }}>
+														{listItem.children[0].text}
+													</li>
+											))}
+											</ol>
+										</>
+									)
+										: ''
+									}
+								</>
+							))}
+        	</Box>
+					<button onClick={(e) => setOpenToggle(!openToggle) }>Saiba mais <KeyboardArrowDownIcon style={{ float: "right" }}/></button>
         </Box>
         <br />
 
