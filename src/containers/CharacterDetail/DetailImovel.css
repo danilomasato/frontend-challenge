@@ -94,8 +94,8 @@
 
 .caracteristicas {
 	float: left;
-    height: 330px;
-    overflow: hidden;
+  height: 340px;
+  overflow: hidden;
 	width: 500px;
 	max-width: 500px;
 	margin-bottom: 10px;
@@ -104,6 +104,8 @@
 
 .caracteristicas h2 {
 	float: left;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
 }
 
 .caracteristicas h5, .caracteristicas .list {
@@ -125,12 +127,12 @@
 }
 
 .caracteristicas.active {
-	height: 770px;
+	height: 775px;
 }
 
 .propertyDetails button {
 	float: left;
-	margin-top: 10px;
+	margin: 10px 0 20px 0;
 	width: 60%;
 }
 

@@ -152,9 +152,9 @@ const CardDetail = ({ data }) => {
             <CardActionArea>
               <CardContent>
                 <Typography className="icon-card icon-sale" variant="h6" color="text.secondary">
-                  {imovel?.valor_venda !== null ? (
+                  {imovel?.Valor_Venda !== null ? (
                     <div>
-                      R$ {imovel?.valor_venda}
+                      R$ {imovel?.Valor_Venda}
                     </div>
                   )
                     : <div>R$ {imovel?.valor_aluguel}</div>

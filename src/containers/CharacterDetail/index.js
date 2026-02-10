@@ -93,7 +93,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
     return { name, info};
   }
 
-  if(infoImoveis?.valor_venda !== null) {
+  if(infoImoveis?.Valor_Venda !== null) {
     rows = [
       createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar  : ''),
       createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
