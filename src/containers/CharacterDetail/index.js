@@ -30,7 +30,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import "./DetailImovel.css";
 import { getArticles } from "../../actions";
 import ThumbSLider from "../../components/ThumbSlider";
-
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
@@ -188,7 +188,14 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 								</>
 							))}
         	</Box>
-					<button onClick={(e) => setOpenToggle(!openToggle) }>Saiba mais <KeyboardArrowDownIcon style={{ float: "right" }}/></button>
+					<button onClick={(e) => setOpenToggle(!openToggle) }>
+            Saiba mais
+            { openToggle ? 
+              (<><KeyboardArrowUpIcon style={{ float: "right" }}/></>)
+            :
+              (<><KeyboardArrowDownIcon style={{ float: "right" }}/></>)
+            }
+          </button>
         </Box>
         <br />
 

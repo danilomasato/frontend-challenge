@@ -99,6 +99,7 @@
 	width: 500px;
 	max-width: 500px;
 	margin-bottom: 10px;
+	transition: height 0.5s ease-in-out;
 }
 
 .caracteristicas h2 {
@@ -125,7 +126,6 @@
 
 .caracteristicas.active {
 	height: 770px;
-	transition: height 0.5s ease-in-out;
 }
 
 .propertyDetails button {
