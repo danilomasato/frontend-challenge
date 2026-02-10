@@ -150,7 +150,7 @@ const CardDetail = ({ data }) => {
           <Card className="card imovel-info" key={imovel?.id} sx={{ maxWidth: 300,  background: 'transparent',
             border: '0', boxShadow: 'none', marginBottom: '40px' }}>
             <CardActionArea>
-              <CardContent>
+              <CardContent style={{ padding: "0px", marginTop: "20px"}}>
                 <Typography className="icon-card icon-sale" variant="h6" color="text.secondary">
                   {imovel?.Valor_Venda !== null ? (
                     <div>
