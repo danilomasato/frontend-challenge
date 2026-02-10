@@ -27,13 +27,15 @@ footer {
     padding: 0 15px;
 }
 .footer-col h4 {
-    font-size: 18px;
+    font-size: 14px;
+    font-weight: bold;
     color: white;
     margin-bottom: 20px;
-    font-weight: 500;
+    font-weight: bold;
     position: relative;
     text-transform: uppercase;
 }
+
 .footer-col ul {
     list-style: none;
 }
