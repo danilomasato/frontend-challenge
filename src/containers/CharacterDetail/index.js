@@ -65,18 +65,6 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
             realRstate = item
             setInfoImoveis(item)
             setImoveis(item)
-
-            item?.descricao?.length > 0 && item.descricao.map((desc, index) => {
-
-               if(desc.type == "list"){
-                desc?.children?.length > 0 && desc.children.map(
-                  (listItem, index) => (
-                    
-                      console.log("listItem==================>", listItem.children[0].text)
-                    
-                ))
-              }
-            })
           }
         })
       }
@@ -146,6 +134,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
           <ThumbSLider
             height="300"
             image={imoveis?.Fotos}
+            detail="true"
             onClick={handleClickOpen}
           />
           <div className="ThumbSLider-info">

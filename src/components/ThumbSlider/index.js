@@ -8,6 +8,7 @@ const baseURL = process.env.REACT_APP_URL;
 
   const ThumbSLider = (image) => {
   const fotos = image.image;
+
   var settings = {
     dots: true,
     infinite: true,

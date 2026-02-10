@@ -188,6 +188,7 @@ export default function MultiActionAreaCard(props) {
                     image={card.Fotos}
                     alt={card.imovel}
                     title={card.imovel}
+                    home="true"
                   />
                   <CardContent onClick={(e) => {handleClick(card.id, card) }}>
                     <Typography className="title-imovel" gutterBottom variant="h5">

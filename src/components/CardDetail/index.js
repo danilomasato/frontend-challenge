@@ -119,7 +119,7 @@ const CardDetail = ({ data }) => {
         >
           <DialogContent style={{ height: "660px" }}>
             <ThumbSLider
-              image={imovel?.fotos}
+              image={imovel?.Fotos}
               alt={imovel?.imovel}
               title={imovel?.imovel}
             />
