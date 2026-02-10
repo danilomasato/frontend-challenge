@@ -35,7 +35,8 @@
 
 .ThumbSLider-highligh .slick-track img {
   height: 400px;
-  object-fit: none;
+	object-fit: cover;
+	object-position: 0px -570px;
 }
 .ThumbSLider-highligh .slick-dots  {
     width: 400px;
