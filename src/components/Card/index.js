@@ -42,7 +42,6 @@ export default function MultiActionAreaCard(props) {
   useEffect(() => {
     if(props.data.character?.data?.length > 0) {
       setArticles(props.data.character.data)
-
     } else {
       setArticles(props.data.imoveisCache?.data)
     }
@@ -96,7 +95,7 @@ export default function MultiActionAreaCard(props) {
         {articles?.length > 0 && articles.map(
           (card, index) => (
             <>
-              {card.Valor_Venda !== null ? (
+              {card.Valor_Venda !== null && card.Tipo_de_Anuncio !== "Lançamentos" ? (
                   <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
                     <CardActionArea>
                       <ThumbSLider 
@@ -180,7 +179,7 @@ export default function MultiActionAreaCard(props) {
       {articles?.length > 0 && articles.map(
       (card, index) => (
         <>
-        {card.Valor_Aluguel !== null ? (
+        {card.Valor_Aluguel !== null && card.Tipo_de_Anuncio !== "Lançamentos" ? (
               <Card className="card" key={card.id} sx={{ maxWidth: 345 }} >
                 <CardActionArea>
                   <ThumbSLider 
@@ -260,7 +259,7 @@ export default function MultiActionAreaCard(props) {
       {articles?.length > 0 && articles.map(
       (card, index) => (
         <>
-        {card.Tipo_Residencia?.includes('lançamentos') ? (
+        {card.Tipo_de_Anuncio.includes('Lançamentos') ? (
               <Card className="card" key={card.id} sx={{ maxWidth: 345 }} >
                 <CardActionArea>
                   <ThumbSLider 
