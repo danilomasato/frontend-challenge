@@ -109,13 +109,13 @@ export default function MultiActionAreaCard(props) {
                         <Typography className="title-imovel" gutterBottom variant="h5">
                           {card.titulo}
                         </Typography>
-                        <Typography className="title-imovel" gutterBottom variant="h5">
+                        <Typography className="descripition" gutterBottom variant="h5">
                           {card.Bairro}
                         </Typography>
 
-                        <Typography variant="body2" color="text.secondary" component="div" style={{ marginBottom: "5px" }}>
+                        {/* <Typography variant="body2" color="text.secondary" component="div" style={{ marginBottom: "5px" }}>
                           {card.imovel} 
-                        </Typography>
+                        </Typography> */}
 
                         <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                           {card.Valor_Venda !== null ? (
@@ -193,13 +193,13 @@ export default function MultiActionAreaCard(props) {
                     <Typography className="title-imovel" gutterBottom variant="h5">
                       {card.titulo}
                     </Typography>
-                    <Typography className="title-imovel" gutterBottom variant="h5">
+                    <Typography className="descripition" gutterBottom variant="h5">
                       {card.Bairro}
                     </Typography>
-
+{/* 
                     <Typography className="descripition" variant="body2" color="text.secondary" component="div">
                       {card.rua}
-                    </Typography>
+                    </Typography> */}
                     <br />
         
                     <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
@@ -273,14 +273,13 @@ export default function MultiActionAreaCard(props) {
                     <Typography className="title-imovel" gutterBottom variant="h5">
                       {card.titulo}
                     </Typography>
-                    <Typography className="title-imovel" gutterBottom variant="h5">
+                    <Typography className="descripition" gutterBottom variant="h5">
                       {card.Bairro}
                     </Typography>
 
-                    <Typography className="descripition" variant="body2" color="text.secondary" component="div">
+                    {/* <Typography className="descripition" variant="body2" color="text.secondary" component="div">
                       {card.rua}
-                    </Typography>
-                    <br />
+                    </Typography> */}
         
                     <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                       {card.Valor_Aluguel !== null ? (

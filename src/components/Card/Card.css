@@ -88,6 +88,14 @@
     color: #ffffff;
 }
 
+.card .descripition {
+  max-height: 40px;
+  height: 30px;
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: initial;
+}
+
 @media only screen and (min-width: 1025px) {
 	.home.center {
 		width: 1230px;
@@ -98,13 +106,6 @@
 	.card {
 		width: 100%;
 		max-width: 100% !important;
-	}
-
-    .card .descripition {
-    	max-height: 40px;
-    	height: 40px;
-    	overflow: hidden;
-    }
-    
+	} 
 }
 
