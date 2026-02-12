@@ -23,7 +23,7 @@ const Home = ({ character, imoveisCache }) => {
   const [realEstate, setRealEstate] = useState([]);
   const [search, setSearch] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [imoveis, setImoveis] = useState(false);
+  const [imoveis, setImoveis] = useState([]);
   const [error, setError] = useState(null);
   const [options, setOptions] = useState([]);
 
@@ -54,13 +54,16 @@ const Home = ({ character, imoveisCache }) => {
   //   fetchData();
 
   // }, [realEstate]); // Empty dependency array ensures this runs once
+  const payload = character.character?.data
 
   useEffect(() => {
-    character.character?.data?.length > 0 ? setImoveis(character.character?.data) : setImoveis(imoveisCache.data)
-  }, []);
+    payload?.length > 0 ? setImoveis(payload) : setImoveis(imoveisCache.data)
+      console.log("imoveis================>", imoveis)
+
+  }, [character]);
 
   useEffect(() => {
-    character.character.data?.length > 0 ? setRealEstate({character: { data: character.character.data }}) : setRealEstate(imoveisCache.data)
+    payload?.length > 0 ? setRealEstate({character: { data: payload }}) : setRealEstate(imoveisCache.data)
   }, [character]);
   
   let research= [];
@@ -70,6 +73,7 @@ const Home = ({ character, imoveisCache }) => {
 
     //data for card
     if(imoveis?.length > 0 ){
+
       const mapa = new Map();
       imoveis.forEach(obj => {
           mapa.set(obj.Bairro, obj); // Define o ID como chave e o objeto como valor
@@ -88,30 +92,32 @@ const Home = ({ character, imoveisCache }) => {
           if(a.label > b.label) return 1;
           return 0;
       }))
- 
-      imoveis.filter((item, index) => {
-          if(item.Bairro.includes(search.label)){
-            //loading
-            setLoading(true)
+      
+    if(search?.label?.length > 0 ){
+        imoveis.filter((item, index) => {
+            if(item.Bairro.includes(search.label)){
+              //loading
+              setLoading(true)
 
-            if(search.label !== "" && item.Bairro.includes(search.label)){
-              setRealEstate("")
+              if(search.label !== "" && item.Bairro.includes(search.label)){
+                setRealEstate("")
+              }
+
+              research = research.concat(item)
+
+              setTimeout(() => {
+                
+                setRealEstate({character: {
+                  data: research
+                }})
+                setLoading(false)
+                setSearch(false)
+              }, 2500);
+
             }
-
-            research = research.concat(item)
-
-            setTimeout(() => {
-              
-              setRealEstate({character: {
-                data: research
-              }})
-              setLoading(false)
-              setSearch(false)
-            }, 2500);
-
           }
-        }
-      )
+        )
+      }
     } 
 
     //Disable click right mouse
