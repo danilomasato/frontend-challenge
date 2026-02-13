@@ -153,12 +153,12 @@ export default function MultiActionAreaCard(props) {
                           <DirectionsCarIcon /> {card.Vagas} 
                         </Typography>
                       </CardContent>
+                      <CardActions className="wrap-see-more">
+                        <Button className="see-more" variant="contained" onClick={(e) => {handleClick(card.id, card) }}>
+                          Ver Mais
+                        </Button>
+                      </CardActions>
                     </CardActionArea>
-                    <CardActions>
-                      <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
-                        Ver Mais
-                      </Button>
-                    </CardActions>
                   </Card>
                 )
                 : ''
@@ -231,12 +231,12 @@ export default function MultiActionAreaCard(props) {
                       <DirectionsCarIcon /> {card.Vagas} 
                     </Typography>
                   </CardContent>
+                  <CardActions className="wrap-see-more">
+                    <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
+                      Ver Mais
+                    </Button>
+                  </CardActions>
                 </CardActionArea>
-                <CardActions>
-                  <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
-                    Ver Mais
-                  </Button>
-                </CardActions>
               </Card>
           )
             : ''
@@ -310,12 +310,12 @@ export default function MultiActionAreaCard(props) {
                       <DirectionsCarIcon /> {card.Vagas} 
                     </Typography>
                   </CardContent>
+                  <CardActions className="wrap-see-more">
+                    <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
+                      Ver Mais
+                    </Button>
+                  </CardActions>
                 </CardActionArea>
-                <CardActions>
-                  <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
-                    Ver Mais
-                  </Button>
-                </CardActions>
               </Card>
           )
             : ''

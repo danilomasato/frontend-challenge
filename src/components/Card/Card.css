@@ -106,6 +106,27 @@
 	.card {
 		width: 100%;
 		max-width: 100% !important;
-	} 
+    position: relative;
+    padding-bottom: 20px;
+	}
+
+    .card .wrap-see-more {
+      width: 100px;
+      position: absolute;
+      right: 10px;
+      bottom: -10px; 
+    }
+
+    .card .see-more {
+        width: 100%;
+    }
+
+    .card .see-more:hover {
+      background-color: rgb(11, 44, 61);
+      box-shadow: none;
+    }
+
 }
+
+
 
