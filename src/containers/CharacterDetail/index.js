@@ -96,7 +96,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   if(infoImoveis?.Valor_Venda !== null) {
     console.log("Number.isFinite(infoImoveis.Condominio)", Number.isFinite(infoImoveis.Condominio))
     rows = [
-      createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar  : ''),
+      createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar + 'º' : ''),
       createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
       createData('Ano de construção', infoImoveis?.Ano_de_Construcao !== null ? infoImoveis.Ano_de_Construcao  : 'Sem Informação'),
       createData('Condomínio', infoImoveis?.Condominio !== null && Number.isFinite(infoImoveis.Condominio) ? 'R$' + infoImoveis.Condominio  : 'Sem Informação'),
@@ -108,7 +108,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
     rows = rows.filter(item => item.info !== '');
   } else {
     rows = [
-      createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar  : ''),
+      createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar + 'º' : ''),
       createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
       createData('Condomínio', infoImoveis?.Condominio !== null && Number.isFinite(infoImoveis.Condominio) ? 'R$' + infoImoveis?.Condominio  : ''),
       createData('IPTU (anual)', infoImoveis?.IPTU !== null ? 'R$' + infoImoveis.IPTU  : ''),
