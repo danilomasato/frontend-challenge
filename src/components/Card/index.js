@@ -259,7 +259,7 @@ export default function MultiActionAreaCard(props) {
       {articles?.length > 0 && articles.map(
       (card, index) => (
         <>
-        {card.Tipo_de_Anuncio?.includes('Lançamentos') ? (
+        {card.Tipo_de_Anuncio !== null && card.Tipo_de_Anuncio?.includes('Lançamentos') ? (
               <Card className="card" key={card.id} sx={{ maxWidth: 345 }} >
                 <CardActionArea>
                   <ThumbSLider 
