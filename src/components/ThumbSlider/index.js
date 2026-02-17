@@ -31,7 +31,7 @@ const baseURL = process.env.REACT_APP_URL;
         )
       : ( 
       <>
-        <img src={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8lRbS7eKYzDq-Ftxc1p8G_TTw2unWBMEYUw&s`} style={{ width: "100%", height:'200px', objectFit: 'contain' }} alt='sem imagem' />
+        <img src={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8lRbS7eKYzDq-Ftxc1p8G_TTw2unWBMEYUw&s`} style={{ width: "100%", height:'200px', objectFit: 'none' }} alt='sem imagem' />
       </>
       )
       }

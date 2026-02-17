@@ -17,7 +17,7 @@ export const Footer = data => {
                       </ul>
                   </div>
                  
-                  <div className="footer-col">
+                  {/* <div className="footer-col">
                       <h4>Avaliações de Clientes</h4>
                       <ul>
                           <li>
@@ -33,7 +33,7 @@ export const Footer = data => {
                             </span>
                           </li>
                       </ul>
-                  </div>
+                  </div> */}
                 
                   <div className="footer-col">
                       <h4>Afiliados</h4>

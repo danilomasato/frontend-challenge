@@ -17,6 +17,7 @@ import { Loading } from "../../components/Loading";
 import { TopInfo } from "../../components/TopInfo";
 import { Footer } from "../../components/Footer";
 import { GetAPI } from "../../utils";
+import { CustomerTestimonials } from "../../components/CustomerTestimonials";
 
 const Home = ({ character, imoveisCache }) => {
 
@@ -58,8 +59,6 @@ const Home = ({ character, imoveisCache }) => {
 
   useEffect(() => {
     payload?.length > 0 ? setImoveis(payload) : setImoveis(imoveisCache.data)
-      console.log("imoveis================>", imoveis)
-
   }, [character]);
 
   useEffect(() => {
@@ -186,6 +185,8 @@ const Home = ({ character, imoveisCache }) => {
       }
 
       <Pagination data={realEstate} />
+
+      <CustomerTestimonials />
       <Footer />
     </React.Fragment>
   );

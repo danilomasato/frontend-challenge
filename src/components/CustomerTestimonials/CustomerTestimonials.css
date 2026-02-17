@@ -1,0 +1,17 @@
+.CustomerTestimonials {
+	margin: 40px 0 0 0;
+  padding: 0 0 30px 0;
+  background: #f7f7f8;
+}
+
+.CustomerTestimonials .CustomerTestimonials-card {
+	border: 1px solid #eaeef5;
+	padding: 0px 16px;
+	border-radius: 8px;
+	box-shadow: none;
+}
+
+.CustomerTestimonials .separator {
+	display: block;
+  margin: 0 auto;
+}
