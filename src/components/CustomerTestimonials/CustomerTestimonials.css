@@ -1,7 +1,11 @@
 .CustomerTestimonials {
-	margin: 40px 0 0 0;
+	margin: 40px 0 30px 0;
   padding: 0 0 30px 0;
   background: #f7f7f8;
+}
+
+.footer {
+	margin-top: 0;
 }
 
 .CustomerTestimonials  .row {
