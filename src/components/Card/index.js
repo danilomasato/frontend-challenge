@@ -77,7 +77,7 @@ export default function MultiActionAreaCard(props) {
       type: types.RECEIVE_CHARACTER,
       payload: articles.filter(item => item.id === cardID)
     })
-    history.push(`/imovel/${card.id}/${card.titulo.replace(/[\s,]/g,"-")}`)
+    history.push(`/imovel/${card.id}/${card.titulo.replace(/[\s,]/g,"-").replace("/","-")}`)
   };
 
   return (

@@ -94,11 +94,12 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   }
 
   if(infoImoveis?.Valor_Venda !== null) {
+    console.log("Number.isFinite(infoImoveis.Condominio)", Number.isFinite(infoImoveis.Condominio))
     rows = [
       createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar  : ''),
       createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
       createData('Ano de construção', infoImoveis?.Ano_de_Construcao !== null ? infoImoveis.Ano_de_Construcao  : 'Sem Informação'),
-      createData('Condomínio', infoImoveis?.Condominio !== null ? 'R$' + infoImoveis.Condominio  : ''),
+      createData('Condomínio', infoImoveis?.Condominio !== null && Number.isFinite(infoImoveis.Condominio) ? 'R$' + infoImoveis.Condominio  : 'Sem Informação'),
       createData('IPTU (anual)', infoImoveis?.IPTU !== null ? 'R$' + infoImoveis.IPTU  : ''),
       createData('Quartos', infoImoveis?.Quartos !== null ? infoImoveis.Quartos  : ''),
       createData('Suítes', infoImoveis?.Suites !== null ? infoImoveis.Suites  : ''),
@@ -108,8 +109,8 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   } else {
     rows = [
       createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar  : ''),
-      createData('Área útil', infoImoveis?.Area_util !== null ? infoImoveis.Area_util + ' (m²)' : 'Sem Informação'),
-      createData('Condomínio', infoImoveis?.Condominio !== null ? 'R$' + infoImoveis?.Condominio  : ''),
+      createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
+      createData('Condomínio', infoImoveis?.Condominio !== null && Number.isFinite(infoImoveis.Condominio) ? 'R$' + infoImoveis?.Condominio  : ''),
       createData('IPTU (anual)', infoImoveis?.IPTU !== null ? 'R$' + infoImoveis.IPTU  : ''),
       createData('Quartos', infoImoveis?.Quartos !== null ? infoImoveis.Quartos  : ''),
       createData('Suítes', infoImoveis?.Suites !== null ? infoImoveis.Suites  : ''),
