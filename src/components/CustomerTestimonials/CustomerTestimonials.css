@@ -4,11 +4,25 @@
   background: #f7f7f8;
 }
 
+.CustomerTestimonials  .row {
+  margin-top: 23px;
+}
+
 .CustomerTestimonials .CustomerTestimonials-card {
 	border: 1px solid #eaeef5;
 	padding: 0px 16px;
 	border-radius: 8px;
 	box-shadow: none;
+}
+
+.CustomerTestimonials h2 {
+	color: #1E2126;
+	font-size: 1.5rem;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 600;
+	line-height: 36px;
+	letter-spacing: 0em;
+	margin-bottom: 20px;
 }
 
 .CustomerTestimonials .separator {

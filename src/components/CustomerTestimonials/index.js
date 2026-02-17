@@ -21,6 +21,7 @@ export const CustomerTestimonials  = () => {
         </svg>
 
         <div className="row center">
+          <h2>Veja os depoimentos dos nossos clientes</h2>
           <Card className="CustomerTestimonials-card" sx={{ maxWidth: 345 }}>
             <CardHeader
               avatar={
