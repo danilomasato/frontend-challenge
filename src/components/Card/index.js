@@ -196,11 +196,6 @@ export default function MultiActionAreaCard(props) {
                     <Typography className="descripition" gutterBottom variant="h5">
                       {card.Bairro}
                     </Typography>
-{/* 
-                    <Typography className="descripition" variant="body2" color="text.secondary" component="div">
-                      {card.rua}
-                    </Typography> */}
-                    <br />
         
                     <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                       {card.Valor_Aluguel !== null ? (
