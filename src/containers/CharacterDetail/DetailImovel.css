@@ -89,18 +89,19 @@
 	}
 
   .ThumbSLider-highligh .slick-track img {
-        object-fit: cover;
+    object-fit: cover;
 	}
 }
 
 .caracteristicas {
 	float: left;
-  height: 340px;
+  min-height: 255px;
+  max-height: 340px;
   overflow: hidden;
 	width: 500px;
 	max-width: 500px;
 	margin-bottom: 10px;
-	transition: height 0.5s ease-in-out;
+	transition: max-height 0.5s ease-in-out;
 }
 
 .caracteristicas h2 {
@@ -128,7 +129,7 @@
 }
 
 .caracteristicas.active {
-	height: 775px;
+	max-height: max-content;
 }
 
 .propertyDetails button {
