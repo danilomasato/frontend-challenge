@@ -161,24 +161,7 @@ export default function MultiActionAreaCard(props) {
                     </CardActionArea>
                   </Card>
                 )
-                : (<>
-                  <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
-                    <CardActionArea>
-                      <ThumbSLider 
-                        height="180"
-                        image={card.Fotos}
-                        alt={card.imovel}
-                        title={card.imovel}
-                        home="true"
-                      />
-                      <CardContent onClick={(e) => {handleClick(card.id, card) }}>
-                        <Typography className="title-imovel" gutterBottom variant="h5">
-                          Imovél faltando informação
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </>)
+                : ''
             }
           </>
         ))}
@@ -277,63 +260,63 @@ export default function MultiActionAreaCard(props) {
       (card, index) => (
         <>
         {card.Tipo_de_Anuncio !== null && card.Tipo_de_Anuncio?.includes('Lançamentos') ? (
-              <Card className="card" key={card.id} sx={{ maxWidth: 345 }} >
-                <CardActionArea>
-                  <ThumbSLider 
-                    height="200"
-                    image={card.Fotos}
-                    alt={card.imovel}
-                    title={card.imovel}
-                    home="true"
-                  />
-                  <CardContent onClick={(e) => {handleClick(card.id, card) }}>
-                    <Typography className="title-imovel" gutterBottom variant="h5">
-                      {card.titulo}
-                    </Typography>
-                    <Typography className="descripition" gutterBottom variant="h5">
-                      {card.Bairro}
-                    </Typography>
+            <Card className="card" key={card.id} sx={{ maxWidth: 345 }} >
+              <CardActionArea>
+                <ThumbSLider 
+                  height="200"
+                  image={card.Fotos}
+                  alt={card.imovel}
+                  title={card.imovel}
+                  home="true"
+                />
+                <CardContent onClick={(e) => {handleClick(card.id, card) }}>
+                  <Typography className="title-imovel" gutterBottom variant="h5">
+                    {card.titulo}
+                  </Typography>
+                  <Typography className="descripition" gutterBottom variant="h5">
+                    {card.Bairro}
+                  </Typography>
 
-                    {/* <Typography className="descripition" variant="body2" color="text.secondary" component="div">
-                      {card.rua}
-                    </Typography> */}
-        
-                    <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                      {card.Valor_Aluguel !== null ? (
-                        <div>
-                          R$ {card.Valor_Aluguel}
-                        </div>
-                      )
-                        : ''
-                      }
-                    </Typography>
-                    <Typography className="icon-card" variant="body2" color="text.secondary">
-                       {card.Area_Total !== null ? (
-                            <div>
-                              <FullscreenIcon />
-                              {card.Area_Total} m<span className="mcubico">2</span>
-                            </div>
-                          )
-                            : ''
-                          }
-                    </Typography>
-                    <Typography className="icon-card" variant="body2" color="text.secondary">
-                      <BedIcon /> {card.Quartos} 
-                    </Typography>
-                    <Typography className="icon-card" variant="body2" color="text.secondary">
-                      <ShowerIcon /> {card.Banheiros} 
-                    </Typography>
-                    <Typography className="icon-card" variant="body2" color="text.secondary">
-                      <DirectionsCarIcon /> {card.Vagas} 
-                    </Typography>
-                  </CardContent>
-                  <CardActions className="wrap-see-more">
-                    <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
-                      Ver Mais
-                    </Button>
-                  </CardActions>
-                </CardActionArea>
-              </Card>
+                  {/* <Typography className="descripition" variant="body2" color="text.secondary" component="div">
+                    {card.rua}
+                  </Typography> */}
+      
+                  <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
+                    {card.Valor_Aluguel !== null ? (
+                      <div>
+                        R$ {card.Valor_Aluguel}
+                      </div>
+                    )
+                      : ''
+                    }
+                  </Typography>
+                  <Typography className="icon-card" variant="body2" color="text.secondary">
+                      {card.Area_Total !== null ? (
+                          <div>
+                            <FullscreenIcon />
+                            {card.Area_Total} m<span className="mcubico">2</span>
+                          </div>
+                        )
+                          : ''
+                        }
+                  </Typography>
+                  <Typography className="icon-card" variant="body2" color="text.secondary">
+                    <BedIcon /> {card.Quartos} 
+                  </Typography>
+                  <Typography className="icon-card" variant="body2" color="text.secondary">
+                    <ShowerIcon /> {card.Banheiros} 
+                  </Typography>
+                  <Typography className="icon-card" variant="body2" color="text.secondary">
+                    <DirectionsCarIcon /> {card.Vagas} 
+                  </Typography>
+                </CardContent>
+                <CardActions className="wrap-see-more">
+                  <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
+                    Ver Mais
+                  </Button>
+                </CardActions>
+              </CardActionArea>
+            </Card>
           )
             : ''
           }
