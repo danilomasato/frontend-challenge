@@ -161,7 +161,24 @@ export default function MultiActionAreaCard(props) {
                     </CardActionArea>
                   </Card>
                 )
-                : ''
+                : (<>
+                  <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
+                    <CardActionArea>
+                      <ThumbSLider 
+                        height="180"
+                        image={card.Fotos}
+                        alt={card.imovel}
+                        title={card.imovel}
+                        home="true"
+                      />
+                      <CardContent onClick={(e) => {handleClick(card.id, card) }}>
+                        <Typography className="title-imovel" gutterBottom variant="h5">
+                          Imovél faltando informação
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </>)
             }
           </>
         ))}
