@@ -100,10 +100,10 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
       createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
       createData('Ano de construção', infoImoveis?.Ano_de_Construcao !== null ? infoImoveis.Ano_de_Construcao  : 'Sem Informação'),
       createData('Condomínio', infoImoveis?.Condominio !== null && Number.isFinite(infoImoveis.Condominio) ? 'R$' + infoImoveis.Condominio  : 'Sem Informação'),
-      createData('IPTU (anual)', infoImoveis?.IPTU !== null ? 'R$' + infoImoveis.IPTU  : ''),
-      createData('Quartos', infoImoveis?.Quartos !== null ? infoImoveis.Quartos  : ''),
-      createData('Suítes', infoImoveis?.Suites !== null ? infoImoveis.Suites  : ''),
-      createData('Banheiros', infoImoveis?.Banheiros !== null ? infoImoveis.Banheiros  : ''),
+      createData('IPTU (anual)', infoImoveis?.IPTU !== null ? 'R$' + infoImoveis.IPTU  : 'Sem Informação'),
+      createData('Quartos', infoImoveis?.Quartos !== null ? infoImoveis.Quartos  : 'Sem Informação'),
+      createData('Suítes', infoImoveis?.Suites !== null ? infoImoveis.Suites  : 'Sem Informação'),
+      createData('Banheiros', infoImoveis?.Banheiros !== null ? infoImoveis.Banheiros  : 'Sem Informação'),
     ]
     rows = rows.filter(item => item.info !== '');
   } else {
@@ -114,7 +114,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
       createData('IPTU (anual)', infoImoveis?.IPTU !== null ? 'R$' + infoImoveis.IPTU  : ''),
       createData('Quartos', infoImoveis?.Quartos !== null ? infoImoveis.Quartos  : ''),
       createData('Suítes', infoImoveis?.Suites !== null ? infoImoveis.Suites  : ''),
-      createData('Banheiros', infoImoveis?.Banheiros !== null ?infoImoveis.Banheiros  : ''),
+      createData('Banheiros', infoImoveis?.Banheiros !== null ? infoImoveis.Banheiros  : 'Sem Informação'),
     ]
     rows = rows.filter(item => item.info !== '');
   }

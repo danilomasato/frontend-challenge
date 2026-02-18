@@ -96,7 +96,7 @@ export default function MultiActionAreaCard(props) {
           (card, index) => (
             <>
               {card.Valor_Venda !== null && card.Tipo_de_Anuncio !== "Lançamentos" ? (
-                  <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
+                  <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id, card) }}>
                     <CardActionArea>
                       <ThumbSLider 
                         height="180"
@@ -105,18 +105,16 @@ export default function MultiActionAreaCard(props) {
                         title={card.imovel}
                         home="true"
                       />
-                      <CardContent onClick={(e) => {handleClick(card.id, card) }}>
+                      <CardContent className="CardContent">
                         <Typography className="title-imovel" gutterBottom variant="h5">
                           {card.titulo}
                         </Typography>
                         <Typography className="descripition" gutterBottom variant="h5">
                           {card.Bairro}
                         </Typography>
+                      </CardContent>
 
-                        {/* <Typography variant="body2" color="text.secondary" component="div" style={{ marginBottom: "5px" }}>
-                          {card.imovel} 
-                        </Typography> */}
-
+                      <CardContent  className="CardContent">
                         <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                           {card.Valor_Venda !== null ? (
                             <div>
@@ -152,12 +150,12 @@ export default function MultiActionAreaCard(props) {
                         <Typography className="icon-card" variant="body2" color="text.secondary">
                           <DirectionsCarIcon /> {card.Vagas} 
                         </Typography>
+                        <CardActions className="wrap-see-more">
+                          <Button className="see-more" variant="contained" onClick={(e) => {handleClick(card.id, card) }}>
+                            Ver Mais
+                          </Button>
+                        </CardActions>
                       </CardContent>
-                      <CardActions className="wrap-see-more">
-                        <Button className="see-more" variant="contained" onClick={(e) => {handleClick(card.id, card) }}>
-                          Ver Mais
-                        </Button>
-                      </CardActions>
                     </CardActionArea>
                   </Card>
                 )
@@ -180,7 +178,7 @@ export default function MultiActionAreaCard(props) {
       (card, index) => (
         <>
         {card.Valor_Aluguel !== null && card.Tipo_de_Anuncio !== "Lançamentos" ? (
-              <Card className="card" key={card.id} sx={{ maxWidth: 345 }} >
+              <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id, card) }}>
                 <CardActionArea>
                   <ThumbSLider 
                     height="200"
@@ -189,14 +187,17 @@ export default function MultiActionAreaCard(props) {
                     title={card.imovel}
                     home="true"
                   />
-                  <CardContent onClick={(e) => {handleClick(card.id, card) }}>
+
+                  <CardContent className="CardContent">
                     <Typography className="title-imovel" gutterBottom variant="h5">
                       {card.titulo}
                     </Typography>
                     <Typography className="descripition" gutterBottom variant="h5">
                       {card.Bairro}
                     </Typography>
-        
+                  </CardContent>
+
+                  <CardContent className="CardContent">
                     <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                       {card.Valor_Aluguel !== null ? (
                         <div>
@@ -225,12 +226,12 @@ export default function MultiActionAreaCard(props) {
                     <Typography className="icon-card" variant="body2" color="text.secondary">
                       <DirectionsCarIcon /> {card.Vagas} 
                     </Typography>
+                    <CardActions className="wrap-see-more">
+                      <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
+                        Ver Mais
+                      </Button>
+                    </CardActions>
                   </CardContent>
-                  <CardActions className="wrap-see-more">
-                    <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
-                      Ver Mais
-                    </Button>
-                  </CardActions>
                 </CardActionArea>
               </Card>
           )
@@ -255,7 +256,7 @@ export default function MultiActionAreaCard(props) {
       (card, index) => (
         <>
         {card.Tipo_de_Anuncio !== null && card.Tipo_de_Anuncio?.includes('Lançamentos') ? (
-            <Card className="card" key={card.id} sx={{ maxWidth: 345 }} >
+            <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id, card) }}>
               <CardActionArea>
                 <ThumbSLider 
                   height="200"
@@ -264,18 +265,15 @@ export default function MultiActionAreaCard(props) {
                   title={card.imovel}
                   home="true"
                 />
-                <CardContent onClick={(e) => {handleClick(card.id, card) }}>
+                <CardContent className="CardContent">
                   <Typography className="title-imovel" gutterBottom variant="h5">
                     {card.titulo}
                   </Typography>
                   <Typography className="descripition" gutterBottom variant="h5">
                     {card.Bairro}
                   </Typography>
-
-                  {/* <Typography className="descripition" variant="body2" color="text.secondary" component="div">
-                    {card.rua}
-                  </Typography> */}
-      
+                </CardContent>
+                <CardContent className="CardContent">
                   <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                     {card.Valor_Aluguel !== null ? (
                       <div>
@@ -304,12 +302,12 @@ export default function MultiActionAreaCard(props) {
                   <Typography className="icon-card" variant="body2" color="text.secondary">
                     <DirectionsCarIcon /> {card.Vagas} 
                   </Typography>
+                  <CardActions className="wrap-see-more">
+                    <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
+                      Ver Mais
+                    </Button>
+                  </CardActions>
                 </CardContent>
-                <CardActions className="wrap-see-more">
-                  <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
-                    Ver Mais
-                  </Button>
-                </CardActions>
               </CardActionArea>
             </Card>
           )
