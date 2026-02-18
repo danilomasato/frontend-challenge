@@ -96,15 +96,15 @@ export default function MultiActionAreaCard(props) {
           (card, index) => (
             <>
               {card.Valor_Venda !== null && card.Tipo_de_Anuncio !== "Lançamentos" ? (
-                  <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id, card) }}>
-                    <CardActionArea>
-                      <ThumbSLider 
+                  <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
+                     <ThumbSLider 
                         height="180"
                         image={card.Fotos}
                         alt={card.imovel}
                         title={card.imovel}
                         home="true"
                       />
+                    <CardActionArea onClick={(e) => {handleClick(card.id, card) }}>
                       <CardContent className="CardContent">
                         <Typography className="title-imovel" gutterBottom variant="h5">
                           {card.titulo}
@@ -178,16 +178,15 @@ export default function MultiActionAreaCard(props) {
       (card, index) => (
         <>
         {card.Valor_Aluguel !== null && card.Tipo_de_Anuncio !== "Lançamentos" ? (
-              <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id, card) }}>
-                <CardActionArea>
-                  <ThumbSLider 
+              <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
+                 <ThumbSLider 
                     height="200"
                     image={card.Fotos}
                     alt={card.imovel}
                     title={card.imovel}
                     home="true"
                   />
-
+                <CardActionArea onClick={(e) => {handleClick(card.id, card) }}>
                   <CardContent className="CardContent">
                     <Typography className="title-imovel" gutterBottom variant="h5">
                       {card.titulo}
@@ -237,8 +236,6 @@ export default function MultiActionAreaCard(props) {
           )
             : ''
           }
-
-          
         </>
       ))}
     </Container>
@@ -256,15 +253,15 @@ export default function MultiActionAreaCard(props) {
       (card, index) => (
         <>
         {card.Tipo_de_Anuncio !== null && card.Tipo_de_Anuncio?.includes('Lançamentos') ? (
-            <Card className="card" key={card.id} sx={{ maxWidth: 345 }} onClick={(e) => {handleClick(card.id, card) }}>
-              <CardActionArea>
-                <ThumbSLider 
+            <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
+              <ThumbSLider 
                   height="200"
                   image={card.Fotos}
                   alt={card.imovel}
                   title={card.imovel}
                   home="true"
                 />
+              <CardActionArea onClick={(e) => {handleClick(card.id, card) }}>
                 <CardContent className="CardContent">
                   <Typography className="title-imovel" gutterBottom variant="h5">
                     {card.titulo}
