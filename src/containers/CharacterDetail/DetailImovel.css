@@ -36,8 +36,8 @@
 .ThumbSLider-highligh .slick-track img {
   height: 400px;
 	object-fit: cover;
-	object-position: 0px -570px;
 }
+
 .ThumbSLider-highligh .slick-dots  {
     width: 400px;
     bottom: -0;
@@ -140,4 +140,11 @@
 
 .caracteristicas button svg {
 	float: right !important;
+}
+
+@media only screen and (min-width: 1024px) {
+
+.ThumbSLider-highligh .slick-track img {
+	object-position: 0px -570px;
+  }
 }
