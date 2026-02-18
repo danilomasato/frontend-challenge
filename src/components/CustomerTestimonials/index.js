@@ -25,7 +25,7 @@ export const CustomerTestimonials  = () => {
           <Card className="CustomerTestimonials-card" sx={{ maxWidth: 345 }}>
             <CardHeader
               avatar={
-                <Avatar sx={{ backgroundImage: `url('https://tudosobreap.com.br/assets/images/brendaqueiroz.jpg')`, backgroundSize: 'cover' }} aria-label="recipe">
+                <Avatar className="svg" sx={{ backgroundImage: `url('https://tudosobreap.com.br/assets/images/brendaqueiroz.jpg')`, backgroundSize: 'cover' }} aria-label="recipe">
                 </Avatar>
               }
               title="Brenda Queiroz"

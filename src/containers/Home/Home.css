@@ -6,6 +6,10 @@ div[role="alert"] {
 	background: rgb(20 20 20 / 70%) !important;
 }
 
+.CustomerTestimonials + .footer {
+	margin-top: 0;
+}
+
 @media only screen and (max-width: 1024px) {
 	.css-pztpmr {
 		display: grid;
