@@ -272,18 +272,6 @@ const CardDetail = ({ data }) => {
                     <hr />
 
                     <Typography className="ThumbSLider-description" gutterBottom>
-                        
-
-                        {/* {imovel?.Condominio == null  ? (
-                         'Total:' +(parseInt(imovel?.Valor_Venda?.replace(".",""))).toLocaleString('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL'
-                          })
-                        )
-                        : 
-                          'Total: Sem informação'
-                        } */}
-
                         {imovel?.Condominio !== null  && imovel?.IPTU !== null ? (
                          'Total: ' + (parseInt(imovel?.Valor_Venda !== null ? imovel?.Valor_Venda : imovel?.Valor_Aluguel) + parseInt(imovel?.IPTU?.replace(".","")) + parseInt(!typeof imovel?.Condominio === 'string' ? imovel?.Condominio : 0)).toLocaleString('pt-BR', {
                             style: 'currency',
@@ -300,8 +288,6 @@ const CardDetail = ({ data }) => {
                             style: 'currency',
                             currency: 'BRL'
                           }) : 'Total: Sem informação')
-                          
-                            
                         }
                     </Typography>
                   </Box>
