@@ -109,7 +109,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
     rows = [
       createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar + 'º' : ''),
       createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
-      createData('Condomínio', infoImoveis?.Condominio !== null && Number.isFinite(infoImoveis.Condominio) ? 'R$' + infoImoveis?.Condominio  : ''),
+      createData('Condomínio', infoImoveis?.Condominio !== null && Number.isFinite(infoImoveis.Condominio) ? 'R$' + infoImoveis?.Condominio  : 'Sem Informação'),
       createData('IPTU (anual)', infoImoveis?.IPTU !== null ? parseInt(infoImoveis.IPTU).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''),
       createData('Quartos', infoImoveis?.Quartos !== null ? infoImoveis.Quartos  : ''),
       createData('Suítes', infoImoveis?.Suites !== null ? infoImoveis.Suites  : ''),
