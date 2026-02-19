@@ -118,7 +118,10 @@ export default function MultiActionAreaCard(props) {
                         <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                           {card.Valor_Venda !== null ? (
                             <div>
-                              R$ {card.Valor_Venda}
+                              R$ {card?.Valor_Venda?.toLocaleString('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL'
+                              })}
                             </div>
                           )
                             : ''
@@ -200,7 +203,10 @@ export default function MultiActionAreaCard(props) {
                     <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                       {card.Valor_Aluguel !== null ? (
                         <div>
-                          R$ {card.Valor_Aluguel}
+                          {parseInt(card?.Valor_Aluguel)?.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                          })}
                         </div>
                       )
                         : ''
@@ -274,7 +280,10 @@ export default function MultiActionAreaCard(props) {
                   <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                     {card.Valor_Aluguel !== null ? (
                       <div>
-                        R$ {card.Valor_Aluguel}
+                        {parseInt(card?.Valor_Aluguel).toLocaleString('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL'
+                        })}
                       </div>
                     )
                       : ''

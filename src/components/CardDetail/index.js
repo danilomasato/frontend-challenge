@@ -154,18 +154,18 @@ const CardDetail = ({ data }) => {
                 <Typography className="icon-card icon-sale" variant="h6" color="text.secondary">
                   {imovel?.Valor_Venda !== null ? (
                     <div>
-                      {new Intl.NumberFormat('pt-BR', {
+                      R$ {imovel?.Valor_Venda?.toLocaleString('pt-BR', {
                         style: 'currency',
                         currency: 'BRL'
-                      }).format(imovel?.Valor_Venda)}
+                      })}
                     </div>
                   )
                     : 
                       <div>
-                      {new Intl.NumberFormat('pt-BR', {
+                      {parseInt(imovel?.Valor_Aluguel)?.toLocaleString('pt-BR', {
                         style: 'currency',
                         currency: 'BRL'
-                      }).format(imovel?.Valor_Aluguel)}
+                      })}
                     </div>
                     
                   }
