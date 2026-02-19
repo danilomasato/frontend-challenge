@@ -170,3 +170,19 @@
 		}
 }
 
+@media only screen and (max-width: 1024px) {
+	.PriceDetails {
+    display: block;
+    box-shadow: none !important;
+    height: 150px;
+    position: initial; 
+    width: 100%;
+    float: left;
+    margin: 20px;
+  }
+
+	.GroupBelowHighligh .imovel-info {
+    margin: 0 auto;
+    float: none;
+	}
+}

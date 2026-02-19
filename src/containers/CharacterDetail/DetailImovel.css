@@ -148,3 +148,17 @@
 	object-position: 0px -570px;
   }
 }
+
+@media only screen and (max-width: 1024px) {
+  .caracteristicas {
+    padding: 0 20px;
+    box-sizing: border-box;
+	}
+
+	.propertyDetails button {
+    margin-left: 20%;
+	}
+}
+
+
+	
