@@ -129,9 +129,9 @@
 	top: 250px;
 	bottom: 0;
 	height: 150px;
-  background: #f7f7f8 !important;
+    background: #f7f7f8 !important;
 	box-shadow: none !important;
-	border: 1px solid rgb(237 237 237 / 60%);
+	border: 1px solid rgb(231 236 243);
 }
 
 .PriceDetails button {
