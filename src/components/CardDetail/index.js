@@ -236,7 +236,7 @@ const CardDetail = ({ data }) => {
                     <Typography className="ThumbSLider-description" gutterBottom>
                       {imovel?.Valor_Venda !== null ? (
                         <div>
-                          R$ {imovel?.Valor_Venda?.toLocaleString('pt-BR', {
+                          Valor do imóvel: R$ {imovel?.Valor_Venda?.toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
                           })}
