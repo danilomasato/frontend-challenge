@@ -167,7 +167,6 @@ const CardDetail = ({ data }) => {
                         currency: 'BRL'
                       })}
                     </div>
-                    
                   }
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">
@@ -227,6 +226,58 @@ const CardDetail = ({ data }) => {
                     </Typography>
                   </Box>
                 </CardContent>
+              </CardActionArea>
+          </Card>
+
+          <Card className="PriceDetails" key={card.id} sx={{ maxWidth: 345 }} style={{ overflow: "visible"}}>
+              <CardActionArea>
+                <CardContent>
+                  <Box className="contact">
+                    <Typography className="ThumbSLider-description" gutterBottom>
+                      {imovel?.Valor_Venda !== null ? (
+                        <div>
+                          R$ {imovel?.Valor_Venda?.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                          })}
+                        </div>
+                      )
+                        : 
+                          <div>
+                          {parseInt(imovel?.Valor_Aluguel)?.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                          })}
+                        </div> 
+                      }
+                    </Typography>
+                    <Typography className="ThumbSLider-description" gutterBottom>
+                      IPTU: {imovel?.IPTU?.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                          })}
+                    </Typography>
+                    <Typography className="ThumbSLider-description" gutterBottom>
+                      {imovel?.Condominio ? (
+                       'Condomínio: R$' + imovel.Condominio
+                      )
+                      : 
+                        'Condomínio: Sem informação'
+                      }
+                    </Typography>
+
+                    <hr />
+
+                    <Typography className="ThumbSLider-description" gutterBottom>
+                      Total: {(parseInt(imovel?.Valor_Venda?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".","")) + parseInt(imovel?.Condominio?.replace(".",""))).toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                          })}
+                    </Typography>
+                  </Box>
+                </CardContent>
+
+                
               </CardActionArea>
           </Card>
         </box>

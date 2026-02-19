@@ -122,6 +122,25 @@
     margin-right: 5px;
 }
 
+.PriceDetails {
+	width: 230px;
+	position: absolute;
+	right: 30px;
+	top: 250px;
+	bottom: 0;
+	height: 150px;
+  background: #f7f7f8 !important;
+}
+
+.PriceDetails button {
+	height: 100%;
+}
+
+.PriceDetails p {
+	color: #786e6e !important;
+	font-size: 0.8rem;
+}
+
 @media only screen and (max-width: 1024px) {
 		.ThumbSLider-author .avatar {
     	position: initial;
