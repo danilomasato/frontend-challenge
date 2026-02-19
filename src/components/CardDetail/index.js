@@ -154,10 +154,20 @@ const CardDetail = ({ data }) => {
                 <Typography className="icon-card icon-sale" variant="h6" color="text.secondary">
                   {imovel?.Valor_Venda !== null ? (
                     <div>
-                      R$ {imovel?.Valor_Venda}
+                      {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                      }).format(imovel?.Valor_Venda)}
                     </div>
                   )
-                    : <div>R$ {imovel?.valor_aluguel}</div>
+                    : 
+                      <div>
+                      {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                      }).format(imovel?.Valor_Aluguel)}
+                    </div>
+                    
                   }
                 </Typography>
                 <Typography className="icon-card" variant="body2" color="text.secondary">

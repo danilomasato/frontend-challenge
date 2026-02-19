@@ -94,7 +94,6 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   }
 
   if(infoImoveis?.Valor_Venda !== null) {
-    console.log("Number.isFinite(infoImoveis.Condominio)", Number.isFinite(infoImoveis.Condominio))
     rows = [
       createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar + 'º' : ''),
       createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
