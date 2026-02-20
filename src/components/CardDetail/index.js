@@ -234,9 +234,9 @@ const CardDetail = ({ data }) => {
                 <CardContent>
                   <Box className="contact">
                     <Typography className="ThumbSLider-description">
-                      {imovel?.Valor_Venda !== null ? (
+                      {imovel?.Valor_Venda == null ? (
                         <div>
-                          Aluguel: {imovel?.Valor_Venda?.toLocaleString('pt-BR', {
+                          Aluguel: {parseInt(imovel?.Valor_Aluguel)?.toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
                           })}
@@ -244,7 +244,7 @@ const CardDetail = ({ data }) => {
                       )
                         : 
                         <div>
-                          Venda: {parseInt(imovel?.Valor_Aluguel)?.toLocaleString('pt-BR', {
+                          Venda: {parseInt(imovel?.Valor_Venda)?.toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
                           })}
@@ -252,7 +252,7 @@ const CardDetail = ({ data }) => {
                       }
                     </Typography>
                     <Typography className="ThumbSLider-description">
-                       {imovel?.Condominio ? (
+                       {imovel?.IPTU ? (
                        ' IPTU: ' +  parseInt(imovel?.IPTU).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
                       )
                       : 
@@ -261,8 +261,8 @@ const CardDetail = ({ data }) => {
                      
                     </Typography>
                     <Typography className="ThumbSLider-description">
-                      {!typeof imovel?.Condominio === 'string' ? (
-                       'Condomínio: R$' + imovel.Condominio
+                      {imovel?.Condominio ? (
+                       'Condomínio: ' + (typeof imovel?.Condominio !== 'string' ? 'R$ ' + imovel.Condominio : 'Sem informação')
                       )
                       : 
                         'Condomínio: Sem informação'
@@ -271,13 +271,16 @@ const CardDetail = ({ data }) => {
 
                     <hr />
 
-                    <Typography className="ThumbSLider-description" gutterBottom>
-                        {imovel?.Condominio !== null  && imovel?.IPTU !== null ? (
-                         'Total: ' + (parseInt(imovel?.Valor_Venda !== null ? imovel?.Valor_Venda : imovel?.Valor_Aluguel) + parseInt(imovel?.IPTU?.replace(".","")) + parseInt(!typeof imovel?.Condominio === 'string' ? imovel?.Condominio : 0)).toLocaleString('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL'
-                          })
+                    <Typography className="ThumbSLider-description">
+                   {/* {parseInt(imovel?.Valor_Venda?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}))} */}
+                      {/* {parseInt(imovel?.Valor_Venda?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + (parseInt(imovel.Condominio?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".","")))} */}
+                        {imovel?.Condominio !== null && imovel?.IPTU !== null ? (
+                          imovel.Tipo_de_Anuncio == 'venda'                                
+                            ?  (typeof imovel?.Condominio !== 'string' && imovel?.Valor_Venda !== null ? parseFloat(imovel?.Valor_Venda?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + (parseInt(imovel?.Condominio?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : parseInt(imovel?.Valor_Venda?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})
+                            :  (typeof imovel?.Condominio !== 'string' && imovel?.Valor_Aluguel !== null ? parseFloat(imovel?.Valor_Aluguel?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + (parseInt(imovel?.Condominio?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : parseInt(imovel?.Valor_Aluguel?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})                                                      
                         )
+                          //  parseFloat(imovel?.Valor_Venda?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + (parseInt(imovel?.Condominio?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".","")))
+                        
                         : 
                           imovel?.IPTU == null && imovel?.Condominio == null ? (
                           'Total: ' + (parseInt(imovel?.Valor_Venda?.replace(".",""))).toLocaleString('pt-BR', {
