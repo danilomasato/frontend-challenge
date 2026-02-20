@@ -244,7 +244,7 @@ const CardDetail = ({ data }) => {
                       )
                         : 
                         <div>
-                          Venda: {parseInt(imovel?.Valor_Venda)?.toLocaleString('pt-BR', {
+                          Venda:  {'R$ ' + imovel?.Valor_Venda?.toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
                           })}
