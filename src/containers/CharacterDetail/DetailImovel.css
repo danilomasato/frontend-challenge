@@ -7,13 +7,9 @@
     font-size: 0.8rem;
 }
 
-.back {
-    float: left;
-    margin-top: 20px;
-}
-
 .back button {
     color: rgba(0, 0, 0, 0.6);
+		padding-left: 0;
 }
 
 .ThumbSLider-highligh .container__slider .slick-slide:after {
@@ -147,6 +143,10 @@
 /* .ThumbSLider-highligh .slick-track img {
 	object-position: 0px -570px;
   } */
+  .back {
+    float: left;
+    margin-top: 20px;
+  }
 }
 
 @media only screen and (max-width: 1024px) {
@@ -157,6 +157,14 @@
 
 	.propertyDetails button {
     margin-left: 20%;
+	}
+
+	.back {
+    margin-top: 0px;
+		margin-left: 20px;
+	}
+	div.row.center > div.ThumbSLider-highligh .card.imovel-info > button > div {
+    margin-top: 0px !important;
 	}
 }
 
