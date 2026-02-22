@@ -1,19 +1,23 @@
 {
   "files": {
-    "main.css": "/static/css/main.2f502ccd.css",
-    "main.js": "/static/js/main.26792aba.js",
+    "main.css": "/static/css/main.a71125ab.css",
+    "main.js": "/static/js/main.9742e416.js",
     "static/media/logo_tsa.png": "/static/media/logo_tsa.065f0e6987b69aca20e9.png",
     "static/media/Quicksand_Bold.otf": "/static/media/Quicksand_Bold.90bf44d43965116d771b.otf",
     "static/media/Quicksand_Book.otf": "/static/media/Quicksand_Book.c86e224d3dd24efee96a.otf",
     "static/media/Quicksand_Light.otf": "/static/media/Quicksand_Light.beba9db7b80e69e3e3e9.otf",
     "static/media/kleber.jpg": "/static/media/kleber.991123644ed0a717076c.jpg",
     "static/media/vania.jpg": "/static/media/vania.de685a05096cb2b32bae.jpg",
+    "static/media/slick.svg": "/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.2f502ccd.css.map": "/static/css/main.2f502ccd.css.map",
-    "main.26792aba.js.map": "/static/js/main.26792aba.js.map"
+    "main.a71125ab.css.map": "/static/css/main.a71125ab.css.map",
+    "main.9742e416.js.map": "/static/js/main.9742e416.js.map"
   },
   "entrypoints": [
-    "static/css/main.2f502ccd.css",
-    "static/js/main.26792aba.js"
+    "static/css/main.a71125ab.css",
+    "static/js/main.9742e416.js"
   ]
 }

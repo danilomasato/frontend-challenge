@@ -6,6 +6,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 const baseURL = process.env.REACT_APP_URL;
 
+  const deviceWidth = document.documentElement.clientWidth || window.innerWidth || window.screen.width
+
   const ThumbSLider = (image) => {
   const fotos = image.image;
   const settings = {
@@ -13,11 +15,10 @@ const baseURL = process.env.REACT_APP_URL;
     className: "center",
     infinite: true,
     centerPadding: "60px",
-    slidesToShow: image?.detail ? 3 : 1,
+    slidesToShow: image?.detail && deviceWidth > 1024 ? 3 : 1,
     arrows: true,
     speed: 500
   }
-  
 
   return (
     <>
@@ -25,7 +26,7 @@ const baseURL = process.env.REACT_APP_URL;
           <>
           <Slider {...settings} className="container__slider">
             {fotos.map((image, index) => {
-              return <h3><img key={index} src={ image.home === "true" ? image.formats.small.url : (image.width > 1980 ? image.formats.large.url : image.url ) } style={{ width: "100%", objectFit: 'cover' }} alt={image.imgAlt} /></h3>;
+              return <h3><img key={index} src={ image.home === "true" ? image.formats.small.url : (image.width > 1280 ? image.formats.large.url : image?.detail && deviceWidth >= 390 ? image.formats.medium.url : image.formats.small.url  ) } style={{ width: "100%", objectFit: 'cover' }} alt={image.imgAlt} /></h3>;
             })}
           </Slider>
           </>

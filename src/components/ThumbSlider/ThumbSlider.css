@@ -167,4 +167,10 @@
   }
 }
 
+@media only screen and (max-width: 1024px) {
+
+  .slick-slider h3 {
+    padding: 0;
+  }
+}
     
