@@ -144,9 +144,9 @@
 
 @media only screen and (min-width: 1280px) {
 
-.ThumbSLider-highligh .slick-track img {
+/* .ThumbSLider-highligh .slick-track img {
 	object-position: 0px -570px;
-  }
+  } */
 }
 
 @media only screen and (max-width: 1024px) {

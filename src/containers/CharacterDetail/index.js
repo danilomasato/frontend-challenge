@@ -130,7 +130,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
       <TopInfo />
       <Header />
 
-        <div className="ThumbSLider-highligh">
+        <div className="ThumbSLider-highligh slick-slider center slick-initialized">
           <ThumbSLider
             height="300"
             image={imoveis?.Fotos}

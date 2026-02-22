@@ -10,6 +10,12 @@ div[role="alert"] {
 	margin-top: 0;
 }
 
+.home .slick-slider h3 {
+    padding: 0 !important;
+}
+
+.home  .slick-dots { margin-left: 25% !important; }
+
 @media only screen and (max-width: 1024px) {
 	.css-pztpmr {
 		display: grid;

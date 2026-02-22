@@ -26,6 +26,7 @@
     "react-slick": "^0.31.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.19",
     "web-vitals": "^1.1.2"
   },
