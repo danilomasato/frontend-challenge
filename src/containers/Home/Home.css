@@ -59,6 +59,7 @@ div[role="alert"] {
     right: 15px;
     opacity: 0.6;
     background-size: cover;
+    z-index: 9;
 }
 
 

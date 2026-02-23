@@ -160,6 +160,10 @@
   height: auto;
 }
 
+.slick-initialized .slick-slide {
+  position: relative;
+}
+
 @media only screen and (min-width: 1025px) {
   .MuiDialog-container .slider__item img {
     height: 600px;

@@ -106,9 +106,6 @@ const CardDetail = ({ data }) => {
   return (
     <>  
       <div className="ThumbSLider-highligh">
-
-        <AspectRatioIcon onClick={handleClickOpen} className="expanded" />
-
         <Dialog
           open={open}
           onClose={handleClose}
@@ -195,7 +192,8 @@ const CardDetail = ({ data }) => {
 
           <ButtonGroup className="ButtonGroup" variant="contained" aria-label="Basic button group">
             <Button><SlowMotionVideoIcon /> Vídeo </Button>
-            <Button onClick={(e) => {handleClick(urlShare) }}><ShareIcon /> Compartilhar Imóvel </Button>
+            <Button onClick={(e) => {handleClick(urlShare) }}><ShareIcon /> Compartilhar </Button>
+            <Button onClick={handleClickOpen}><AspectRatioIcon  className="expanded" /> Aplicar </Button>
           </ButtonGroup>
 
           <Card className="ThumbSLider-author" key={card.id} sx={{ maxWidth: 345 }} style={{ overflow: "visible"}}>

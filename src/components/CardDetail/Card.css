@@ -8,19 +8,15 @@
 
 .expanded {
     color: #fff;
-    position: absolute;
+    /* position: absolute;
     top: 10px;
-    right: 10px;
+    right: 10px; */
     cursor: pointer;
     width: 1.5rem;
     height: auto;
-    background: rgb(11, 44, 61);
-    border-radius: 50%;
-    padding: 8px;
-}
-
-.ThumbSLider-highligh .expanded {
-    top: -420px;
+    /* background: rgb(11, 44, 61); */
+    /* border-radius: 50%; */
+    /* padding: 8px; */
 }
 
 .modal-close {
@@ -117,6 +113,8 @@
 .GroupBelowHighligh .ButtonGroup button {
     background: rgb(11, 44, 61);
     border-color: rgb(37 79 101);
+    font-size: small;
+    text-transform: capitalize;
 }
 
 .GroupBelowHighligh .ButtonGroup svg {
