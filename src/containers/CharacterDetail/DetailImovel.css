@@ -9,7 +9,7 @@
 
 .back button {
     color: rgba(0, 0, 0, 0.6);
-		padding-left: 0;
+    padding-left: 0;
 }
 
 .ThumbSLider-highligh .container__slider .slick-slide:after {
@@ -58,13 +58,9 @@
 }
 
 .ThumbSLider-info {
-    position: absolute;
-    margin: -70px 0 0 20px;
-    color: #fff;
-    text-shadow: 1px 1px 2px black;
-    background: rgb(11 44 61 / 59%);
-    border-radius: 10px;
-    padding: 10px;
+    float: left;
+    margin: 20px 0 0 0;
+    color: #0b2c3d;
 }
 
 .ThumbSLider-info .imovel {
@@ -145,27 +141,39 @@
   } */
   .back {
     float: left;
-    margin-top: 20px;
+    margin-top: 10px;
   }
 }
 
 @media only screen and (max-width: 1024px) {
-  .caracteristicas {
+    .caracteristicas {
     padding: 0 20px;
     box-sizing: border-box;
 	}
 
 	.propertyDetails button {
-    margin-left: 20%;
+        margin-left: 20%;
 	}
 
 	.back {
-    margin-top: 0px;
+        margin-top: 0px;
 		margin-left: 20px;
 	}
 	div.row.center > div.ThumbSLider-highligh .card.imovel-info > button > div {
-    margin-top: 0px !important;
+        margin-top: 0px !important;
 	}
+
+    .ThumbSLider-info {
+        padding: 10px 20px;
+    }
+
+    .ThumbSLider-info .imovel {
+        font-size: 1.1rem;
+    }
+
+    .ThumbSLider-highligh .expanded {
+        display: none;
+    }
 }
 
 

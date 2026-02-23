@@ -137,15 +137,17 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
             detail="true"
             onClick={handleClickOpen}
           />
-          <div className="ThumbSLider-info">
-              <span className="imovel"> {imoveis?.imovel || ''} </span>
-          </div>
+          
         </div>
 
       <div className="row center">
         <Box className="back" sx={{ width: '100%' }}>
           <Button onClick={(e) => { history.push('/') } }><KeyboardBackspaceIcon />  Voltar</Button>
         </Box>
+
+        <div className="ThumbSLider-info">
+            <span className="imovel"> {imoveis?.titulo || ''} </span>
+        </div>
 
         <CardDetail data={imoveis} imovel={infoImoveis} />
 

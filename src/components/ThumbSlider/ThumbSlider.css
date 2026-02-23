@@ -172,5 +172,9 @@
   .slick-slider h3 {
     padding: 0;
   }
+
+  .slick-dots {
+    margin-left: 1% !important;
+  }
 }
     

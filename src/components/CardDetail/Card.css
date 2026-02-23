@@ -3,6 +3,7 @@
     float: left;
     width: 100%;
     margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .expanded {
@@ -102,7 +103,7 @@
 
 .GroupBelowHighligh .imovel-info {
     width: 280px;
-    margin: 0 0 30px 0;
+    margin: 0;
 }
 
 .GroupBelowHighligh .imovel-info button { cursor: auto; }
@@ -130,7 +131,7 @@
 	top: 250px;
 	bottom: 0;
 	height: 150px;
-    background: #f7f7f8 !important;
+    background: #f6fcfe !important;
 	box-shadow: none !important;
 	border: 1px solid rgb(231 236 243);
 }
