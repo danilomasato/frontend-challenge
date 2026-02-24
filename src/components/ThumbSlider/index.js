@@ -12,6 +12,7 @@ const baseURL = process.env.REACT_APP_URL;
   const home = image?.home;
   const detail = image?.detail;
   const settings = {
+    lazyLoad: true,
     dots: true,
     className: "center",
     infinite: true,
