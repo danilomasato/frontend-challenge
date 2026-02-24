@@ -2,10 +2,6 @@ div[role="alert"] {
 	margin-bottom: 20px;
 }
 
-.home .slick-slider > button {
-	background: rgb(20 20 20 / 70%) !important;
-}
-
 .CustomerTestimonials + .footer {
 	margin-top: 0;
 }

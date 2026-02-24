@@ -72,6 +72,29 @@
   object-fit: cover;
 }
 
+.card .slick-prev, .card .slick-next {
+    background-color: rgba(11, 44, 61, 1) !important;
+  outline: none;
+  border: 0;
+  color: whitesmoke;
+  font-size: 0;
+  height: 40px;
+  width: 30px;
+  border-radius: initial;
+}
+
+.card .slick-prev {
+  left: -25px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.card .slick-next {
+	right: -25px;
+	border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
 .card .slick-dots {
 	width: 180px;
 	bottom: -0;
