@@ -119,7 +119,6 @@ const CardDetail = ({ data }) => {
               image={imovel?.Fotos}
               alt={imovel?.imovel}
               title={imovel?.imovel}
-              detail="large"
             />
           </DialogContent>
           <CloseIcon className="modal-close" onClick={handleClose} />

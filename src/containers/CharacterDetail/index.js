@@ -137,7 +137,6 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
             detail="true"
             onClick={handleClickOpen}
           />
-          
         </div>
 
       <div className="row center">
