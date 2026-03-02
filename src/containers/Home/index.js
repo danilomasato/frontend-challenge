@@ -140,7 +140,7 @@ const Home = ({ character, imoveisCache }) => {
   return (
     <React.Fragment>
       <TopInfo />
-      <Header />
+      <Header  />
 
       <div className="row center home">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>
