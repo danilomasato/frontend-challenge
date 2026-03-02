@@ -49,6 +49,7 @@
   font-size: 16px;
   text-decoration: none;
   font-weight: 700;
+  outline: none;
   color: rgba(0, 0, 0, 0.6);
 }
 
