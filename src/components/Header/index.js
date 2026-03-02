@@ -22,7 +22,7 @@ export const Header = props => {
 
   return (
     <header id="header" className={`${btStatus ? "" : "header-expanded"} `}>
-      <div className="row" style={{ width: (window.location.hash === '#/' ? '1310px' : "980px"), margin: "0 auto" }}>
+      <div className="row">
         <div
           className={`hamburger hamburger--spin ${
             btStatus ? "" : "is-active"
