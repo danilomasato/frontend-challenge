@@ -62,10 +62,11 @@ div[role="alert"] {
 
 .search-clear {
 	position: absolute;
-    margin: -36px 0 0 258px;
+    margin: -36px 0 0 255px;
     cursor: pointer;
     width: 15px !important;
-	background: #f7f7f8;
+    background: #f7f7f8;
+    padding: 0 10px;
 }
 
 @media only screen and (min-width: 1025px) {
