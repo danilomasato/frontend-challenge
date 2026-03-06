@@ -109,7 +109,7 @@ const Home = ({ character, imoveisCache }) => {
   }, [imoveis, search]);
   
   const clearSearch = () => {
-    alert('FOI')
+    window.location = 'https://tudosobreap.com.br'
   }
 
   return (

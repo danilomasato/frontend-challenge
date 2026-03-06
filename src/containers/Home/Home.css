@@ -65,6 +65,7 @@ div[role="alert"] {
     margin: -36px 0 0 258px;
     cursor: pointer;
     width: 15px !important;
+	background: #f7f7f8;
 }
 
 @media only screen and (min-width: 1025px) {
