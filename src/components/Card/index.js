@@ -25,8 +25,13 @@ export default function MultiActionAreaCard(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const baseURL = process.env.REACT_APP_URL;
-  const [rentalValue, setRentalValue] = useState(null);
-  const [salePrice, setSalePrice] = useState(null);
+  const [rentalValue, setRentalValue] = useState(null)
+  const [salePrice, setSalePrice] = useState(null)
+  const [adtype, setAdtype] = useState({
+    sale: '',
+    rent: '',
+    launch: ''
+  });
 
   const Root = styled('div')(({ theme }) => ({
     width: '100%',
@@ -58,6 +63,11 @@ export default function MultiActionAreaCard(props) {
 
         if(item.Valor_Aluguel !== null)
           setRentalValue(true)
+
+        if(item.Tipo_de_Anuncio.includes('Lançamentos'))
+          setAdtype({...adtype, // Copy all existing properties from the 'adtype' object  
+            launch: item.Tipo_de_Anuncio
+        })
       })
     } else {
       if(articles?.length > 0){
@@ -245,14 +255,16 @@ export default function MultiActionAreaCard(props) {
         </>
       ))}
     </Container>
-
-    {salePrice ? (
+    
+    {/* Lançamentos */}
+    {adtype.launch !== '' ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip label="Lançamentos de Imóveis" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
           </Divider>
         </Root> 
     ) : '' }
+    {adtype.launch}
 
     <Container className="home">
       {articles?.length > 0 && articles.map(
