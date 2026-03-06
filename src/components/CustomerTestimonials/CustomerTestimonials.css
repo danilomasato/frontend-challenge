@@ -36,4 +36,7 @@
 	.CustomerTestimonials {
 		float: left;
 	}
+	.CustomerTestimonials {
+  	padding: 0 20px 40px;
+	}
 }
