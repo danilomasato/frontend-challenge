@@ -29,6 +29,7 @@ div[role="alert"] {
 	height: 45px;
 	line-height: 45px;
 	background: #f7f7f8;
+	position: relative;
 }
 
 .search-neighborhoods input {
@@ -59,6 +60,12 @@ div[role="alert"] {
     z-index: 9;
 }
 
+.search-clear {
+	position: absolute;
+    margin: -36px 0 0 258px;
+    cursor: pointer;
+    width: 15px !important;
+}
 
 @media only screen and (min-width: 1025px) {
 	.home.center {

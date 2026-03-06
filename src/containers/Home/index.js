@@ -18,6 +18,7 @@ import { TopInfo } from "../../components/TopInfo";
 import { Footer } from "../../components/Footer";
 import { GetAPI } from "../../utils";
 import { CustomerTestimonials } from "../../components/CustomerTestimonials";
+import CloseIcon from '@mui/icons-material/Close';
 
 const Home = ({ character, imoveisCache }) => {
 
@@ -27,34 +28,6 @@ const Home = ({ character, imoveisCache }) => {
   const [imoveis, setImoveis] = useState([]);
   const [error, setError] = useState(null);
   const [options, setOptions] = useState([]);
-
-  //atualiza o json cache dos imoveis
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       // Await the fetch call
-  //       const response = await fetch(process.env.REACT_APP_API_URL + "Articles?pagination[page]=1&pagination[pageSize]=10&populate=fotos&populate=autor");
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! status: ${response.status}`);
-  //       }
-  //       // Await the response.json() call, which also returns a promise
-  //       const result = await response.json();
-  //       setTimeout(() => {
-  //         // setRealEstate(result)
-  //         setRealEstate({character: {
-  //           data: result.data
-  //         }})
-  //       }, 60000)
-  //     } catch (e) {
-  //       setError(e.message);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-
-  // }, [realEstate]); // Empty dependency array ensures this runs once
   const payload = character.character?.data
 
   useEffect(() => {
@@ -135,7 +108,9 @@ const Home = ({ character, imoveisCache }) => {
 
   }, [imoveis, search]);
   
-  const handleClick = cardID => { }
+  const clearSearch = () => {
+    alert('FOI')
+  }
 
   return (
     <React.Fragment>
@@ -159,17 +134,18 @@ const Home = ({ character, imoveisCache }) => {
                     onChange={(event, value) => { setSearch(value) }}
                     renderInput={(params) => <TextField {...params} label="Pesquise por Bairros..." />}
                   />
+                  <CloseIcon className="search-clear" onClick={() => { clearSearch() }} />
                 </>)
                 : 
                 ""
                 }
                 
               </Grid>
-              <Grid size={4}>
+              {/* <Grid size={4}>
                 <Button variant="contained" style={{ width: "100%" }}>
                   <SearchIcon  onClick={(e) => {handleClick() }} />
                 </Button>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
         </div>
