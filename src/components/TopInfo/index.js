@@ -14,8 +14,8 @@ export const TopInfo = data => {
             <li><MailOutlineIcon className="icon"/><span>tudosobreape@gmail.com</span></li>
             <li><LocationOnIcon className="icon"/><span>Rua Cassino, 13 - Jardim dos Lagos - São Paulo/SP</span></li>
             <li className="CRECI"><span>CRECI:47289J</span></li>
-            <li><a href=""><FacebookIcon className="icon icon-face"/></a></li>
-            <li><a href=""><InstagramIcon className="icon icon-insta"/></a></li>
+            <li><a href="https://www.facebook.com/tudosobreap?locale=pt_BR"><FacebookIcon className="icon icon-face"/></a></li>
+            <li><a href="https://www.instagram.com/tudosobreap/"><InstagramIcon className="icon icon-insta"/></a></li>
           </ul>
       </div>
     </>

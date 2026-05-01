@@ -187,7 +187,7 @@ const Home = ({ character, imoveisCache }) => {
 
       <Pagination data={realEstate} />
 
-      <CustomerTestimonials />
+      {/* <CustomerTestimonials /> */}
       <Footer />
     </React.Fragment>
   );

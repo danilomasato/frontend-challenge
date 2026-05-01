@@ -28,7 +28,7 @@ const baseURL = process.env.REACT_APP_URL;
           <>
           <Slider {...settings} className="container__slider">
             {fotos.map((image, index) => { 
-              return <h3><img key={index} src={ home === 'true' ? image.formats.small.url : (deviceWidth >= 1024 && detail == 'true' ? image.formats.medium.url : (Object.hasOwn(image.formats, 'large') ? image.formats.large?.url : image.formats.medium.url) ) } style={{ width: "100%", objectFit: 'cover' }} alt={image.imgAlt} /></h3>;
+              return <h3><img key={index} src={ home === 'true' ? image.formats?.small.url : (deviceWidth >= 1024 && detail == 'true' ? image.formats?.medium.url : (Object.hasOwn(image.formats, 'large') ? image.formats.large?.url : image.formats.medium.url) ) } style={{ width: "100%", objectFit: 'cover' }} alt={image.imgAlt} /></h3>;
             })}
           </Slider>
           </>

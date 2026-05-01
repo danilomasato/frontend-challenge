@@ -40,11 +40,19 @@ const CardDetail = ({ data }) => {
   const [card, setCard] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [openShare, setOpenShare] = React.useState(false);
+  const [openVideo, setOpenVideo] = React.useState(false);
+  const [video, setVideo] = useState([]);
   
   useEffect(() => {
-    if( data?.length > 0)
-    setImovel(data?.length > 0 && data.filter(item => item.id === parseInt(idMount))[0])
-  }, [data]);
+    if( data?.length > 0){
+      setImovel(data?.length > 0 && data.filter(item => item.id === parseInt(idMount))[0])
+      data.filter(item => {
+        if(item.id === parseInt(idMount)){
+          setVideo(item.Fotos)
+        }
+      })
+    }
+  }, [data, video]);
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,12 +61,17 @@ const CardDetail = ({ data }) => {
   const handleClose = () => {
     setOpen(false);
     setOpenShare(false);
+    setOpenVideo(false);
+  };
+
+  const handleClickOpenVideo = () => {
+    setOpenVideo(true);
   };
 
   const abrirEmail = () => {
     var destinatario = 'tudosobreape@gmail.com';
     var assunto = 'TSA Contato via Site';
-    var corpo = 'Olá,\n\nEste Gostaria de saber mais Sobre este Imóvel';
+    const corpo = `Tenho interesse neste Imóvel, pode me enviar mais informações? ${urlShare}`;
     
     // Codifica o assunto e o corpo para garantir que caracteres especiais sejam tratados corretamente
     var assuntoCodificado = encodeURIComponent(assunto);
@@ -101,8 +114,8 @@ const CardDetail = ({ data }) => {
     setTimeout(() => {
     setOpenShare(false)
     }, 3500)
-  };
-
+  }; 
+               
   return (
     <>  
       <div className="ThumbSLider-highligh">
@@ -121,6 +134,26 @@ const CardDetail = ({ data }) => {
               title={imovel?.imovel}
               dialog="true"
             />
+          </DialogContent>
+          <CloseIcon className="modal-close" onClick={handleClose} />
+        </Dialog>
+
+        <Dialog
+          open={openVideo}
+          onClose={handleClose}
+          fullWidth="lg"
+          maxWidth="lg"
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogContent style={{ height: "660px" }}>
+            {video?.length > 0 && video.map((media, index) => {
+                if(media?.ext === ".mp4"){
+                  return <video controls width="100%" height="100%" autoplay="true">
+                    <source src={media.url} type="video/mp4" />
+                  </video>
+                }
+              })}
           </DialogContent>
           <CloseIcon className="modal-close" onClick={handleClose} />
         </Dialog>
@@ -192,7 +225,7 @@ const CardDetail = ({ data }) => {
           </Card>
 
           <ButtonGroup className="ButtonGroup" variant="contained" aria-label="Basic button group">
-            <Button><SlowMotionVideoIcon /> Vídeo </Button>
+            <Button onClick={handleClickOpenVideo}><SlowMotionVideoIcon /> Vídeo </Button>
             <Button onClick={handleClickOpen}><AspectRatioIcon  className="expanded" /> Ampliar </Button>
             <Button onClick={(e) => {handleClick(urlShare) }}><ShareIcon /> Compartilhar </Button>
           </ButtonGroup>
@@ -214,7 +247,7 @@ const CardDetail = ({ data }) => {
 
                   <Box className="contact">
                     <Typography className="ThumbSLider-description" gutterBottom>
-                      <a target={"_blank"} href="https://wa.me/11961803698?text=Bem Vindo A TSA Imóveis, em que podemos Ajudar?">
+                      <a target={"_blank"} href={`https://wa.me/11961803698?text=Tenho interesse neste Imóvel, pode me enviar mais informações? ${urlShare}`}>
                         <Button size="small"><WhatsAppIcon /> Contato</Button>
                       </a>
                       {/* <b style={{ fontWeight: 600 }}>Contato:</b> {card.autor.contato}*/}

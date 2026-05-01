@@ -86,7 +86,7 @@ export default function MultiActionAreaCard(props) {
       {rentalValue ? ( 
         <Root>
           <Divider style={{ marginTop: "40px"}}>
-            <Chip label="Imóveis á Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff",  fontSize: "1.1rem", padding: "1rem" }} />
+            <Chip label="Imóveis há Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff",  fontSize: "1.1rem", padding: "1rem" }} />
           </Divider>
         </Root> 
       ) : '' }
