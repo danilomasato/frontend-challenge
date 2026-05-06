@@ -121,10 +121,6 @@
 	padding: 5px 0;
 }
 
-.caracteristicas.active {
-	max-height: max-content;
-}
-
 .propertyDetails button {
 	float: left;
 	margin: 10px 0 20px 0;

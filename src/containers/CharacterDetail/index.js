@@ -133,7 +133,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
         <div className="ThumbSLider-highligh slick-slider center slick-initialized">
           <ThumbSLider
             height="300"
-            image={imoveis?.Fotos}
+            image={imoveis?.Fotos?.slice(1)}
             detail="true"
             onClick={handleClickOpen}
           />
@@ -150,8 +150,8 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 
         <CardDetail data={imoveis} imovel={infoImoveis} />
 
-        <Box className="propertyDetails" sx={{ width: '100%' }} >
-          <Box sx={{ width: '100%' }} className={`caracteristicas ${(openToggle ? 'active' : '')}`} style={{height: imoveis?.descricao?.length > 0 ? '' : '0' }}>
+        <Box className="propertyDetails" sx={{ width: '100%' }}>
+          <Box sx={{ width: '100%' }} className={`caracteristicas ${(openToggle ? 'active' : '')}`} style={{maxHeight: (openToggle ? (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length + 'px'): ''), minHeight: (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length > 250 ?  '': '150px' ) }}>
 						<h2>
 							Descrição
 						</h2>
@@ -189,14 +189,20 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
 								</>
 							))}
         	</Box>
-					<button onClick={(e) => setOpenToggle(!openToggle) }>
-            Saiba mais
-            { openToggle ? 
-              (<><KeyboardArrowUpIcon style={{ float: "right" }}/></>)
-            :
-              (<><KeyboardArrowDownIcon style={{ float: "right" }}/></>)
-            }
-          </button>
+          {imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length > 175 ? 
+          (<>
+            <button onClick={(e) => setOpenToggle(!openToggle) }>
+              Saiba mais
+              { openToggle ? 
+                (<><KeyboardArrowUpIcon style={{ float: "right" }}/></>)
+              :
+                (<><KeyboardArrowDownIcon style={{ float: "right" }}/></>)
+              }
+            </button>
+          </>) 
+          
+          : '' }
+					
         </Box>
         <br />
 

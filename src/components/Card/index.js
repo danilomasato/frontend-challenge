@@ -86,7 +86,7 @@ export default function MultiActionAreaCard(props) {
       {rentalValue ? ( 
         <Root>
           <Divider style={{ marginTop: "40px"}}>
-            <Chip label="Imóveis há Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff",  fontSize: "1.1rem", padding: "1rem" }} />
+            <Chip label="Imóveis à Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff",  fontSize: "1.1rem", padding: "1rem" }} />
           </Divider>
         </Root> 
       ) : '' }
@@ -99,7 +99,7 @@ export default function MultiActionAreaCard(props) {
                   <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
                      <ThumbSLider 
                         height="180"
-                        image={card.Fotos}
+                        image={card.Fotos?.slice(1)}
                         alt={card.imovel}
                         title={card.imovel}
                         home="true"
@@ -118,7 +118,7 @@ export default function MultiActionAreaCard(props) {
                         <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                           {card.Valor_Venda !== null ? (
                             <div>
-                              R$ {card?.Valor_Venda?.toLocaleString('pt-BR', {
+                              {parseFloat(card?.Valor_Venda.replace('.',''))?.toLocaleString('pt-BR', {
                                 style: 'currency',
                                 currency: 'BRL'
                               })}
@@ -128,10 +128,10 @@ export default function MultiActionAreaCard(props) {
                           }
                         </Typography>
                         <Typography className="icon-card" variant="body2" color="text.secondary">
-                          {card.Area_Total !== null ? (
+                          {card.Area_Terreno !== null ? (
                             <div>
                               <FullscreenIcon />
-                              {card.Area_Total} m<span className="mcubico">2</span>
+                              {card.Area_Terreno} m<span className="mcubico">2</span>
                             </div>
                           )
                             : ''
@@ -203,7 +203,7 @@ export default function MultiActionAreaCard(props) {
                     <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                       {card.Valor_Aluguel !== null ? (
                         <div>
-                          {parseInt(card?.Valor_Aluguel)?.toLocaleString('pt-BR', {
+                          {parseFloat(card?.Valor_Aluguel)?.toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL'
                           })}
@@ -213,10 +213,10 @@ export default function MultiActionAreaCard(props) {
                       }
                     </Typography>
                     <Typography className="icon-card" variant="body2" color="text.secondary">
-                       {card.Area_Total !== null ? (
+                       {card.Area_Terreno !== null ? (
                             <div>
                               <FullscreenIcon />
-                              {card.Area_Total} m<span className="mcubico">2</span>
+                              {card.Area_Terreno} m<span className="mcubico">2</span>
                             </div>
                           )
                             : ''
@@ -280,7 +280,7 @@ export default function MultiActionAreaCard(props) {
                   <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
                     {card.Valor_Aluguel !== null ? (
                       <div>
-                        {parseInt(card?.Valor_Aluguel).toLocaleString('pt-BR', {
+                        {parseFloat(card?.Valor_Aluguel).toLocaleString('pt-BR', {
                           style: 'currency',
                           currency: 'BRL'
                         })}
@@ -290,10 +290,10 @@ export default function MultiActionAreaCard(props) {
                     }
                   </Typography>
                   <Typography className="icon-card" variant="body2" color="text.secondary">
-                      {card.Area_Total !== null ? (
+                      {card.Area_Terreno !== null ? (
                           <div>
                             <FullscreenIcon />
-                            {card.Area_Total} m<span className="mcubico">2</span>
+                            {card.Area_Terreno} m<span className="mcubico">2</span>
                           </div>
                         )
                           : ''
