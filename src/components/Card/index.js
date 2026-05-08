@@ -256,7 +256,6 @@ export default function MultiActionAreaCard(props) {
       ))}
     </Container>
     
-    {/* Lançamentos */}
     {adtype.launch !== '' ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
@@ -264,7 +263,6 @@ export default function MultiActionAreaCard(props) {
           </Divider>
         </Root> 
     ) : '' }
-    {adtype.launch}
 
     <Container className="home">
       {articles?.length > 0 && articles.map(
@@ -274,7 +272,7 @@ export default function MultiActionAreaCard(props) {
             <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
               <ThumbSLider 
                   height="200"
-                  image={card.Fotos}
+                  image={card.Fotos.slice(1)}
                   alt={card.imovel}
                   title={card.imovel}
                   home="true"
