@@ -19,6 +19,7 @@ import { Footer } from "../../components/Footer";
 import { GetAPI } from "../../utils";
 import { CustomerTestimonials } from "../../components/CustomerTestimonials";
 import CloseIcon from '@mui/icons-material/Close';
+import { NumericFormat } from 'react-number-format';
 
 const Home = ({ character, imoveisCache }) => {
 
@@ -28,6 +29,10 @@ const Home = ({ character, imoveisCache }) => {
   const [imoveis, setImoveis] = useState([]);
   const [error, setError] = useState(null);
   const [options, setOptions] = useState([]);
+  const [optionsValue, setOptionsValue] = useState({
+    min: 0,
+    max: 0
+  });
   const payload = character.character?.data
 
   useEffect(() => {
@@ -66,31 +71,7 @@ const Home = ({ character, imoveisCache }) => {
           return 0;
       }))
       
-    if(search?.label?.length > 0 ){
-        imoveis.filter((item, index) => {
-            if(item.Bairro.includes(search.label)){
-              //loading
-              setLoading(true)
-
-              if(search.label !== "" && item.Bairro.includes(search.label)){
-                setRealEstate("")
-              }
-
-              research = research.concat(item)
-
-              setTimeout(() => {
-                
-                setRealEstate({character: {
-                  data: research
-                }})
-                setLoading(false)
-                setSearch(false)
-              }, 2500);
-
-            }
-          }
-        )
-      }
+    
     } 
 
     //Disable click right mouse
@@ -112,6 +93,48 @@ const Home = ({ character, imoveisCache }) => {
     window.location = 'https://tudosobreap.com.br'
   }
 
+
+const handleClick = () => {
+
+  if(search?.label?.length === undefined) {
+    alert("Selecione um Bairro para fazer a Busca...")
+  } else {
+    imoveis.filter((item, index) => {
+        if(item.Bairro.includes(search.label)){
+          //loading
+          setLoading(true)
+          if(search?.label?.length > 0 && item.Bairro.includes(search.label)){
+            setRealEstate("")
+          } 
+
+          const valueMax = parseInt(optionsValue.max.replace(',','').replace('R$',''))
+          const valueMin = parseInt(optionsValue.min.replace(',','').replace('R$',''))
+
+          if(parseInt(item?.Valor_Aluguel) <= valueMax && parseInt(item?.Valor_Aluguel.replace(',','')) >= valueMin){
+            research = research.concat(item)
+          }
+
+          if(parseFloat(item?.Valor_Venda?.replace(".","")) <= valueMax && parseFloat(item?.Valor_Venda?.replace(",","")) >= valueMin){
+            research = research.concat(item)
+          }
+
+          setTimeout(() => {
+              setRealEstate({character: {
+                data: research
+              }})
+            
+            
+            setLoading(false)
+            setSearch(false)
+          }, 2500);
+
+        }
+      }
+    )
+  }
+}
+  
+
   return (
     <React.Fragment>
       <TopInfo />
@@ -120,9 +143,22 @@ const Home = ({ character, imoveisCache }) => {
       <div className="row center home">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2} style={{ gridColumnGap: "20px" }}>
+            <Grid container spacing={2} style={{ 
+              gridColumnGap: "20px",
+              display: "grid",
+              gridTemplateColumns: "320px 360px  200px"
+             }}>
               <Grid size={8}>
                 { imoveis?.length > 0 ? (<>
+                  <label style={{ 
+                    fontFamily: 'quicksand-regular', 
+                    fontSize: '0.6rem', 
+                    color: 'rgba(0, 0, 0, 0.6)',
+                    margin: '-3px 0 10px 20px',
+                    display: 'block'
+                    }}> 
+                    Selecione o Bairro
+                  </label>
                   <Autocomplete
                     className="search-neighborhoods"
                     disablePortal
@@ -132,7 +168,7 @@ const Home = ({ character, imoveisCache }) => {
                       style: { backgroundColor: 'lightgray' }, // Estilo inline para o input
                     }}
                     onChange={(event, value) => { setSearch(value) }}
-                    renderInput={(params) => <TextField {...params} label="Pesquise por Bairros..." />}
+                    renderInput={(params) => <TextField {...params} />}
                   />
                   <CloseIcon className="search-clear" onClick={() => { clearSearch() }} />
                 </>)
@@ -141,11 +177,45 @@ const Home = ({ character, imoveisCache }) => {
                 }
                 
               </Grid>
-              {/* <Grid size={4}>
-                <Button variant="contained" style={{ width: "100%" }}>
-                  <SearchIcon  onClick={(e) => {handleClick() }} />
+               <Grid
+                component="form"
+                sx={{ '& > :not(style)': { width: '15ch' } }}
+                noValidate
+                autoComplete="off"
+                className="minMax"
+              >
+                  <NumericFormat
+                  value={optionsValue.min}
+                  onFocus={(e) => setOptionsValue({...optionsValue, min: '' })}
+                  onChange={(e) => {
+                    setOptionsValue({...optionsValue, min: '' })
+                    setOptionsValue({...optionsValue, min: e.target.value })
+                  }}
+                  customInput={TextField}
+                  thousandSeparator
+                  valueIsNumericString
+                  prefix="R$"
+                  variant="standard"
+                  label="Valor Min"
+                />
+               <NumericFormat
+                  value={optionsValue.max}
+                  onFocus={(e) => setOptionsValue({...optionsValue, max: '' })}
+                  onChange={(e) => {setOptionsValue({...optionsValue, max: e.target.value }) }}
+                  customInput={TextField}
+                  thousandSeparator
+                  valueIsNumericString
+                  prefix="R$"
+                  variant="standard"
+                  label="Valor Max"
+                style={{ marginLeft: "15px"}}/>
+              </Grid>
+              <Grid size={4}>
+                <Button className="search-button" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(e) }}>
+                  Buscar Imóveis
+                  <SearchIcon   />
                 </Button>
-              </Grid> */}
+              </Grid>
             </Grid>
           </Box>
         </div>

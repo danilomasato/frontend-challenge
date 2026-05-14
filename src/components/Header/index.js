@@ -11,6 +11,10 @@ export const Header = props => {
 
   const menu = [
     {
+      title: "Início",
+      action: "/"
+    },
+    {
       title: "Sobre Nós",
       action: "/sobre-nos"
     },
@@ -19,6 +23,8 @@ export const Header = props => {
       action: "/contato"
     }
   ];
+
+  const page = window.location.hash.replace('#','')
 
   return (
     <header id="header" className={`${btStatus ? "" : "header-expanded"} `}>
@@ -41,12 +47,13 @@ export const Header = props => {
         </a>
 
         <ul id="nav">
-          <li><NavLink to="/">Início</NavLink></li>
           {menu.map((item, index) => (
-        	<li key={index}>
-            	<NavLink to={item.action}>{item.title}</NavLink>
-          	</li>
-          ))}
+            <>
+              <li key={index} className={item.action === page ? 'active' : ''}>
+                <NavLink to={item.action}>{item.title}</NavLink>
+              </li>
+          </>
+        ))}
         </ul>
       </div>
     </header>

@@ -181,7 +181,7 @@ export default function MultiActionAreaCard(props) {
     {salePrice ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
-            <Chip label="Imóveis para Alugar" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
+            <Chip className="separator" label="Imóveis para Alugar" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
           </Divider>
         </Root> 
     ) : '' }

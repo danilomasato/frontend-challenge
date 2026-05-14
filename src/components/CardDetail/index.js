@@ -278,54 +278,27 @@ const CardDetail = ({ data }) => {
                 }}>
                 <CardContent>
                     <ul>
-                      { tipoAnuncio !== 'venda e aluguel' && 
-                        <li>
-                          <AttachMoneyIcon />
-                          <Typography className="ThumbSLider-description">
-                            {imovel?.Valor_Venda == null ? (
-                              <>
-                                <strong>Alguel: </strong>
-                                <span className="value"> 
-                                  {!isNaN(parseFloat(imovel?.Valor_Aluguel)) ? parseFloat(imovel?.Valor_Aluguel.replace('.','')).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
-                                </span>
-                              </>
-                            )
-                              : 
-                              <>
-                                <strong>Venda: </strong>
-                                <span className="value"> 
-                                  {!isNaN(parseFloat(imovel.Valor_Venda)) ?  parseFloat(imovel.Valor_Venda.replace('.','')).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
-                                </span>
-                              </>
-                            }
-                            
-                          </Typography>
-                        </li>
-                      }
-
-                      { tipoAnuncio == 'venda e aluguel' && (
-                        <>
-                          <li>
-                          <AttachMoneyIcon />
-                          <Typography className="ThumbSLider-description">
-                                <strong>Alguel: </strong>
-                                <span className="value"> 
-                                  {!isNaN(parseFloat(imovel?.Valor_Aluguel)) ? parseFloat(imovel?.Valor_Aluguel.replace('.','')).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
-                                </span>
-                          </Typography>
-                        </li>
-                         <li>
-                          <AttachMoneyIcon />
-                          <Typography className="ThumbSLider-description">
-                                <strong>Venda: </strong>
-                                <span className="value"> 
-                                  {!isNaN(parseFloat(imovel.Valor_Venda)) ?  parseFloat(imovel.Valor_Venda.replace('.','')).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
-                                </span>
-                          </Typography>
-                        </li>
-                        </>)
-                      }
-
+                      <li>
+                        <AttachMoneyIcon />
+                        <Typography className="ThumbSLider-description">
+                          {imovel?.Valor_Venda == null ? (
+                            <>
+                              <strong>Alguel: </strong>
+                              <span className="value"> 
+                                {!isNaN(parseFloat(imovel?.Valor_Aluguel)) ? parseFloat(imovel?.Valor_Aluguel.replace('.','')).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
+                              </span>
+                            </>
+                          )
+                            : 
+                            <>
+                              <strong>Venda: </strong>
+                              <span className="value"> 
+                                {!isNaN(parseFloat(imovel.Valor_Venda)) ?  parseFloat(imovel.Valor_Venda.replace('.','')).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
+                              </span>
+                            </>
+                          }
+                        </Typography>
+                      </li>
                       <li>
                         <Typography className="ThumbSLider-description">
                           <PlaylistAddIcon />
@@ -349,7 +322,7 @@ const CardDetail = ({ data }) => {
                             <>
                               <strong>Condomínio: </strong>
                               <span className="value"> 
-                                {typeof imovel?.Condominio !== 'string' ? 'R$ ' + imovel?.Condominio : 'Sem informação'}
+                                {!isNaN(parseFloat(imovel.Condominio)) ? parseFloat(imovel.Condominio).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
                               </span>
                             </>
                           )
@@ -364,44 +337,32 @@ const CardDetail = ({ data }) => {
                           {/* TOTAL */}
                            <strong>Total: </strong>
                               <span className="value" style={{ fontSize: '1rem', color: 'rgb(2 116 59)'}}> 
-
-                            {/* aluguel */}
-
-                            {/* venda */}
- 
-                            {tipoAnuncio == 'venda' ? (
-                                (parseInt(imovel?.Valor_Venda?.replace(".",""))).toLocaleString('pt-BR', {
+                          { tipoAnuncio !== 'venda e aluguel' && imovel?.Condominio !== null && imovel?.IPTU !== null  ? (
+                              imovel?.Tipo_de_Anuncio == 'venda'                              
+                                ?  (!isNaN(parseFloat(imovel.Condominio)) !== 'string' && imovel?.Valor_Venda !== null ? parseFloat(imovel?.Valor_Venda?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + parseFloat(imovel?.Condominio?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".","")) : parseInt(imovel?.Valor_Venda?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})
+                                :  ( imovel?.Condominio !== null && imovel?.Valor_Aluguel !== null ? (parseFloat(imovel?.Valor_Aluguel?.replace(".","")) + (parseFloat(imovel?.Condominio?.replace(".",""))) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : parseInt(imovel?.Valor_Aluguel?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})                                                      
+                            )
+                            : 
+                              imovel?.IPTU == null && imovel?.Condominio == null ? (
+                              (parseInt(imovel?.Valor_Venda?.replace(".",""))).toLocaleString('pt-BR', {
                                   style: 'currency',
                                   currency: 'BRL'
                                 })
-                              ) : (tipoAnuncio == 'venda' && !isNaN(parseFloat(imovel?.Condominio)) !== 'string' ? (parseInt(imovel?.Valor_Venda?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {
+                              ) : ( imovel?.Condominio == null ?  parseFloat(parseInt(imovel?.Valor_Venda?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {
                                 style: 'currency',
                                 currency: 'BRL'
-                              }) :  tipoAnuncio == 'venda' && (parseInt(imovel?.Valor_Venda?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".","")) + parseFloat(imovel?.Condominio?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}))
+                              }) : 
+                              
+                              //venda e aluguel 
+                              (
+                                imovel?.Tipo_de_Anuncio == 'venda e aluguel'                                
+                                ?  (!isNaN(parseFloat(imovel.Condominio)) !== 'string' && imovel?.Valor_Venda !== null ? parseFloat(imovel?.Valor_Venda?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + parseFloat(imovel?.Condominio?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".","")) : parseInt(imovel?.Valor_Venda?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})
+                                :  (typeof imovel?.Condominio !== 'string' && imovel?.Valor_Aluguel !== null ? parseFloat(imovel?.Valor_Aluguel?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + (parseInt(imovel?.Condominio?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : parseInt(imovel?.Valor_Aluguel?.replace(".","").toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'})                                                      
+                              )
+                              
+                            )//fecha terminario
                             }
 
-                            {tipoAnuncio == 'aluguel' ? (
-                                (parseInt(imovel?.Valor_Aluguel?.replace(".",""))).toLocaleString('pt-BR', {
-                                  style: 'currency',
-                                  currency: 'BRL'
-                                })
-                              ) : (tipoAnuncio == 'aluguel' && !isNaN(parseFloat(imovel?.Condominio)) !== 'string' ? (parseInt(imovel?.Valor_Aluguel?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {
-                                style: 'currency',
-                                currency: 'BRL'
-                              }) : tipoAnuncio == 'aluguel' && (parseInt(imovel?.Valor_Aluguel?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".","")) + parseFloat(imovel?.Condominio?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}))
-                            }
-
-                             {tipoAnuncio == 'venda e aluguel' ? (
-                                (parseInt(imovel?.Valor_Venda?.replace(".",""))).toLocaleString('pt-BR', {
-                                  style: 'currency',
-                                  currency: 'BRL'
-                                })
-                              ) : (tipoAnuncio == 'venda e aluguel' && !isNaN(parseFloat(imovel?.Condominio)) !== 'string' ? (parseInt(imovel?.Valor_Venda?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".",""))).toLocaleString('pt-BR', {
-                                style: 'currency',
-                                currency: 'BRL'
-                              }) : tipoAnuncio == 'venda e aluguel' && (parseInt(imovel?.Valor_Venda?.replace(".","")) + parseInt(imovel?.IPTU?.replace(".","")) + parseFloat(imovel?.Condominio?.replace(".",""))).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}))
-                            }
-                          
                             </span>
                         </Typography>
                       </li>

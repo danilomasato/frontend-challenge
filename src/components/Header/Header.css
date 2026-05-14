@@ -38,6 +38,7 @@
 
 #nav li {
   float: left;
+  position: relative;
   cursor: pointer;
   padding: 0 25px;
   line-height: 35px;
@@ -51,6 +52,43 @@
   font-weight: 700;
   outline: none;
   color: rgba(0, 0, 0, 0.6);
+}
+
+#nav li:last-child a::after {
+  border: none;
+}
+
+#nav li a {
+  font-size: 0.9rem;
+  text-decoration: none;
+  font-weight: 700;
+  outline: none;
+  color: #2e2e2e;
+}
+
+
+#nav li.active::after {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+
+  transform: translateX(-50%);
+
+  width: 34px;
+  height: 4px;
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    90deg,
+    #00cfff,
+    #1f8cff
+  );
+
+  /* box-shadow:
+    0 0 12px rgba(0, 207, 255, 0.6); */
 }
 
 .hamburger {

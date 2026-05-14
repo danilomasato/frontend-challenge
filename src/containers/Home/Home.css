@@ -24,7 +24,7 @@ div[role="alert"] {
 .search-neighborhoods {
 	width: 300px;
 	margin-left: 15px;
-	border: 0;
+	border: 1px solid #be9f6061;
 	border-radius: 5px;
 	height: 45px;
 	line-height: 45px;
@@ -45,6 +45,56 @@ div[role="alert"] {
 
 .search-neighborhoods fieldset {
 	border: 0;
+}
+
+.minMax > div div:nth-child(2)::before, 
+.minMax > div div.Mui-focused::after {
+ border-bottom: none !important;
+}
+
+
+.minMax label,
+.minMax label:hover {
+    margin: -5px 0 0 0 !important;
+    font-family: 'quicksand-regular', helvetica, arial !important;
+    font-size: 0.8rem !important;
+}
+
+.minMax input {
+    border: 1px solid #be9f6061;
+    padding: 13px 10px !important;
+    margin: 0 !important;
+    font-family: 'quicksand-regular', helvetica, arial !important;
+    font-size: 0.8rem !important;
+}
+
+/* Botão "Buscar Imóveis" */
+.search-button {
+  height: 44px !important;
+  min-width: 220px !important;
+  padding: 0 28px !important;
+  border-radius: 14px !important;
+  margin-top: 15px !important;
+
+  background: linear-gradient(
+    90deg,
+    #16c4f3 0%,
+    #2b7cff 100%
+  );
+
+  color: #ffffff;
+  font-size: 0.9rem !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  cursor: pointer;
+  transition: all .3s ease;
+
+  box-shadow: none !important;
+  text-transform: none !important;
 }
 
 .card .container__slider .slick-slide:after {
