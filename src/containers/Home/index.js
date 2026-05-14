@@ -168,7 +168,8 @@ const handleClick = () => {
                       style: { backgroundColor: 'lightgray' }, // Estilo inline para o input
                     }}
                     onChange={(event, value) => { setSearch(value) }}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => <TextField {...params} label="Selecione o Bairro" />}
+                    
                   />
                   <CloseIcon className="search-clear" onClick={() => { clearSearch() }} />
                 </>)

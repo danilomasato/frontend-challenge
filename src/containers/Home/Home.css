@@ -47,6 +47,10 @@ div[role="alert"] {
 	border: 0;
 }
 
+.search-neighborhoods.Mui-focused label {
+    display: none;
+}
+
 .minMax > div div:nth-child(2)::before, 
 .minMax > div div.Mui-focused::after {
  border-bottom: none !important;
