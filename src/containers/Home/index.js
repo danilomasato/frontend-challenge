@@ -103,7 +103,7 @@ const handleClick = () => {
     }
 
     imoveis.filter((item, index) => {
-        if(item.Bairro.includes(search.label) || localStorage.length < 0 && localStorage.getItem("neighborhood")){
+        if(item.Bairro.includes(search.label) || localStorage.length > 0 && localStorage.getItem("neighborhood")){
           //loading
           setLoading(true)
           
