@@ -107,7 +107,7 @@ const handleClick = () => {
     }
 
     imoveis.filter((item, index) => {
-        if(item.Bairro.includes(search.label) || localStorage.length > 0 && item.Bairro.includes(localStorage.getItem("neighborhood"))){
+        if(item.Bairro.includes(search?.label) || localStorage.length > 0 && item.Bairro.includes(localStorage.getItem("neighborhood"))){
           //loading
           setLoading(true)
           
@@ -126,13 +126,14 @@ const handleClick = () => {
             valueMin = parseInt(valueMin?.replace(',','')?.replace('R$',''))
           }
 
-          const itemValueAluguel = parseFloat(item?.Valor_Aluguel?.replace(".",""))
-          const itemValueVenda = parseFloat(item?.Valor_Venda?.replace(".",""))
+          const itemValueAluguel = parseInt(item?.Valor_Aluguel?.replace(".",""))
+          const itemValueVenda = parseInt(item?.Valor_Venda?.replace(".",""))
 
-          if(valueMin  > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMin){
+          if(valueMin  > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMin || valueMax > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMax){
             research = research.concat(item)
           }
-          if(valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax ){
+
+          if(valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax || valueMin > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMin){
             research = research.concat(item)
           }
 
