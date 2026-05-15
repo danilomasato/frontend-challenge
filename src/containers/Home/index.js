@@ -96,9 +96,14 @@ const handleClick = () => {
   if(!("neighborhood" in localStorage) && search?.label?.length === undefined) {
     alert("Selecione um Bairro para fazer a Busca...")
   } else {
+    if(localStorage.length < 0 ){
+
+    localStorage.setItem("neighborhood", search.label)
+          console.log(localStorage.getItem("neighborhood"))
+    }
 
     imoveis.filter((item, index) => {
-        if(item.Bairro.includes(search.label) || localStorage.length > 0 && item.Bairro.includes(localStorage.getItem("neighborhood"))){
+        if(item.Bairro.includes(search.label) || localStorage.length < 0 && localStorage.getItem("neighborhood")){
           //loading
           setLoading(true)
           
