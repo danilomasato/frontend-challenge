@@ -24,7 +24,7 @@ import { NumericFormat } from 'react-number-format';
 const Home = ({ character, imoveisCache }) => {
 
   const [realEstate, setRealEstate] = useState([]);
-  const [search, setSearch] = useState([]);
+  const [search, setSearch] = useState();
   const [loading, setLoading] = useState(false);
   const [imoveis, setImoveis] = useState([]);
   const [error, setError] = useState(null);
@@ -70,8 +70,6 @@ const Home = ({ character, imoveisCache }) => {
           if(a.label > b.label) return 1;
           return 0;
       }))
-      
-    
     } 
 
     //Disable click right mouse
@@ -95,16 +93,18 @@ const Home = ({ character, imoveisCache }) => {
 
 
 const handleClick = () => {
-
-  if(search?.label?.length === undefined) {
+  if(!("neighborhood" in localStorage) && search?.label?.length === undefined) {
     alert("Selecione um Bairro para fazer a Busca...")
   } else {
+
     imoveis.filter((item, index) => {
-        if(item.Bairro.includes(search.label)){
+        if(item.Bairro.includes(search.label) || localStorage.length > 0 && item.Bairro.includes(localStorage.getItem("neighborhood"))){
           //loading
           setLoading(true)
+          
           if(search?.label?.length > 0 && item.Bairro.includes(search.label)){
             setRealEstate("")
+            
           } 
 
           let valueMin= optionsValue?.min
