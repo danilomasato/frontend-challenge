@@ -107,23 +107,32 @@ const handleClick = () => {
             setRealEstate("")
           } 
 
-          const valueMax = parseInt(optionsValue.max.replace(',','').replace('R$',''))
-          const valueMin = parseInt(optionsValue.min.replace(',','').replace('R$',''))
+          let valueMin= optionsValue?.min
+          let valueMax = optionsValue?.max
 
-          if(parseInt(item?.Valor_Aluguel) <= valueMax && parseInt(item?.Valor_Aluguel.replace(',','')) >= valueMin){
-            research = research.concat(item)
+          if(valueMax?.length > 0){
+            valueMax = parseInt(valueMax?.replace(',','')?.replace('R$',''))
           }
 
-          if(parseFloat(item?.Valor_Venda?.replace(".","")) <= valueMax && parseFloat(item?.Valor_Venda?.replace(",","")) >= valueMin){
+          if(valueMin?.length > 0){
+            valueMin = parseInt(valueMin?.replace(',','')?.replace('R$',''))
+          }
+
+          const itemValueAluguel = parseFloat(item?.Valor_Aluguel?.replace(".",""))
+          const itemValueVenda = parseFloat(item?.Valor_Venda?.replace(".",""))
+
+          if(valueMin  > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMin){
+            research = research.concat(item)
+          }
+          if(valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax ){
             research = research.concat(item)
           }
 
           setTimeout(() => {
-              setRealEstate({character: {
-                data: research
-              }})
-            
-            
+            setRealEstate({character: {
+              data: research
+            }})
+
             setLoading(false)
             setSearch(false)
           }, 2500);
