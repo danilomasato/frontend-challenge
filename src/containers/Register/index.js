@@ -16,11 +16,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import Checkbox from '@mui/material/Checkbox';
 
 const Register = ({ props }) => {
 
   const [email, setEmail] = useState('');
   const [erro, setErro] = useState(false);
+  const label = { slotProps: { input: { 'aria-label': 'Checkbox demo' } } };
 
   const validarEmail = (valor) => {
     // Regex simples para validação de formato de e-mail
@@ -153,7 +155,7 @@ const Register = ({ props }) => {
               />
 
               <Typography className="ThumbSLider-description" gutterBottom>
-                Estando de acordo, você aceita nosso <a href="https://drive.google.com/file/d/14KrwuRBWVf1IT5m7Iu4FqS7D-bgyIYdE/view?usp=sharing" target="_blank">termos</a>
+                <Checkbox {...label} defaultChecked style={{ paddingLeft: '0' }}/> Estando de acordo, você aceita nosso <a href="https://drive.google.com/file/d/14KrwuRBWVf1IT5m7Iu4FqS7D-bgyIYdE/view?usp=sharing" target="_blank">termos</a>
               </Typography>
               <Button variant="contained" endIcon={<SendIcon />}>
                 Cadastrar
