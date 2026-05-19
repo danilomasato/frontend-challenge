@@ -23,6 +23,30 @@ const Register = ({ props }) => {
   const [email, setEmail] = useState('');
   const [erro, setErro] = useState(false);
   const label = { slotProps: { input: { 'aria-label': 'Checkbox demo' } } };
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+  const [formData, setFormData] = useState({
+    name: '',
+    surname: '',
+    user: '',
+    email: '', 
+    password: '' 
+  });
+
+  const handleChange = (e) => {
+    const valor = e.target.value;
+
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setEmail(valor);
+    
+    // Atualiza o estado de erro baseado na validação
+    setErro(!validarEmail(valor));
+  };
+  
+  let JWTToken
 
   const validarEmail = (valor) => {
     // Regex simples para validação de formato de e-mail
@@ -30,51 +54,27 @@ const Register = ({ props }) => {
     return regex.test(valor);
   };
 
-  const handleChange = (e) => {
-    const valor = e.target.value;
-    setEmail(valor);
-    
-    // Atualiza o estado de erro baseado na validação
-    setErro(!validarEmail(valor));
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!erro && email.length > 0) {
       alert(`E-mail enviado: ${email}`);
+       axios.post('https://sublime-bat-ad2fca1255.strapiapp.com/admin/login', {
+          "email": "danilomasato@hotmail.com",
+          "password": "Admin@123"
+        })
+          .then(response => {
+            // Handle success.
+            console.log('Well done!');
+            JWTToken = response.data.data.accessToken
+            console.log('User profile', response.data.data.accessToken);
+          })
+          .catch(error => {
+            // Handle error.
+            console.log('An error occurred:', error.response);
+          });
     } else {
       setErro(true);
     }
-  };
-
-  const JWTToken = "b80e112ff544e1a8399201e6edb52393854b6e3e4903eaba176fcf52bd258c37b7b81454bdfb131181390d65727d8ca64e71e6c12112426d984513f29930d14444ca2a694bb62dd9cab3501ae120642fbb17235558ae03a1ee15a665476a80b39ddc22159169bbb71aacc90f8be07d2bfe867886ccbf2b037069a3c69635ac04"
-  axios
-  .post('http://localhost:1337/admin/users', {
-    firstname: "jose",
-    lastname: "silva",
-    roles: ["2", "3"]
-  }, {
-  headers: {
-    'Authorization': `Bearer ${JWTToken}`
-  }
-  })
-  .then(response => {
-    // Handle success.
-    console.log('Well done!');
-    console.log('User profile', response.data.user);
-    console.log('User token', response.data.jwt);
-  })
-  .catch(error => {
-    // Handle error.
-    console.log('An error occurred:', error.response);
-  });
-
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
   };
 
   return (
@@ -104,6 +104,7 @@ const Register = ({ props }) => {
               sx={{ '& > :not(style)': { m: 1, width: '100%' } }}
               noValidate
               autoComplete="off"
+              onSubmit={handleSubmit}
             >
               <Typography variant="h5" className="title">
                 <PersonAddAltIcon style={{ marginRight: '10px'}}/> Crie Sua Conta
@@ -113,15 +114,28 @@ const Register = ({ props }) => {
               </Typography> 
               
               <TextField id="outlined-basic" label="Digite seu Nome..." variant="outlined" 
+              onChange={handleChange} 
+              value={formData.name}
+              name="name"
                style={{float: 'left', width: '46%'}} />
               <TextField id="outlined-basic" label="Digite seu Sobrenome..." variant="outlined" 
+              onChange={handleChange} 
+              value={formData.surname}
+              name="surname"
               style={{float: 'left', width: '46%'}} />
-              <TextField id="outlined-basic" label="Digite usuário para login..." variant="outlined" 
+              <TextField id="outlined-basic" label="Digite usuário para login..." variant="outlined"  
+              onChange={handleChange} 
+              value={formData.user}
+              name="user"
                style={{float: 'left', width: '46%'}} />
               <TextField
                style={{float: 'left', width: '46%'}} 
               label="Password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               type={showPassword ? 'text' : 'password'}
+              
               variant="outlined" // or "filled", "standard"
               InputProps={{
                 endAdornment: (
@@ -148,7 +162,7 @@ const Register = ({ props }) => {
                 type="email"
                 autoComplete="email"
                 autoFocus
-                value={email}
+                value={formData.email}
                 onChange={handleChange}
                 error={erro}
                 helperText={erro ? "Por favor, digite um e-mail válido." : ""}
@@ -157,7 +171,7 @@ const Register = ({ props }) => {
               <Typography className="ThumbSLider-description" gutterBottom>
                 <Checkbox {...label} defaultChecked style={{ paddingLeft: '0' }}/> Estando de acordo, você aceita nosso <a href="https://drive.google.com/file/d/14KrwuRBWVf1IT5m7Iu4FqS7D-bgyIYdE/view?usp=sharing" target="_blank">termos</a>
               </Typography>
-              <Button variant="contained" endIcon={<SendIcon />}>
+              <Button type="submit" variant="contained" endIcon={<SendIcon />}>
                 Cadastrar
               </Button>
             </Box>
