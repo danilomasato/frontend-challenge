@@ -2,6 +2,56 @@ div[role="alert"] {
 	margin-bottom: 20px;
 }
 
+.form-left {
+	float: left;
+	margin-right: 0rem;
+}
+
+.form-left .title,
+.form .title {
+	text-align: left !important;
+	margin: 0 !important;
+	border: none;
+	font-size: 1.5rem;
+	color: rgb(11, 44, 61);
+	font-family: 'quicksand-bold', helvetica, arial !important;
+	letter-spacing: -1px;
+}
+
+
+.form-left .title::after,
+.form .title::after {
+	content: '';
+	display: block;
+	width: 2rem;
+	border-bottom: 3px solid #c19c64 !important;
+	margin-top: 1rem;
+}
+
+.form .title {
+	margin-left: 10px !important;
+}
+
+.form .title::after {
+	margin-top: 0.5rem;
+}
+
+.form .description {
+	margin-bottom: 1rem;
+}
+.form-left .description,
+.form .description {
+	font-size: 0.8rem;
+	margin-top: 0.5rem;
+	line-height: 1.1rem;
+	color: #353535;
+}
+
+.form {
+	float: right;
+	width: 50%;
+}
+
 @media only screen and (min-width: 1025px) {
 	
 }
@@ -11,7 +61,6 @@ div[role="alert"] {
 }
 
 .form {
-	float: right;
-	width: 450px;
+	float: left;
 }
 

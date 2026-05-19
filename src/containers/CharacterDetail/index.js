@@ -38,7 +38,7 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
   const [imoveis, setImoveis] = useState([]);
   const history = useHistory();
   const urlShare = window.location.href
-  const idMount = parseInt(window.location.hash.substring(0, 11).replace('#/imovel/',''))
+  const idMount = parseInt(window.location.hash.substring(0, 13).replace('#/imovel/',''))
 
   let rows = []
 
@@ -62,6 +62,8 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
       if(imoveis?.length > 0) {
         imoveis.filter((item, index) => {
           if(item.id === parseInt(idMount)){
+          
+            
             realRstate = item
             setInfoImoveis(item)
             setImoveis(item)

@@ -38,7 +38,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 const CardDetail = ({ data }) => {
   const baseURL = process.env.REACT_APP_BASEURL;
   const urlShare = window.location.href
-  const idMount = window.location.hash.substring(0, 11).replace('#/imovel/', '')
+  const idMount = window.location.hash.substring(0, 13).replace('#/imovel/', '')
   const [imovel, setImovel] = useState([]);
   const [card, setCard] = useState([]);
   const [open, setOpen] = React.useState(false);
@@ -256,7 +256,7 @@ const CardDetail = ({ data }) => {
 
                   <Box className="contact">
                     <Typography className="ThumbSLider-description" gutterBottom>
-                      <a target={"_blank"} href={`https://wa.me/11961803698?text=Tenho interesse, pode me enviar mais informações? ${urlShare}`}>
+                      <a target={"_blank"} href={`https://wa.link/nxg8r6?${urlShare}`}>
                         <Button size="small"><WhatsAppIcon /> Contato</Button>
                       </a>
                       {/* <b style={{ fontWeight: 600 }}>Contato:</b> {card.autor.contato}*/}
@@ -281,6 +281,7 @@ const CardDetail = ({ data }) => {
                       <li>
                         <AttachMoneyIcon />
                         <Typography className="ThumbSLider-description">
+  
                           {imovel?.Valor_Venda == null ? (
                             <>
                               <strong>Alguel: </strong>
