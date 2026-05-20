@@ -64,9 +64,44 @@ const Register = ({ props }) => {
         })
           .then(response => {
             // Handle success.
-            console.log('Well done!');
+            console.log('usuario criado!');
             JWTToken = response.data.data.accessToken
             console.log('User profile', response.data.data.accessToken);
+            axios.post('https://sublime-bat-ad2fca1255.strapiapp.com/admin/users', {
+                "firstname":formData.name,
+                "lastname": formData.surname,
+                "email": formData.email,
+                "roles":["2"]
+              }, {
+              headers: {
+                'Authorization': `Bearer ${JWTToken}`
+              }})
+              .then(response => {
+               
+                const id = response.data.data.id.toString()
+                console.log(id)
+                axios.put(`https://sublime-bat-ad2fca1255.strapiapp.com/admin/users/${id}`, {
+                  "firstname":formData.name,
+                  "lastname": formData.surname,
+                  "roles":["2"],  
+                  "isActive": true
+                  }, {
+                  headers: {
+                    'Authorization': `Bearer ${JWTToken}`
+                  }})
+                  .then(response => {
+                    // Handle success.
+                    console.log('usuario ativado!');
+                  })
+                  .catch(error => {
+                    // Handle error.
+                    console.log('An error occurred:', error.response);
+                  });
+              })
+              .catch(error => {
+                // Handle error.
+                console.log('An error occurred:', error.response);
+              });
           })
           .catch(error => {
             // Handle error.
@@ -123,12 +158,12 @@ const Register = ({ props }) => {
               value={formData.surname}
               name="surname"
               style={{float: 'left', width: '46%'}} />
-              <TextField id="outlined-basic" label="Digite usuário para login..." variant="outlined"  
+              {/* <TextField id="outlined-basic" label="Digite usuário para login..." variant="outlined"  
               onChange={handleChange} 
               value={formData.user}
               name="user"
-               style={{float: 'left', width: '46%'}} />
-              <TextField
+               style={{float: 'left', width: '46%'}} /> */}
+              {/* <TextField
                style={{float: 'left', width: '46%'}} 
               label="Password"
               name="password"
@@ -151,7 +186,7 @@ const Register = ({ props }) => {
                   </InputAdornment>
                 ),
               }}
-            />
+            /> */}
               <TextField
                 margin="normal"
                 required
