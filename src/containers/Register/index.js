@@ -17,6 +17,9 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import Checkbox from '@mui/material/Checkbox';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Register = ({ props }) => {
 
@@ -24,6 +27,7 @@ const Register = ({ props }) => {
   const [erro, setErro] = useState(false);
   const label = { slotProps: { input: { 'aria-label': 'Checkbox demo' } } };
   const [showPassword, setShowPassword] = useState(false);
+  const [open, setOpen] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -54,10 +58,17 @@ const Register = ({ props }) => {
     return regex.test(valor);
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!erro && email.length > 0) {
-      alert(`E-mail enviado: ${email}`);
        axios.post('https://sublime-bat-ad2fca1255.strapiapp.com/admin/login', {
           "email": "danilomasato@hotmail.com",
           "password": "Admin@123"
@@ -93,6 +104,13 @@ const Register = ({ props }) => {
                   .then(response => {
                     // Handle success.
                     console.log('usuario ativado!');
+                    setOpen(true);
+
+                    setTimeout(()=> {
+                      //abre modal
+                      setOpen(false);
+                      window.location.href = 'https://sublime-bat-ad2fca1255.strapiapp.com/admin'
+                    }, 60000)
                   })
                   .catch(error => {
                     // Handle error.
@@ -117,6 +135,29 @@ const Register = ({ props }) => {
     <React.Fragment>
       <TopInfo />
       <Header />
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth="lg"
+        maxWidth="lg"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent className="success">
+            <div className="row center">
+            <div className="content" style={{ minHeight: "auto",  display: "block", width: "500px" }}>
+              <img src="https://tudosobreap.com.br/assets/images/loading.gif" width="100"/>
+              <Typography variant="h2" className="description">
+                Você foi registrado com Sucesso ! <br />
+                Vamos Redirecionar você para página de Administração de imóveis da TSA
+              </Typography> 
+                
+            </div>
+          </div>
+        </DialogContent>
+        <CloseIcon className="modal-close" onClick={handleClose} />
+      </Dialog>
 
       <div className="row center">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>

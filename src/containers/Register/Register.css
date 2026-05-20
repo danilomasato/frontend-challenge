@@ -40,11 +40,32 @@ div[role="alert"] {
 	margin-bottom: 1rem;
 }
 .form-left .description,
-.form .description {
+.form .description,
+.success .description {
 	font-size: 0.8rem;
 	margin-top: 0.5rem;
 	line-height: 1.1rem;
 	color: #353535;
+}
+
+.success  {
+	overflow: hidden !important;
+}
+.success .content {
+	max-height: 250px !important;
+}
+
+.success img,
+.success .description {
+	float: left;
+}
+
+.success .description {
+	font-size: 1rem;
+	margin-left: 1.5rem;
+	line-height: 1.2rem;
+	width: 23rem;
+	margin-top: 1rem;
 }
 
 .form {
