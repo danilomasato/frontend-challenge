@@ -83,6 +83,7 @@ const Register = ({ props }) => {
                 axios.put(`https://sublime-bat-ad2fca1255.strapiapp.com/admin/users/${id}`, {
                   "firstname":formData.name,
                   "lastname": formData.surname,
+                  "password": formData.password,
                   "roles":["2"],  
                   "isActive": true
                   }, {
@@ -158,35 +159,32 @@ const Register = ({ props }) => {
               value={formData.surname}
               name="surname"
               style={{float: 'left', width: '46%'}} />
-              {/* <TextField id="outlined-basic" label="Digite usuário para login..." variant="outlined"  
+              <TextField id="outlined-basic" label="Digite usuário para login..." variant="outlined"  
               onChange={handleChange} 
               value={formData.user}
               name="user"
-               style={{float: 'left', width: '46%'}} /> */}
-              {/* <TextField
-               style={{float: 'left', width: '46%'}} 
-              label="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              type={showPassword ? 'text' : 'password'}
-              
-              variant="outlined" // or "filled", "standard"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            /> */}
+               style={{float: 'left', width: '46%'}} />
+              <Box style={{ position: 'relative', float: 'left', width: '46%' }}>
+                <TextField
+                  style={{width: '100%'}} 
+                  label="Senha"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  type={showPassword ? 'text' : 'password'}
+                  variant="outlined" // or "filled", "standard"
+                  
+                />
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                  style={{ position: 'absolute', right: '1.2rem', top: '0.5rem'}}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </Box>
               <TextField
                 margin="normal"
                 required
