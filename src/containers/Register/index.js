@@ -110,7 +110,7 @@ const Register = ({ props }) => {
                       //abre modal
                       setOpen(false);
                       window.location.href = 'https://sublime-bat-ad2fca1255.strapiapp.com/admin'
-                    }, 60000)
+                    }, 6000)
                   })
                   .catch(error => {
                     // Handle error.
