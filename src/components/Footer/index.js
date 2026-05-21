@@ -39,7 +39,7 @@ export const Footer = data => {
                       <h4>Afiliados</h4>
                       <ul>
                           <li><a href="https://sublime-bat-ad2fca1255.strapiapp.com/admin/auth/login"> Acesso para Corretores </a></li>
-                          <li><a href="#/register"> Venha ser um Corretor(a) </a></li>
+                          <li><a href="#/register">Venha ser parceiro TSA </a></li>
                       </ul>
                   </div>
                   

@@ -164,8 +164,8 @@ const Register = ({ props }) => {
           <div sx={{ width: '100%' }}>
             <Box className="form-left">
               <Typography variant="h5" className="title">
-                Venha ser <br />
-                um corretor
+                Venha ser<br />
+                parceiro TSA
               </Typography>
 
               <Typography variant="h2" className="description">
