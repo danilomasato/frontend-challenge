@@ -1,6 +1,7 @@
 import {
   RECEIVE_HOME, 
-  RECEIVE_IMOVEISCACHE
+  RECEIVE_IMOVEISCACHE,
+  RECEIVE_PAGINATION
 } from "../constants/ActionTypes";
 
 const home = (state = {
@@ -10,7 +11,9 @@ const home = (state = {
 
     switch (action.type) {
         case RECEIVE_HOME:
-            return {...state, character: action.home};   
+            return {...state, character: action.home}; 
+        case RECEIVE_PAGINATION:
+            return {...state, pagination: action.pagination};   
         case RECEIVE_IMOVEISCACHE:
             return {...state, imoveisCache: action.payload};         
     default:

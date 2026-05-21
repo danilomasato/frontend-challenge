@@ -21,8 +21,8 @@ export default function CustomIcons(props) {
     setTimeout(() => {
       api.getCharacterData(page).then(response => {
          dispatch({
-            type: types.RECEIVE_HOME,
-            home: response
+            type: types.RECEIVE_PAGINATION,
+            pagination: response
           })
         setChangePage(false)
       })

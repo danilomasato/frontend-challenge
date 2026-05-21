@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { getArticles, getImoveisCache } from "../../actions";
+import { getArticles, getImoveisCache, getCharacterData } from "../../actions";
 import "./Home.css";
 import Card from "../../components/Card";
 import Pagination from "../../components/Pagination";
@@ -21,7 +21,7 @@ import { CustomerTestimonials } from "../../components/CustomerTestimonials";
 import CloseIcon from '@mui/icons-material/Close';
 import { NumericFormat } from 'react-number-format';
 
-const Home = ({ character, imoveisCache }) => {
+const Home = ({ character, imoveisCache, pagination}) => {
 
   const [realEstate, setRealEstate] = useState([]);
   const [search, setSearch] = useState();
@@ -33,15 +33,15 @@ const Home = ({ character, imoveisCache }) => {
     min: 0,
     max: 0
   });
-  const payload = character.character?.data
+
 
   useEffect(() => {
+  const payload = pagination?.length > 0 ? pagination : character.character?.data
+
     payload?.length > 0 ? setImoveis(payload) : setImoveis(imoveisCache.data)
-  }, [character]);
-
-  useEffect(() => {
+  
     payload?.length > 0 ? setRealEstate({character: { data: payload }}) : setRealEstate(imoveisCache.data)
-  }, [character]);
+  }, [character, pagination]);
   
   let research= [];
 
@@ -93,17 +93,12 @@ const Home = ({ character, imoveisCache }) => {
 
 
 const handleClick = () => {
-  if(!("neighborhood" in localStorage) && search?.label?.length === undefined) {
-    alert("Selecione um Bairro para fazer a Busca...")
-  } else {
-
+    if(!("neighborhood" in localStorage) && search?.label?.length === undefined) {
+      alert("Selecione um Bairro para fazer a Busca...")
+    } else {
 
     if(localStorage.length <= 0 ){
-      
-      console.log(localStorage)
-
       localStorage.setItem("neighborhood", search.label)
-      console.log(localStorage.getItem("neighborhood"))
     }
 
     imoveis.filter((item, index) => {
@@ -240,15 +235,11 @@ const handleClick = () => {
         </div>
       </div>
 
-      { realEstate?.character?.data?.length > 0 ? 
-          <Card data={realEstate} /> : 
-          <Loading />
+      { realEstate?.character?.data?.length > 0 
+        ? <Card data={realEstate} /> : <Loading />
       }
 
-      { loading ? 
-          <Loading /> : 
-          ""
-      }
+      { loading ? <Loading /> : ""}
 
       <Pagination data={realEstate} />
 
@@ -260,14 +251,16 @@ const handleClick = () => {
 
 const mapStateToProps = state => ({
   character: state.home,
-  imoveisCache: state.home.imoveisCache
+  imoveisCache: state.home.imoveisCache,
+  pagination: state.home.pagination?.data
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       getArticles: dispatch(getArticles()),
-      getImoveisCache: dispatch(getImoveisCache())
+      getImoveisCache: dispatch(getImoveisCache()),
+      getCharacterData: dispatch(getCharacterData())
     },
     dispatch
   );

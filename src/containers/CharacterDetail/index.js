@@ -16,7 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { bindActionCreators } from "redux";
-import { getAuthors, getImoveisCache } from "../../actions";
+import { getAuthors, getImoveisCache, getCharacterData } from "../../actions";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -32,22 +32,21 @@ import { getArticles } from "../../actions";
 import ThumbSLider from "../../components/ThumbSlider";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
+const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }) => {
 
   const [infoImoveis, setInfoImoveis] = useState([]);
   const [imoveis, setImoveis] = useState([]);
   const history = useHistory();
   const urlShare = window.location.href
-  const idMount = parseInt(window.location.hash.substring(0, 13).replace('#/imovel/',''))
+  const idMount = parseInt(window.location.hash.substring(9, 12).replace('#/imovel/',''))
 
   let rows = []
 
   useEffect(() => {
-    const imoveis = data?.length > 0 ? data : imoveisCache.data;
-    if(imoveis?.length > 0){
-      setImoveis(imoveis)
-    }
-  }, [imoveisCache, data]);
+    const imoveis =  pagination?.length > 0 ? pagination : (data?.length > 0 ? data : data.imoveisCache.data)
+    setImoveis(imoveis)
+    
+  }, [imoveisCache, data, pagination]);
   useEffect(() => {
     // if(authors.data?.length > 0){
     //   authors.data.filter((item, index) =>  {
@@ -61,6 +60,8 @@ const CharacterDetail = ({ data, realRstate, authors, imoveisCache }) => {
     
       if(imoveis?.length > 0) {
         imoveis.filter((item, index) => {
+        // console.log(idMount, item.id)
+
           if(item.id === parseInt(idMount)){
           
             
@@ -236,7 +237,8 @@ const mapStateToProps = state => ({
   imoveisCache: state.home.imoveisCache,
   data: state.home.character.data,
   realRstate: state.character.characterDetail[0],
-  authors: state.character.authors
+  authors: state.character.authors,
+  pagination: state.home.pagination?.data
 });
 
 const mapDispatchToProps = dispatch =>
@@ -244,7 +246,8 @@ const mapDispatchToProps = dispatch =>
     {
       // getAuthors: dispatch(getAuthors()),
       getArticles: dispatch(getArticles()),
-      getImoveisCache: dispatch(getImoveisCache())
+      getImoveisCache: dispatch(getImoveisCache()),
+      getCharacterData: dispatch(getCharacterData()),
     },
     dispatch
   );
