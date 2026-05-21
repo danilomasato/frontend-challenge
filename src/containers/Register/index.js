@@ -37,7 +37,8 @@ const Register = ({ props }) => {
     surname: '',
     user: '',
     email: '', 
-    password: '' 
+    password: '',
+    creci: '' 
   });
 
   const handleChange = (e) => {
@@ -90,7 +91,7 @@ const Register = ({ props }) => {
               .then(response => {
                
                 const id = response.data.data.id.toString()
-                console.log(id)
+
                 axios.put(`https://sublime-bat-ad2fca1255.strapiapp.com/admin/users/${id}`, {
                   "firstname":formData.name,
                   "lastname": formData.surname,
@@ -98,29 +99,49 @@ const Register = ({ props }) => {
                   "roles":["2"],  
                   "isActive": true
                   }, {
-                  headers: {
-                    'Authorization': `Bearer ${JWTToken}`
-                  }})
-                  .then(response => {
-                    // Handle success.
-                    console.log('usuario ativado!');
-                    setOpen(true);
+                headers: {
+                  'Authorization': `Bearer ${JWTToken}`
+                }})
+                .then(response => {
+                  // Handle success.
+                  console.log('usuario ativado!');
+                  setOpen(true);
 
-                    setTimeout(()=> {
-                      //abre modal
-                      setOpen(false);
-                      window.location.href = 'https://sublime-bat-ad2fca1255.strapiapp.com/admin'
-                    }, 6000)
-                  })
-                  .catch(error => {
-                    // Handle error.
-                    console.log('An error occurred:', error.response);
-                  });
-              })
-              .catch(error => {
-                // Handle error.
-                console.log('An error occurred:', error.response);
-              });
+                  setTimeout(()=> {
+                    //abre modal
+                    setOpen(false);
+                    window.location.href = 'https://sublime-bat-ad2fca1255.strapiapp.com/admin'
+                  }, 6000)
+                })
+                .catch(error => {
+                  // Handle error.
+                  console.log('An error occurred:', error.response);
+                });
+
+                //api corretores para registrar o CRECI
+                axios.put(`https://sublime-bat-ad2fca1255.strapiapp.com/api/brokers`, {
+                    "nome":formData.name,
+                    "sobrenome": formData.surname,
+                    "creci": formData.creci,
+                    "email": formData.email
+                    }, {
+                    headers: {
+                      'Authorization': `Bearer ${JWTToken}`
+                    }})
+                    .then(response => {
+                      // Handle success.
+                      console.log('brokers', response);
+  
+                    })
+                    .catch(error => {
+                      // Handle error.
+                      console.log('An error occurred:', error.response);
+                    });
+                })
+                .catch(error => {
+                  // Handle error.
+                  console.log('An error occurred:', error.response);
+                })
           })
           .catch(error => {
             // Handle error.
@@ -200,12 +221,18 @@ const Register = ({ props }) => {
               value={formData.surname}
               name="surname"
               style={{float: 'left', width: '46%'}} />
-              <TextField id="outlined-basic" label="Digite usuário para login..." variant="outlined"  
+              <TextField id="outlined-basic" label="Digite seu Sobrenome..." variant="outlined" 
               onChange={handleChange} 
-              value={formData.user}
-              name="user"
+              value={formData.creci}
+              name="name"
+              style={{float: 'left', width: '46%'}} />
+              
+              <TextField id="outlined-basic" label="Digite seu CRECI..." variant="outlined"  
+              onChange={handleChange} 
+              value={formData.creci}
+              name="creci"
                style={{float: 'left', width: '46%'}} />
-              <Box style={{ position: 'relative', float: 'left', width: '46%' }}>
+              <Box style={{ position: 'relative', float: 'left', width: '100%' }}>
                 <TextField
                   style={{width: '100%'}} 
                   label="Senha"
