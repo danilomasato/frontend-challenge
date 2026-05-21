@@ -270,17 +270,29 @@ const CardDetail = ({ data }) => {
 
                   {imovel?.Valor_Venda == null ? (
                     <>
-                      <strong>Alguel: </strong>
+                      <strong>Alguel: </strong><br />
                       <span className="value"> 
-                        {!isNaN(parseFloat(imovel?.Valor_Aluguel)) ? parseFloat(imovel?.Valor_Aluguel.replace('.','')).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
+                        {!isNaN(parseFloat(imovel?.Valor_Aluguel)) ? parseFloat(imovel?.Valor_Aluguel.replace('.','')).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) 
+                        : 
+                        <>
+                          <strong>aluguel: </strong><br />
+                          <span className="value"> Sem informação </span>
+                        </>
+                        }
                       </span>
                     </>
                   )
                     : 
                     <>
-                      <strong>Venda: </strong>
+                      <strong>Venda: </strong><br />
                       <span className="value"> 
-                        {!isNaN(parseFloat(imovel.Valor_Venda)) ?  parseFloat(imovel.Valor_Venda.replace('.','')).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
+                        {!isNaN(parseFloat(imovel.Valor_Venda)) ?  parseFloat(imovel.Valor_Venda.replace('.','')).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) 
+                        : 
+                        <>
+                          <strong>Venda: </strong><br />
+                          <span className="value"> Sem informação </span>
+                        </>
+                        }
                       </span>
                     </>
                   }
@@ -291,14 +303,17 @@ const CardDetail = ({ data }) => {
                 <Typography className="ThumbSLider-description">
                   {imovel?.IPTU ? (
                     <>
-                      <strong>IPTU: </strong>
+                      <strong>IPTU: </strong><br />
                       <span className="value"> 
                         {!isNaN(parseFloat(imovel.IPTU)) ? parseFloat(imovel.IPTU).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
                       </span>
                     </>
                   )
                   : 
-                    'IPTU: Sem informação'
+                    <>
+                      <strong>IPTU: </strong><br />
+                      <span className="value"> Sem informação </span>
+                    </>
                   }
                 </Typography>
               </li>
@@ -307,14 +322,17 @@ const CardDetail = ({ data }) => {
                 <Typography className="ThumbSLider-description">
                   {imovel?.Condominio ? (
                     <>
-                      <strong>Condomínio: </strong>
+                      <strong>Condomínio: </strong><br />
                       <span className="value"> 
                         {!isNaN(parseFloat(imovel.Condominio)) ? parseFloat(imovel.Condominio).toLocaleString('pt-BR', {style: 'currency',currency: 'BRL'}) : 'Sem informação'}
                       </span>
                     </>
                   )
                   : 
-                    'Condomínio: Sem informação'
+                    <>
+                      <strong>Condomínio: </strong><br />
+                      <span className="value"> Sem informação </span>
+                    </>
                   }
                 </Typography>
               </li>
