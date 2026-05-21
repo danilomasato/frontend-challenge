@@ -43,8 +43,30 @@
     background: #fff;
 }
 
+.PriceDetails {
+	width: 230px;
+    position: absolute;
+    right: 30px;
+    top: 210px;
+    bottom: 0;
+    background: #ffffff !important;
+    border: none;
+    box-shadow: none !important;
+}
+
+.PriceDetails ul {
+    padding: 20px 20px;
+	background: #ffffff !important;
+    border: 1px solid rgb(231 236 243);
+    box-shadow: 1px 1px 12px #0000001a;
+}
+
+.PriceDetails p {
+	color: #786e6e !important;
+	font-size: 0.8rem;
+}
+
 .PriceDetails li {
-    float: left;
     width: 100%;
     list-style: none;
     margin-top: 10px;
@@ -157,7 +179,7 @@
 
 
 .GroupBelowHighligh .ButtonGroup {
-    margin: 20px 0 0 70px;
+    margin: 10px 0 0 130px;
 		box-shadow: none;
 }
 
@@ -173,70 +195,56 @@
     margin-right: 5px;
 }
 
-.PriceDetails {
-	width: 230px;
-    position: absolute;
-    right: 30px;
-    top: 210px;
-    bottom: 0;
-    height: 208px;
-    background: #ffffff !important;
-    border: none;
-    box-shadow: none !important;
-}
-
-.PriceDetails button {
-    padding-bottom: 15px;
-	background: #ffffff !important;
-    border: 1px solid rgb(231 236 243);
-    box-shadow: 1px 1px 12px #0000001a;
-}
-
-.PriceDetails p {
-	color: #786e6e !important;
-	font-size: 0.8rem;
-}
-
 @media only screen and (max-width: 1024px) {
+
+		.ThumbSLider-highligh {
+			margin: 0;
+		}
+
 		.ThumbSLider-author .avatar {
-    	display: none;
+			display: none;
 		}
 
 		.MuiDialog-container .slick-slide img {
 			object-fit: cover;
 		}
 
-    .ThumbSLider-author {
+		.ThumbSLider-author {
 			position: initial;
-      width: 80%;
+			width: 80%;
 			max-width: 100% !important;
-      box-shadow: none !important;
-      border-bottom: 1px solid #ccc;
-    }
+			box-shadow: none !important;
+			border-bottom: 1px solid #ccc;
+		}
 
 		.GroupBelowHighligh .ButtonGroup {
-				margin: 0 auto;
-				float: initial;
-				width: 318px;
-				display: flex;
+			padding: 0 15px;
+			margin: initial;
+			width: 100%;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			box-sizing: border-box;
 		}
 
 	.PriceDetails {
-    display: block;
-    box-shadow: none !important;
-    height: 150px;
-    position: initial; 
-    width: 100%;
-    float: left;
-    margin: 20px;
-  }
+		float: left;
+		display: block;
+		box-shadow: none !important;
+		position: initial; 
+		width: 100%;
+	}
+
+	.propertyDetails {
+		float: left;
+		margin-top: 20px;
+	}
 
 	.GroupBelowHighligh .imovel-info {
-    margin: 0 auto;
-    float: none;
+		margin: 0 auto;
+		margin-left: 20px;
 	}
 
 	.GroupBelowHighligh .ThumbSLider-author {
-    margin: 0 0 0 40px;
+		margin: 0 0 0 40px;
 	}
 }
