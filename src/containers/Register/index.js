@@ -119,14 +119,15 @@ const Register = ({ props }) => {
                 });
 
                 //api corretores para registrar o CRECI
-                axios.put(`https://sublime-bat-ad2fca1255.strapiapp.com/api/brokers`, {
-                    "nome":formData.name,
-                    "sobrenome": formData.surname,
-                    "creci": formData.creci,
-                    "email": formData.email
-                    }, {
+                axios.post(`https://sublime-bat-ad2fca1255.strapiapp.com/api/brokers`, {
+                    "data": {
+                      "nome":formData.name,
+                      "sobrenome": formData.surname,
+                      "creci": formData.creci,
+                      "email": formData.email
+                    }}), {
                     headers: {
-                      'Authorization': `Bearer ${JWTToken}`
+                      'Authorization': `Bearer bb71d99fd4e9cc6af847e1f75af8eb8eb895c8cdc50b835d210efbf504e1bdb69005dd946f1c001a554d6eb8f867941f76e7dd8183213298576dd0cf0081c92a89117e759cdd270cc1fc3a46bd7bdf0a19489ee45c2bebf79828e2e775dfaaf2aad1feec705c8b4ebd14d470c9fa46fbca5734e8f98f20cb932193d3db19a050`
                     }})
                     .then(response => {
                       // Handle success.
@@ -221,10 +222,10 @@ const Register = ({ props }) => {
               value={formData.surname}
               name="surname"
               style={{float: 'left', width: '46%'}} />
-              <TextField id="outlined-basic" label="Digite seu Sobrenome..." variant="outlined" 
+              <TextField id="outlined-basic" label="Digite seu usuário..." variant="outlined" 
               onChange={handleChange} 
-              value={formData.creci}
-              name="name"
+              value={formData.user}
+              name="user"
               style={{float: 'left', width: '46%'}} />
               
               <TextField id="outlined-basic" label="Digite seu CRECI..." variant="outlined"  
