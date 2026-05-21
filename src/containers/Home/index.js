@@ -54,7 +54,7 @@ const Home = ({ character, imoveisCache }) => {
       const mapa = new Map();
       imoveis.forEach(obj => {
         if(obj.Bairro !== null)
-          mapa.set(obj.Bairro, obj); // Define o ID como chave e o objeto como valor
+          mapa.set(obj.Bairro.toLowerCase(), obj); // Define o ID como chave e o objeto como valor
       });
 
       let objetosUnicosPorId = Array.from(mapa.values());
