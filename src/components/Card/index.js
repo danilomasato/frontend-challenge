@@ -259,7 +259,7 @@ export default function MultiActionAreaCard(props) {
     {adtype.launch !== '' ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
-            <Chip label="Lançamentos de Imóveis" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
+            <Chip label="Lançamentos" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
           </Divider>
         </Root> 
     ) : '' }
