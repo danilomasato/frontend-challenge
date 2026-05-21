@@ -287,8 +287,8 @@ const CardDetail = ({ data }) => {
                 </Typography>
               </li>
               <li>
+                <PlaylistAddIcon />
                 <Typography className="ThumbSLider-description">
-                  <PlaylistAddIcon />
                   {imovel?.IPTU ? (
                     <>
                       <strong>IPTU: </strong>
@@ -303,8 +303,8 @@ const CardDetail = ({ data }) => {
                 </Typography>
               </li>
               <li>
+                <BusinessIcon  />
                 <Typography className="ThumbSLider-description">
-                  <BusinessIcon  />
                   {imovel?.Condominio ? (
                     <>
                       <strong>Condomínio: </strong>
