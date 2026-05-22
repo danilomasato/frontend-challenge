@@ -34,10 +34,11 @@ import { getArticles } from "../../actions";
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import BusinessIcon from '@mui/icons-material/Business';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import axios from 'axios';
 
 const CardDetail = ({ data }) => {
   const baseURL = process.env.REACT_APP_BASEURL;
-  const urlShare = window.location.href
+  const [urlShare, setUrlShare] = useState();
   const idMount = window.location.hash.substring(0, 13).replace('#/imovel/', '')
   const [imovel, setImovel] = useState([]);
   const [card, setCard] = useState([]);
@@ -47,18 +48,38 @@ const CardDetail = ({ data }) => {
   const [video, setVideo] = useState([]);
   const [tipoAnuncio, setTipoAnuncio] = useState('');
   
+  function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+  
   useEffect(() => {
+    const paramID  = getParameterByName('dcID')
     if( data?.length > 0){
-      setImovel(data?.length > 0 && data.filter(item => item.id === parseInt(idMount))[0])
-      data.filter(item => {
+      
+      if(paramID == null){
+        setImovel(data.filter(item => item.id === parseInt(idMount))[0])
+      } else {
 
-        if(item.id === parseInt(idMount)){
-          setVideo(item.Fotos)
-          setTipoAnuncio(item.Tipo_de_Anuncio)
-        }
-      })
+        axios.get(`https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`)
+        .then(response => {
+          // Handle success.
+          setImovel(response.data.data)
+        })
+        .catch(error => {
+          // Handle error.
+          console.log('An error occurred:', error.response);
+        });
+      }
+      setVideo(imovel?.Fotos)
+      setTipoAnuncio(imovel?.Tipo_de_Anuncio)
+      setUrlShare(window.location.href + '?dcID=' + imovel?.documentId)
     }
-  }, [data, video]);
+  }, [data]);
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -114,9 +135,9 @@ const CardDetail = ({ data }) => {
       }
   }
 
-  const handleClick = url => {
+  const handleClick = documentId => {
     setOpenShare(true)
-    copiarParaAreaDeTransferencia(url);
+    copiarParaAreaDeTransferencia(urlShare);
     setTimeout(() => {
     setOpenShare(false)
     }, 3500)
@@ -232,7 +253,7 @@ const CardDetail = ({ data }) => {
                 return <Button onClick={handleClickOpenVideo}><SlowMotionVideoIcon /> Vídeo </Button>
           })}
             <Button onClick={handleClickOpen}><AspectRatioIcon  className="expanded" /> Ampliar </Button>
-            <Button onClick={(e) => {handleClick(urlShare) }}><ShareIcon /> Compartilhar </Button>
+            <Button onClick={(e) => {handleClick(imovel?.documentId) }}><ShareIcon /> Compartilhar </Button>
           </ButtonGroup>
 
           <Box className="ThumbSLider-author" key={card.id} sx={{ maxWidth: 345 }} style={{ overflow: "visible"}}>

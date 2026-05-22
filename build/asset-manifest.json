@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.dbfdb414.css",
-    "main.js": "/static/js/main.94e18a95.js",
+    "main.css": "/static/css/main.14b9114d.css",
+    "main.js": "/static/js/main.af9f2c1c.js",
     "static/media/logo_tsa.png": "/static/media/logo_tsa.065f0e6987b69aca20e9.png",
     "static/media/Quicksand_Bold.otf": "/static/media/Quicksand_Bold.90bf44d43965116d771b.otf",
     "static/media/Quicksand_Book.otf": "/static/media/Quicksand_Book.c86e224d3dd24efee96a.otf",
@@ -13,11 +13,11 @@
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.dbfdb414.css.map": "/static/css/main.dbfdb414.css.map",
-    "main.94e18a95.js.map": "/static/js/main.94e18a95.js.map"
+    "main.14b9114d.css.map": "/static/css/main.14b9114d.css.map",
+    "main.af9f2c1c.js.map": "/static/js/main.af9f2c1c.js.map"
   },
   "entrypoints": [
-    "static/css/main.dbfdb414.css",
-    "static/js/main.94e18a95.js"
+    "static/css/main.14b9114d.css",
+    "static/js/main.af9f2c1c.js"
   ]
 }

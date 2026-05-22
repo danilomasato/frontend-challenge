@@ -31,6 +31,7 @@ import "./DetailImovel.css";
 import { getArticles } from "../../actions";
 import ThumbSLider from "../../components/ThumbSlider";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import axios from 'axios';
 
 const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }) => {
 
@@ -42,11 +43,36 @@ const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }
 
   let rows = []
 
-  useEffect(() => {
-    const imoveis =  pagination?.length > 0 ? pagination : (data?.length > 0 ? data : data.imoveisCache.data)
-    setImoveis(imoveis)
-    
-  }, [imoveisCache, data, pagination]);
+  function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+
+
+    useEffect(() => {
+      const paramID  = getParameterByName('dcID')
+      if( data?.length > 0){
+        
+        if(paramID == null){
+          setImoveis(pagination?.length > 0 ? pagination : (data?.length > 0 ? data : imoveisCache.data))
+        } else {
+  
+          axios.get(`https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`)
+          .then(response => {
+            // Handle success.
+            setImoveis(response.data.data)
+          })
+          .catch(error => {
+            // Handle error.
+            console.log('An error occurred:', error.response);
+          });
+        }
+      }
+    }, [data]);
   useEffect(() => {
     // if(authors.data?.length > 0){
     //   authors.data.filter((item, index) =>  {
@@ -58,19 +84,15 @@ const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }
     //   })
     // }
     
-      if(imoveis?.length > 0) {
-        imoveis.filter((item, index) => {
-        // console.log(idMount, item.id)
-
-          if(item.id === parseInt(idMount)){
-          
-            
-            realRstate = item
-            setInfoImoveis(item)
-            setImoveis(item)
-          }
-        })
-      }
+    if(imoveis?.length > 0) {
+      imoveis.filter((item, index) => {
+        if(item.id === parseInt(idMount)){
+          realRstate = item
+          setInfoImoveis(item)
+          setImoveis(item)
+        }
+      })
+    }
 
     //Disable click right mouse
     const handleContextMenu = (e) => {
@@ -86,8 +108,6 @@ const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }
     };
 
   }, [imoveis, infoImoveis]);
-
-
 
   function createData(
     name: string,
