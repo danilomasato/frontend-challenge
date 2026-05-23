@@ -19,6 +19,8 @@ import { Container } from "../../components";
 import { styled } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import 'pure-react-carousel/dist/react-carousel.es.css';
 
 export default function MultiActionAreaCard(props) {
   const [articles, setArticles] = useState([]);
@@ -102,80 +104,92 @@ export default function MultiActionAreaCard(props) {
       ) : '' }
  
       <Container className="home">
-        {articles?.length > 0 && articles.map(
-          (card, index) => (
-            <>
-              {card.Valor_Venda !== null && card.Tipo_de_Anuncio !== "Lançamentos" ? (
-                  <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
-                     <ThumbSLider 
-                        height="180"
-                        image={card.Fotos?.slice(1)}
-                        alt={card.imovel}
-                        title={card.imovel}
-                        home="true"
-                      />
-                    <CardActionArea onClick={(e) => {handleClick(card.id, card) }}>
-                      <CardContent className="CardContent">
-                        <Typography className="title-imovel" gutterBottom variant="h5">
-                          {card.titulo}
-                        </Typography>
-                        <Typography className="descripition" gutterBottom variant="h5">
-                          {card.Bairro}
-                        </Typography>
-                      </CardContent>
+        <CarouselProvider
+        naturalSlideWidth={345}
+        naturalSlideHeight={350}
+        totalSlides={23}
+      >
+        <Slider>
+          {articles?.length > 0 && articles.map(
+            (card, index) => (
+              <>
+                {card.Valor_Venda !== null && card.Tipo_de_Anuncio !== "Lançamentos" ? (
+                  <Slide index={index}>
+                    <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
+                      <ThumbSLider 
+                          height="180"
+                          image={card.Fotos?.slice(1)}
+                          alt={card.imovel}
+                          title={card.imovel}
+                          home="true"
+                        />
+                      <CardActionArea onClick={(e) => {handleClick(card.id, card) }}>
+                        <CardContent className="CardContent">
+                          <Typography className="title-imovel" gutterBottom variant="h5">
+                            {card.titulo}
+                          </Typography>
+                          <Typography className="descripition" gutterBottom variant="h5">
+                            {card.Bairro}
+                          </Typography>
+                        </CardContent>
 
-                      <CardContent  className="CardContent">
-                        <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                          {card.Valor_Venda !== null ? (
-                            <div>
-                              {parseFloat(card?.Valor_Venda.replace('.',''))?.toLocaleString('pt-BR', {
-                                style: 'currency',
-                                currency: 'BRL'
-                              })}
-                            </div>
-                          )
-                            : ''
-                          }
-                        </Typography>
-                        <Typography className="icon-card" variant="body2" color="text.secondary">
-                          {card.Area_Terreno !== null ? (
-                            <div>
-                              <FullscreenIcon />
-                              {card.Area_Terreno} m<span className="mcubico">2</span>
-                            </div>
-                          )
-                            : ''
-                          }
-                        </Typography>
-                        <Typography className="icon-card" variant="body2" color="text.secondary">
-                          
-                          {card.Quartos !== null ? (
-                            <div>
-                              <BedIcon /> {card.Quartos}
-                            </div>
-                          )
-                            : ''
-                          }
-                        </Typography>
-                        <Typography className="icon-card" variant="body2" color="text.secondary">
-                          <ShowerIcon /> {card.Banheiros} 
-                        </Typography>
-                        <Typography className="icon-card" variant="body2" color="text.secondary">
-                          <DirectionsCarIcon /> {card.Vagas} 
-                        </Typography>
-                        <CardActions className="wrap-see-more">
-                          <Button className="see-more" variant="contained" onClick={(e) => {handleClick(card.id, card) }}>
-                            Ver Mais
-                          </Button>
-                        </CardActions>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                )
-                : ''
-            }
-          </>
-        ))}
+                        <CardContent  className="CardContent">
+                          <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
+                            {card.Valor_Venda !== null ? (
+                              <div>
+                                {parseFloat(card?.Valor_Venda.replace('.',''))?.toLocaleString('pt-BR', {
+                                  style: 'currency',
+                                  currency: 'BRL'
+                                })}
+                              </div>
+                            )
+                              : ''
+                            }
+                          </Typography>
+                          <Typography className="icon-card" variant="body2" color="text.secondary">
+                            {card.Area_Terreno !== null ? (
+                              <div>
+                                <FullscreenIcon />
+                                {card.Area_Terreno} m<span className="mcubico">2</span>
+                              </div>
+                            )
+                              : ''
+                            }
+                          </Typography>
+                          <Typography className="icon-card" variant="body2" color="text.secondary">
+                            
+                            {card.Quartos !== null ? (
+                              <div>
+                                <BedIcon /> {card.Quartos}
+                              </div>
+                            )
+                              : ''
+                            }
+                          </Typography>
+                          <Typography className="icon-card" variant="body2" color="text.secondary">
+                            <ShowerIcon /> {card.Banheiros} 
+                          </Typography>
+                          <Typography className="icon-card" variant="body2" color="text.secondary">
+                            <DirectionsCarIcon /> {card.Vagas} 
+                          </Typography>
+                          <CardActions className="wrap-see-more">
+                            <Button className="see-more" variant="contained" onClick={(e) => {handleClick(card.id, card) }}>
+                              Ver Mais
+                            </Button>
+                          </CardActions>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                    </Slide>
+                  )
+                  : ''
+              }
+            </>
+          ))}
+        </Slider>
+        <ButtonBack>Back</ButtonBack>
+        <ButtonNext>Next</ButtonNext>
+      </CarouselProvider>
     </Container>
 
     {salePrice ? (

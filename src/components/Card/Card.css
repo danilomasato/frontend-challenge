@@ -135,6 +135,34 @@
 	bottom: -10px;
 }
 
+.home .carousel {
+	position: relative
+}
+
+.home  .buttonBack___1mlaL {
+	margin-left: -70px;
+}
+
+
+.home  .buttonNext___2mOCa {
+	position: absolute;
+    left: inherit;
+    right: 0;
+}
+
+.slideHorizontal___1NzNV {
+    width: 396px !important;
+	margin: 0 20px !important;
+}
+
+.carousel__slider--horizontal {
+	height: 345px !important;
+}
+
+.home .content {
+	display: inherit !important;
+}
+
 @media only screen and (min-width: 1025px) {
 	.home.center {
 		width: 1230px;

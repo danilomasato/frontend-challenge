@@ -34,9 +34,8 @@ const Home = ({ character, imoveisCache, pagination}) => {
     max: 0
   });
 
-
   useEffect(() => {
-  const payload = pagination?.length > 0 ? pagination : character.character?.data
+    const payload = pagination?.length > 0 ? pagination : character.character?.data
 
     payload?.length > 0 ? setImoveis(payload) : setImoveis(imoveisCache.data)
   
