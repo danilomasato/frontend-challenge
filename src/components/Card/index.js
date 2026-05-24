@@ -107,7 +107,10 @@ export default function MultiActionAreaCard(props) {
         <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={23}
+        totalSlides={29}
+        visibleSlides={6}
+        step={6}
+        orientation="horizontal"
       >
         <Slider>
           {articles?.length > 0 && articles.map(
@@ -187,8 +190,8 @@ export default function MultiActionAreaCard(props) {
             </>
           ))}
         </Slider>
-        <ButtonBack>Back</ButtonBack>
-        <ButtonNext>Next</ButtonNext>
+        <ButtonBack> ‹ </ButtonBack>
+        <ButtonNext> › </ButtonNext>
       </CarouselProvider>
     </Container>
 
