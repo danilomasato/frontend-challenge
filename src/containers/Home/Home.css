@@ -64,12 +64,18 @@ div[role="alert"] {
     font-size: 0.8rem !important;
 }
 
-.minMax input {
+.minMax input,
+.minMax fieldset {
     border: 1px solid #be9f6061;
     padding: 13px 10px !important;
     margin: 0 !important;
     font-family: 'quicksand-regular', helvetica, arial !important;
     font-size: 0.8rem !important;
+}
+
+.minMax fieldset {
+    top: 11px;
+    height: 23px !important;
 }
 
 /* Botão "Buscar Imóveis" */

@@ -160,11 +160,12 @@
 .slideHorizontal___1NzNV {
   width: 396px !important;
 	height: 343px !important;
-	margin: 0 20px 30px 20px !important;
 }
 
-.carousel__slider--horizontal {
-	height: 720px !important;
+.sliderTray___-vHFQ {
+    display: grid !important;
+    grid-template-columns: 396px 396px 396px !important;
+    grid-gap: 20px !important;
 }
 
 .home .content {

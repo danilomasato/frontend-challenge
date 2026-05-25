@@ -6,7 +6,7 @@ import { getArticles, getImoveisCache, getCharacterData } from "../../actions";
 import "./Home.css";
 import Card from "../../components/Card";
 import Pagination from "../../components/Pagination";
-import TextField from '@mui/material/TextField';
+import { TextField, MenuItem } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -29,6 +29,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
   const [imoveis, setImoveis] = useState([]);
   const [error, setError] = useState(null);
   const [options, setOptions] = useState([]);
+  const [category, setCategory] = useState('');
   const [optionsValue, setOptionsValue] = useState({
     min: 0,
     max: 0
@@ -101,6 +102,21 @@ const handleClick = () => {
     }
 
     imoveis.filter((item, index) => {
+        //busca por tipo de anuncio
+        if(item.Tipo_de_Anuncio.includes(category)){
+          research = research.concat(item)
+
+          setTimeout(() => {
+            setRealEstate({character: {
+              data: research
+            }})
+
+            setLoading(false)
+            setSearch(false)
+          }, 2500);
+        }
+
+        //busca por bairro e valor minimo e maximo
         if(item.Bairro.includes(search?.label) || localStorage.length > 0 && item.Bairro.includes(localStorage.getItem("neighborhood"))){
           //loading
           setLoading(true)
@@ -145,6 +161,10 @@ const handleClick = () => {
     )
   }
 }
+
+  const handleChangeCategory = (evento) => {
+    setCategory(evento.target.value);
+  };
   
 
   return (
@@ -158,7 +178,7 @@ const handleClick = () => {
             <Grid container spacing={2} style={{ 
               gridColumnGap: "20px",
               display: "grid",
-              gridTemplateColumns: "320px 360px  200px"
+              gridTemplateColumns: "320px 359px 210px 220px"
              }}>
               <Grid size={8}>
                 { imoveis?.length > 0 ? (<>
@@ -222,6 +242,23 @@ const handleClick = () => {
                   variant="standard"
                   label="Valor Max"
                 style={{ marginLeft: "15px"}}/>
+              </Grid>
+              <Grid size={12} className="minMax">
+                <TextField
+                  select
+                  label="Tipo de Anúncio"
+                  value={category}
+                  onChange={handleChangeCategory}
+                  helperText="Selecione o tipo de Anúncio"
+                  style={{ m: 1, minWidth: '100%' }}
+                >
+                  <MenuItem value="">
+                    <em>Todos</em>
+                  </MenuItem>
+                  <MenuItem value={'venda'}>venda</MenuItem>
+                  <MenuItem value={'aluguel'}>aluguel</MenuItem>
+                  <MenuItem value={'Lançamentos'}>Lançamentos</MenuItem>
+                </TextField>
               </Grid>
               <Grid size={4}>
                 <Button className="search-button" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(e) }}>

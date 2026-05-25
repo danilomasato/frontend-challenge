@@ -304,7 +304,6 @@ export default function MultiActionAreaCard(props) {
         visibleSlides={12}
         step={6}
         orientation="horizontal"
-        style={{ height: '345px'}}
         >
         <Slider >
       {articles?.length > 0 && articles.map(
