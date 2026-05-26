@@ -20,6 +20,8 @@ import { GetAPI } from "../../utils";
 import { CustomerTestimonials } from "../../components/CustomerTestimonials";
 import CloseIcon from '@mui/icons-material/Close';
 import { NumericFormat } from 'react-number-format';
+import Typography from '@mui/material/Typography';
+import { Container } from "../../components";
 
 const Home = ({ character, imoveisCache, pagination}) => {
 
@@ -96,66 +98,63 @@ const handleClick = () => {
     if(!("neighborhood" in localStorage) && search?.label?.length === undefined) {
       alert("Selecione um Bairro para fazer a Busca...")
     } else {
-
+      
+    //se não houver setado localstorage registra o bairro
     if(localStorage.length <= 0 ){
       localStorage.setItem("neighborhood", search.label)
     }
 
     imoveis.filter((item, index) => {
-        //busca por tipo de anuncio
-        if(item.Tipo_de_Anuncio.includes(category)){
-          research = research.concat(item)
 
-          setTimeout(() => {
-            setRealEstate({character: {
-              data: research
-            }})
+        const minMax = item => {
 
-            setLoading(false)
-            setSearch(false)
-          }, 2500);
+            //loading
+            setLoading(true)
+            
+            // if(search?.label?.length > 0 && item.Bairro.includes(search.label)){
+              setRealEstate("")  
+            // } 
+
+            let valueMin= optionsValue?.min
+            let valueMax = optionsValue?.max
+
+            if(valueMax?.length > 0){
+              valueMax = parseInt(valueMax?.replace(',','')?.replace('R$',''))
+            }
+
+            if(valueMin?.length > 0){
+              valueMin = parseInt(valueMin?.replace(',','')?.replace('R$',''))
+            }
+
+            const itemValueAluguel = parseInt(item?.Valor_Aluguel?.replace(".",""))
+            const itemValueVenda = parseInt(item?.Valor_Venda?.replace(".",""))
+
+            if(valueMin  > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMin || valueMax > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMax){
+              research = research.concat(item)
+            }
+
+            if(valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax || valueMin > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMin){
+              research = research.concat(item)
+            }
+
+            setTimeout(() => {
+              setRealEstate({character: {
+                data: research
+              }})
+
+              setLoading(false)
+              setSearch(false)
+            }, 2500);
         }
 
         //busca por bairro e valor minimo e maximo
-        if(item.Bairro.includes(search?.label) || localStorage.length > 0 && item.Bairro.includes(localStorage.getItem("neighborhood"))){
-          //loading
-          setLoading(true)
-          
-          if(search?.label?.length > 0 && item.Bairro.includes(search.label)){
-            setRealEstate("")  
-          } 
+        if(item.Bairro.includes(search?.label) && category == '' || localStorage.length > 0 && item.Bairro.includes(localStorage.getItem("neighborhood")) && category == ''){
+          minMax(item)
+        }
 
-          let valueMin= optionsValue?.min
-          let valueMax = optionsValue?.max
-
-          if(valueMax?.length > 0){
-            valueMax = parseInt(valueMax?.replace(',','')?.replace('R$',''))
-          }
-
-          if(valueMin?.length > 0){
-            valueMin = parseInt(valueMin?.replace(',','')?.replace('R$',''))
-          }
-
-          const itemValueAluguel = parseInt(item?.Valor_Aluguel?.replace(".",""))
-          const itemValueVenda = parseInt(item?.Valor_Venda?.replace(".",""))
-
-          if(valueMin  > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMin || valueMax > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMax){
-            research = research.concat(item)
-          }
-
-          if(valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax || valueMin > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMin){
-            research = research.concat(item)
-          }
-
-          setTimeout(() => {
-            setRealEstate({character: {
-              data: research
-            }})
-
-            setLoading(false)
-            setSearch(false)
-          }, 2500);
-
+        //busca por tipo de anuncio
+        if(category !== '' && item.Tipo_de_Anuncio.includes(category)){
+          minMax(item)
         }
       }
     )
@@ -272,7 +271,17 @@ const handleClick = () => {
       </div>
 
       { realEstate?.character?.data?.length > 0 
-        ? <Card data={realEstate} /> : <Loading />
+        ? <Card data={realEstate} /> : (
+        <>
+        <Container>
+          <img style={{ float: 'left', marginLeft: '180px' }}src="https://static.vecteezy.com/ti/vetor-gratis/p1/26391345-busca-sem-resultados-nao-encontrado-ilustracao-de-conceito-design-plano-eps10-elemento-grafico-moderno-para-pagina-de-destino-ui-de-estado-vazio-infografico-icone-vetor.jpg" width="300"/>
+          <Typography style={{ float: 'left', textAlign: 'center', fontWeight: 'bold', fontSize: '2rem', alignSelf: 'center'}}>
+            Nenhum Resultado Encontrado...
+          </Typography>
+        </Container>
+        
+        </>
+        )
       }
 
       { loading ? <Loading /> : ""}

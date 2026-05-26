@@ -95,7 +95,7 @@ export default function MultiActionAreaCard(props) {
   return (
     <>
     
-      {rentalValue ? ( 
+      {salePrice ? ( 
         <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip label="Imóveis à Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff",  fontSize: "1.1rem", padding: "1rem" }} />
@@ -195,7 +195,7 @@ export default function MultiActionAreaCard(props) {
       </CarouselProvider>
     </Container>
 
-    {salePrice ? (
+    {rentalValue ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip className="separator" label="Imóveis para Alugar" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
