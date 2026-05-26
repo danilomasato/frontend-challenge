@@ -108,7 +108,7 @@ export default function MultiActionAreaCard(props) {
         naturalSlideWidth={345}
         naturalSlideHeight={350}
         totalSlides={29}
-        visibleSlides={12}
+        visibleSlides={9.1}
         step={6}
         orientation="horizontal"
       >
@@ -208,7 +208,7 @@ export default function MultiActionAreaCard(props) {
         naturalSlideWidth={345}
         naturalSlideHeight={350}
         totalSlides={29}
-        visibleSlides={12}
+        visibleSlides={9.1}
         step={6}
         orientation="horizontal"
       >
@@ -301,7 +301,7 @@ export default function MultiActionAreaCard(props) {
         naturalSlideWidth={345}
         naturalSlideHeight={350}
         totalSlides={29}
-        visibleSlides={12}
+        visibleSlides={9.1}
         step={6}
         orientation="horizontal"
       >

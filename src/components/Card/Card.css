@@ -166,6 +166,12 @@
 .carousel__slider--horizontal {
 	min-height: 0px !important;
 	max-height: 720px !important;
+	width: 1300px;
+	margin-left: -20px;
+}
+
+.carousel__slider-tray-wrap--horizontal {
+	margin-left: -20px;
 }
 
 .home .content {
