@@ -78,7 +78,9 @@ const CardDetail = ({ data }) => {
     }
 
     setVideo(imovel?.Fotos)
-      setTipoAnuncio(imovel?.Tipo_de_Anuncio)
+    setTipoAnuncio(imovel?.Tipo_de_Anuncio)
+    if(imovel?.documentId !==undefined) {
+    console.log('share', imovel?.documentId)
 
       axios.post(`https://api.url.gratis/shortener/shortlinks`,{
         "destination":"https://tudosobreap.com.br/#/imovel/tsa/share/?dcID="+ imovel?.documentId,
@@ -93,6 +95,7 @@ const CardDetail = ({ data }) => {
           // Handle error.
           console.log('An error occurred:', error.response);
         });
+    } 
   }, [data]);
   
   const handleClickOpen = () => {
