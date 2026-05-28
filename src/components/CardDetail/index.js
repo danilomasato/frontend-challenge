@@ -79,7 +79,20 @@ const CardDetail = ({ data }) => {
 
     setVideo(imovel?.Fotos)
       setTipoAnuncio(imovel?.Tipo_de_Anuncio)
-      setUrlShare(window.location.href + '?dcID=' + imovel?.documentId)
+
+      axios.post(`https://api.url.gratis/shortener/shortlinks`,{
+        "destination":"https://tudosobreap.com.br/#/imovel/tsa/share/?dcID="+ imovel?.documentId,
+        "slug":""
+      })
+        .then(response => {
+          // Handle success.
+          setUrlShare(response.data.domain + '/' + response.data.slug )
+          console.log('share', urlShare)
+        })
+        .catch(error => {
+          // Handle error.
+          console.log('An error occurred:', error.response);
+        });
   }, [data]);
   
   const handleClickOpen = () => {
