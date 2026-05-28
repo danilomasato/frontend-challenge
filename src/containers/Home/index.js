@@ -51,7 +51,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
       setTimeout(() => {
       setLoading(false)
       setSearch(false)
-      }, 1500);
+      }, 1000);
     }
   }, [character, pagination]);
   
@@ -287,15 +287,14 @@ const handleClick = () => {
       { realEstate?.character?.data?.length > 0 
         ? <Card data={realEstate} /> : (
         <>
-        ({loading ? <Loading />
-        :
-          <Container>
-            <img style={{ float: 'left', marginLeft: '180px' }}src="https://static.vecteezy.com/ti/vetor-gratis/p1/26391345-busca-sem-resultados-nao-encontrado-ilustracao-de-conceito-design-plano-eps10-elemento-grafico-moderno-para-pagina-de-destino-ui-de-estado-vazio-infografico-icone-vetor.jpg" width="300"/>
-            <Typography style={{ float: 'left', textAlign: 'center', fontWeight: 'bold', fontSize: '2rem', alignSelf: 'center'}}>
-              Nenhum Resultado Encontrado...
-            </Typography>
-          </Container>
-        })
+          {!loading &&
+            <Container>
+              <img style={{ float: 'left', marginLeft: '180px' }}src="https://static.vecteezy.com/ti/vetor-gratis/p1/26391345-busca-sem-resultados-nao-encontrado-ilustracao-de-conceito-design-plano-eps10-elemento-grafico-moderno-para-pagina-de-destino-ui-de-estado-vazio-infografico-icone-vetor.jpg" width="300"/>
+              <Typography style={{ float: 'left', textAlign: 'center', fontWeight: 'bold', fontSize: '2rem', alignSelf: 'center'}}>
+                Nenhum Resultado Encontrado...
+              </Typography>
+            </Container>
+          }
         </>
         )
       }
