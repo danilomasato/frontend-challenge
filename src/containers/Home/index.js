@@ -38,11 +38,21 @@ const Home = ({ character, imoveisCache, pagination}) => {
   });
 
   useEffect(() => {
+    //inicia Componente loading até fazer o fetch dos imoveis
+    setLoading(true)
+
     const payload = pagination?.length > 0 ? pagination : character.character?.data
 
     payload?.length > 0 ? setImoveis(payload) : setImoveis(imoveisCache.data)
   
     payload?.length > 0 ? setRealEstate({character: { data: payload }}) : setRealEstate(imoveisCache.data)
+
+    if(research?.length <= 0) {
+      setTimeout(() => {
+      setLoading(false)
+      setSearch(false)
+      }, 1500);
+    }
   }, [character, pagination]);
   
   let research= [];
@@ -142,8 +152,7 @@ const handleClick = () => {
                 data: research
               }})
 
-              setLoading(false)
-              setSearch(false)
+              
             }, 2500);
         }
 
@@ -156,6 +165,13 @@ const handleClick = () => {
         if(category !== '' && item.Tipo_de_Anuncio.includes(category)){
           minMax(item)
         }
+
+          if(research?.length <= 0) {
+            setTimeout(() => {
+            setLoading(false)
+            setSearch(false)
+            }, 1500);
+          }
       }
     )
   }
@@ -273,13 +289,17 @@ const handleClick = () => {
       { realEstate?.character?.data?.length > 0 
         ? <Card data={realEstate} /> : (
         <>
-        <Container>
-          <img style={{ float: 'left', marginLeft: '180px' }}src="https://static.vecteezy.com/ti/vetor-gratis/p1/26391345-busca-sem-resultados-nao-encontrado-ilustracao-de-conceito-design-plano-eps10-elemento-grafico-moderno-para-pagina-de-destino-ui-de-estado-vazio-infografico-icone-vetor.jpg" width="300"/>
-          <Typography style={{ float: 'left', textAlign: 'center', fontWeight: 'bold', fontSize: '2rem', alignSelf: 'center'}}>
-            Nenhum Resultado Encontrado...
-          </Typography>
-        </Container>
-        
+        ({loading ? <Loading />
+        : (
+            <Container>
+              <img style={{ float: 'left', marginLeft: '180px' }}src="https://static.vecteezy.com/ti/vetor-gratis/p1/26391345-busca-sem-resultados-nao-encontrado-ilustracao-de-conceito-design-plano-eps10-elemento-grafico-moderno-para-pagina-de-destino-ui-de-estado-vazio-infografico-icone-vetor.jpg" width="300"/>
+              <Typography style={{ float: 'left', textAlign: 'center', fontWeight: 'bold', fontSize: '2rem', alignSelf: 'center'}}>
+                Nenhum Resultado Encontrado...
+              </Typography>
+            </Container>
+            
+          )
+        })
         </>
         )
       }
