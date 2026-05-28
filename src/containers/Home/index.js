@@ -151,9 +151,7 @@ const handleClick = () => {
               setRealEstate({character: {
                 data: research
               }})
-
-              
-            }, 2500);
+            }, 1500);  
         }
 
         //busca por bairro e valor minimo e maximo
@@ -170,7 +168,7 @@ const handleClick = () => {
             setTimeout(() => {
             setLoading(false)
             setSearch(false)
-            }, 1500);
+            }, 2000);
           }
       }
     )
@@ -290,15 +288,13 @@ const handleClick = () => {
         ? <Card data={realEstate} /> : (
         <>
         ({loading ? <Loading />
-        : (
-            <Container>
-              <img style={{ float: 'left', marginLeft: '180px' }}src="https://static.vecteezy.com/ti/vetor-gratis/p1/26391345-busca-sem-resultados-nao-encontrado-ilustracao-de-conceito-design-plano-eps10-elemento-grafico-moderno-para-pagina-de-destino-ui-de-estado-vazio-infografico-icone-vetor.jpg" width="300"/>
-              <Typography style={{ float: 'left', textAlign: 'center', fontWeight: 'bold', fontSize: '2rem', alignSelf: 'center'}}>
-                Nenhum Resultado Encontrado...
-              </Typography>
-            </Container>
-            
-          )
+        :
+          <Container>
+            <img style={{ float: 'left', marginLeft: '180px' }}src="https://static.vecteezy.com/ti/vetor-gratis/p1/26391345-busca-sem-resultados-nao-encontrado-ilustracao-de-conceito-design-plano-eps10-elemento-grafico-moderno-para-pagina-de-destino-ui-de-estado-vazio-infografico-icone-vetor.jpg" width="300"/>
+            <Typography style={{ float: 'left', textAlign: 'center', fontWeight: 'bold', fontSize: '2rem', alignSelf: 'center'}}>
+              Nenhum Resultado Encontrado...
+            </Typography>
+          </Container>
         })
         </>
         )
