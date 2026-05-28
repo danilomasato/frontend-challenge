@@ -60,11 +60,11 @@ const CardDetail = ({ data }) => {
   useEffect(() => {
     const paramID  = getParameterByName('dcID')
     if( data?.length > 0){
-      
+      //seta imóvel apartir do reducer
       if(paramID == null){
         setImovel(data.filter(item => item.id === parseInt(idMount))[0])
       } else {
-
+        //get endpoint via documentID quando vindo do componente share (pois perde a referencia dos dados reducer por ser SPA)
         axios.get(`https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`)
         .then(response => {
           // Handle success.
@@ -75,10 +75,11 @@ const CardDetail = ({ data }) => {
           console.log('An error occurred:', error.response);
         });
       }
-      setVideo(imovel?.Fotos)
+    }
+
+    setVideo(imovel?.Fotos)
       setTipoAnuncio(imovel?.Tipo_de_Anuncio)
       setUrlShare(window.location.href + '?dcID=' + imovel?.documentId)
-    }
   }, [data]);
   
   const handleClickOpen = () => {
