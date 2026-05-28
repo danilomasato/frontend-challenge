@@ -110,18 +110,14 @@ const handleClick = () => {
     if(localStorage.length <= 0 ){
       localStorage.setItem("neighborhood", search.label)
     }
-
+  
+    //loading
+    setLoading(true)
+    //limpa array imóveis
+    setRealEstate("")
+  
     imoveis.filter((item, index) => {
-
         const minMax = item => {
-
-            //loading
-            setLoading(true)
-            
-            // if(search?.label?.length > 0 && item.Bairro.includes(search.label)){
-              setRealEstate("")  
-            // } 
-
             let valueMin= optionsValue?.min
             let valueMax = optionsValue?.max
 
@@ -161,12 +157,12 @@ const handleClick = () => {
           minMax(item)
         }
 
-          if(research?.length <= 0) {
-            setTimeout(() => {
-            setLoading(false)
-            setSearch(false)
-            }, 2000);
-          }
+        if(research?.length <= 0) {
+          setTimeout(() => {
+          setLoading(false)
+          setSearch(false)
+          }, 2000);
+        }
       }
     )
   }
@@ -281,10 +277,11 @@ const handleClick = () => {
         </div>
       </div>
 
-      { realEstate?.character?.data?.length > 0 
-        ? <Card data={realEstate} /> : (
-        <>
-          {!loading && realEstate?.character?.data?.length <= 0 &&
+      { realEstate?.character?.data?.length > 0 &&
+        <Card data={realEstate} /> 
+      }
+
+      {!loading && realEstate?.character?.data?.length <= 0 &&
             <Container>
               <img style={{ float: 'left', marginLeft: '180px' }}src="https://static.vecteezy.com/ti/vetor-gratis/p1/26391345-busca-sem-resultados-nao-encontrado-ilustracao-de-conceito-design-plano-eps10-elemento-grafico-moderno-para-pagina-de-destino-ui-de-estado-vazio-infografico-icone-vetor.jpg" width="300"/>
               <Typography style={{ float: 'left', textAlign: 'center', fontWeight: 'bold', fontSize: '2rem', alignSelf: 'center'}}>
@@ -292,9 +289,6 @@ const handleClick = () => {
               </Typography>
             </Container>
           }
-        </>
-        )
-      }
 
       { loading ? <Loading /> : ""}
 
