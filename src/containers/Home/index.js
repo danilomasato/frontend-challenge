@@ -27,7 +27,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
 
   const [realEstate, setRealEstate] = useState([]);
   const [search, setSearch] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [imoveis, setImoveis] = useState([]);
   const [error, setError] = useState(null);
   const [options, setOptions] = useState([]);
@@ -38,9 +38,6 @@ const Home = ({ character, imoveisCache, pagination}) => {
   });
 
   useEffect(() => {
-    //inicia Componente loading até fazer o fetch dos imoveis
-    setLoading(true)
-
     const payload = pagination?.length > 0 ? pagination : character.character?.data
 
     payload?.length > 0 ? setImoveis(payload) : setImoveis(imoveisCache.data)
@@ -287,7 +284,7 @@ const handleClick = () => {
       { realEstate?.character?.data?.length > 0 
         ? <Card data={realEstate} /> : (
         <>
-          {!loading &&
+          {!loading && realEstate?.character?.data?.length <= 0 &&
             <Container>
               <img style={{ float: 'left', marginLeft: '180px' }}src="https://static.vecteezy.com/ti/vetor-gratis/p1/26391345-busca-sem-resultados-nao-encontrado-ilustracao-de-conceito-design-plano-eps10-elemento-grafico-moderno-para-pagina-de-destino-ui-de-estado-vazio-infografico-icone-vetor.jpg" width="300"/>
               <Typography style={{ float: 'left', textAlign: 'center', fontWeight: 'bold', fontSize: '2rem', alignSelf: 'center'}}>
