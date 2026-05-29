@@ -207,7 +207,7 @@ export default function MultiActionAreaCard(props) {
       <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={29}
+        totalSlides={12}
         visibleSlides={9.1}
         step={6}
         orientation="horizontal"
