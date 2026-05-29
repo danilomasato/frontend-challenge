@@ -37,6 +37,13 @@ const Home = ({ character, imoveisCache, pagination}) => {
     max: 0
   });
 
+   const closeLoad = () => {
+      setTimeout(() => {
+      setLoading(false)
+      // setSearch('')
+      }, 2000);
+    }
+
   useEffect(() => {
     const payload = pagination?.length > 0 ? pagination : character.character?.data
 
@@ -45,10 +52,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
     payload?.length > 0 ? setRealEstate({character: { data: payload }}) : setRealEstate(imoveisCache.data)
 
     if(research?.length <= 0) {
-      setTimeout(() => {
-      setLoading(false)
-      setSearch(false)
-      }, 1000);
+      closeLoad()
     }
   }, [character, pagination]);
   
@@ -100,7 +104,6 @@ const Home = ({ character, imoveisCache, pagination}) => {
     window.location = 'https://tudosobreap.com.br'
   }
 
-
 const handleClick = () => {
     if(!("neighborhood" in localStorage) && search?.label?.length === undefined) {
       alert("Selecione um Bairro para fazer a Busca...")
@@ -139,12 +142,6 @@ const handleClick = () => {
             if(valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax || valueMin > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMin){
               research = research.concat(item)
             }
-
-            setTimeout(() => {
-              setRealEstate({character: {
-                data: research
-              }})
-            }, 1500);  
         }
 
         //busca por bairro e valor minimo e maximo
@@ -157,14 +154,15 @@ const handleClick = () => {
           minMax(item)
         }
 
-        if(research?.length <= 0) {
-          setTimeout(() => {
-          setLoading(false)
-          setSearch(false)
-          }, 2000);
-        }
+         setTimeout(() => {
+              setRealEstate({character: {
+                data: research
+              }})
+            }, 1500);  
       }
     )
+
+    closeLoad()
   }
 }
 

@@ -92,6 +92,21 @@ export default function MultiActionAreaCard(props) {
     history.push(`/imovel/${card.id}/${card.titulo.replace(/[\s,]/g,"-").replace("/","-")}`)
   };
 
+  // Limpa o localStorage quando o usuário fecha a aba ou o navegador
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.clear(); // Clears all items
+      // Or use localStorage.removeItem('your_key_name'); for specific keys
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
+
   return (
     <>
     
