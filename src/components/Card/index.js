@@ -33,7 +33,11 @@ export default function MultiActionAreaCard(props) {
     sale: '',
     rent: '',
     launch: ''
-  });
+  })
+  const [countSlider, setCountSlider] = useState({
+    sale: 0,
+    rental: 0
+  })
 
   const Root = styled('div')(({ theme }) => ({
     width: '100%',
@@ -42,7 +46,7 @@ export default function MultiActionAreaCard(props) {
     '& > :not(style) ~ :not(style)': {
       marginTop: theme.spacing(2),
     },
-  }));
+  }))
   
   let character
 //first load
@@ -58,13 +62,17 @@ export default function MultiActionAreaCard(props) {
   useEffect(() => {
     if (articles?.length > 0) {
       // setArticles(articles);
-      articles.filter(item => {
+      articles.filter((item, index) => {
 
-        if(item.Valor_Venda !== null)
+        if(item.Valor_Venda !== null || item.Tipo_de_Anuncio == 'venda'){
           setSalePrice(true)
+          setCountSlider({...countSlider, sale: countSlider.sale++})
+        }
 
-        if(item.Valor_Aluguel !== null)
+        if(item.Valor_Aluguel !== null || item.Tipo_de_Anuncio == 'aluguel') {
+          setCountSlider({...countSlider, rental: countSlider.rental++})
           setRentalValue(true)
+        }
 
         if(item.Tipo_de_Anuncio.includes('Lançamentos'))
           setAdtype({...adtype, // Copy all existing properties from the 'adtype' object  
@@ -82,6 +90,7 @@ export default function MultiActionAreaCard(props) {
         })
       }
     }
+
   }, [props, articles]);
 
   const handleClick = (cardID, card) => {
@@ -122,7 +131,7 @@ export default function MultiActionAreaCard(props) {
         <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={29}
+        totalSlides={countSlider.sale}
         visibleSlides={9.1}
         step={6}
         orientation="horizontal"
@@ -222,7 +231,7 @@ export default function MultiActionAreaCard(props) {
       <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={12}
+        totalSlides={countSlider.rental}
         visibleSlides={9.1}
         step={6}
         orientation="horizontal"

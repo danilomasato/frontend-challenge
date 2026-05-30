@@ -65,7 +65,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
     if(imoveis?.length > 0 ){
 
       const mapa = new Map();
-      imoveis.forEach(obj => {
+      imoveis.forEach((obj, index) => {
         if(obj.Bairro !== null)
           mapa.set(obj.Bairro?.toLowerCase(), obj); // Define o ID como chave e o objeto como valor
       });
