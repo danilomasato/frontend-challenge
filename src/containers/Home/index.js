@@ -118,49 +118,53 @@ const handleClick = () => {
     setLoading(true)
     //limpa array imóveis
     setRealEstate("")
+
+    const setResearch = imovel => {
+      if(imovel !== 'undefined' && imovel !== undefined){
+        console.log(imovel)
+
+        research = research.concat(imovel)
+        setTimeout(() => {
+          setRealEstate({character: {
+            data: research
+          }})
+        }, 1500);
+      }  
+    }
   
     imoveis.filter((item, index) => {
-        const minMax = item => {
-            let valueMin= optionsValue?.min
-            let valueMax = optionsValue?.max
+      let valueMin = parseInt(optionsValue?.min.length > 0 && optionsValue.min.replace(',','').replace('R$',''))
+      let valueMax = parseInt(optionsValue?.max.length > 0 && optionsValue.max.replace(',','').replace('R$',''))
+     
+      const minMax = imovel => {
+        const itemValueAluguel = parseInt(imovel?.Valor_Aluguel?.replace(".",""))
+        const itemValueVenda = parseInt(imovel?.Valor_Venda?.replace(".",""))
+        const roleSale = valueMin  > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMin || valueMax > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMax
+        const roleRental = valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax || valueMin > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMin
 
-            if(valueMax?.length > 0){
-              valueMax = parseInt(valueMax?.replace(',','')?.replace('R$',''))
-            }
+        if(roleSale)
+          return  imovel
 
-            if(valueMin?.length > 0){
-              valueMin = parseInt(valueMin?.replace(',','')?.replace('R$',''))
-            }
-
-            const itemValueAluguel = parseInt(item?.Valor_Aluguel?.replace(".",""))
-            const itemValueVenda = parseInt(item?.Valor_Venda?.replace(".",""))
-
-            if(valueMin  > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMin || valueMax > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMax){
-              research = research.concat(item)
-            }
-
-            if(valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax || valueMin > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMin){
-              research = research.concat(item)
-            }
-        }
-
-        //busca por bairro e valor minimo e maximo
-        if(item.Bairro.includes(search?.label) && category == '' || localStorage.length > 0 && item.Bairro.includes(localStorage.getItem("neighborhood")) && category == ''){
-          minMax(item)
-        }
-
-        //busca por tipo de anuncio
-        if(category !== '' && item.Tipo_de_Anuncio.includes(category)){
-          minMax(item)
-        }
-
-         setTimeout(() => {
-              setRealEstate({character: {
-                data: research
-              }})
-            }, 1500);  
+        if(roleRental)
+          return  imovel
       }
-    )
+
+      //busca por localstorage (mantem o bairro)
+      if(localStorage.length > 0 && item.Bairro.includes(localStorage.getItem("neighborhood")) && category == ''){
+        setResearch(item)
+      }
+
+      //busca por bairro valor min e max
+      if(item.Bairro.includes(search?.label) && category == ''){
+
+        setResearch(minMax(item))
+      }
+
+      //busca por tipo de anuncio e bairro
+      if(category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search?.label)){
+        valueMin > 0 || valueMax > 0 ? setResearch(minMax(item)) : setResearch(item)
+      }
+    })
 
     closeLoad()
   }
