@@ -33,11 +33,7 @@ export default function MultiActionAreaCard(props) {
     sale: '',
     rent: '',
     launch: ''
-  })
-  const [countSlider, setCountSlider] = useState({
-    sale: 0,
-    rental: 0
-  })
+  });
 
   const Root = styled('div')(({ theme }) => ({
     width: '100%',
@@ -46,7 +42,7 @@ export default function MultiActionAreaCard(props) {
     '& > :not(style) ~ :not(style)': {
       marginTop: theme.spacing(2),
     },
-  }))
+  }));
   
   let character
 //first load
@@ -62,17 +58,13 @@ export default function MultiActionAreaCard(props) {
   useEffect(() => {
     if (articles?.length > 0) {
       // setArticles(articles);
-      articles.filter((item, index) => {
+      articles.filter(item => {
 
-        if(item.Valor_Venda !== null || item.Tipo_de_Anuncio == 'venda'){
+        if(item.Valor_Venda !== null)
           setSalePrice(true)
-          setCountSlider({...countSlider, sale: countSlider.sale++})
-        }
 
-        if(item.Valor_Aluguel !== null || item.Tipo_de_Anuncio == 'aluguel') {
-          setCountSlider({...countSlider, rental: countSlider.rental++})
+        if(item.Valor_Aluguel !== null)
           setRentalValue(true)
-        }
 
         if(item.Tipo_de_Anuncio.includes('Lançamentos'))
           setAdtype({...adtype, // Copy all existing properties from the 'adtype' object  
@@ -90,7 +82,6 @@ export default function MultiActionAreaCard(props) {
         })
       }
     }
-
   }, [props, articles]);
 
   const handleClick = (cardID, card) => {
@@ -102,7 +93,7 @@ export default function MultiActionAreaCard(props) {
   };
 
   // Limpa o localStorage quando o usuário fecha a aba ou o navegador
-  useEffect(() => {
+useEffect(() => {
     const handleBeforeUnload = () => {
       localStorage.clear(); // Clears all items
       // Or use localStorage.removeItem('your_key_name'); for specific keys
@@ -131,7 +122,7 @@ export default function MultiActionAreaCard(props) {
         <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={countSlider.sale}
+        totalSlides={29}
         visibleSlides={9.1}
         step={6}
         orientation="horizontal"
@@ -231,7 +222,7 @@ export default function MultiActionAreaCard(props) {
       <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={countSlider.rental}
+        totalSlides={12}
         visibleSlides={9.1}
         step={6}
         orientation="horizontal"
