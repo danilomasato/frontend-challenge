@@ -101,69 +101,84 @@ const Home = ({ character, imoveisCache, pagination}) => {
   }, [imoveis, search]);
   
   const clearSearch = () => {
-    window.location = 'https://tudosobreap.com.br'
+    setRealEstate({character: {
+      data: []
+    }})
   }
 
   const handleClick = () => {
       if(!("neighborhood" in localStorage) && search?.label?.length === undefined) {
         alert("Selecione um Bairro para fazer a Busca...")
       } else {
-    
-      //loading
-      setLoading(true)
-      //limpa array imóveis
-      setRealEstate("")
+        //loading
+        setLoading(true)
 
-      const setResearch = imovel => {
+        //limpa array imóveis
+        clearSearch()
 
-        if(imovel !== 'undefined' && imovel !== undefined){
+        const setResearch = imovel => {
+          if(imovel !== 'undefined' && imovel !== undefined){
+            research = research.concat(imovel)
 
-          research = research.concat(imovel)
-
-          setTimeout(() => {
-            setRealEstate({character: {
-              data: research
-            }})
-          }, 1500);
-        }  else { 
-          setRealEstate({character: {
-              data: []
-            }})
+            setTimeout(() => {
+              setRealEstate({character: {
+                data: research
+              }})
+            }, 1500);
+          }
         }
-      } 
-    
+
+      let valueMin, valueMax
+      let roleSale, roleRental
+      let itemValueAluguel, itemValueVenda 
+          console.log('local', optionsValue)
+
+      valueMin = parseInt(optionsValue?.min > 0 && optionsValue?.min?.replace(',','')?.replace('R$',''))
+      valueMax = parseInt(optionsValue?.max?.replace(',','')?.replace('R$',''))
+
       imoveis.filter((item, index) => {
-        let valueMin = parseInt(optionsValue?.min.length > 0 && optionsValue.min.replace(',','').replace('R$',''))
-        let valueMax = parseInt(optionsValue?.max.length > 0 && optionsValue.max.replace(',','').replace('R$',''))
-      
+
         const minMax = imovel => {
-          const itemValueAluguel = parseInt(imovel?.Valor_Aluguel?.replace(".",""))
-          const itemValueVenda = parseInt(imovel?.Valor_Venda?.replace(".",""))
 
-          const roleSale = valueMin  > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMin || valueMax > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMax
-          const roleRental = valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax || valueMin > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMin
+          if(imovel?.Valor_Aluguel !== 'undefined' && imovel?.Valor_Aluguel !== undefined && imovel?.Valor_Aluguel !== null)
+            itemValueAluguel = parseInt(imovel?.Valor_Aluguel?.replace(".",""))
 
-          if(roleSale)
-            return  imovel
+          if(imovel?.Valor_Venda !== 'undefined' && imovel?.Valor_Venda !== undefined && imovel?.Valor_Venda !== null)
+            itemValueVenda = parseInt(imovel?.Valor_Venda?.replace(".",""))
 
-          if(roleRental)
-            return  imovel
-        }
- 
-        //busca por localstorage (mantem o bairro)
-        if(localStorage.length > 0 && item.Bairro.includes(localStorage.getItem("neighborhood")) && category == ''){
-          setResearch(item)
-        }
+          roleSale = valueMin > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMin || valueMax > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMax
+          roleRental = valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax || valueMin > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMin
 
-        //busca por bairro valor min e max
-        if(item.Bairro.includes(search?.label) && category == ''){
-          setResearch(minMax(item))
+          if(roleSale && imovel.Tipo_de_Anuncio == 'venda')
+            return imovel
+
+          if(roleRental && imovel.Tipo_de_Anuncio == 'aluguel')
+            return imovel
+
+          //se não encontrar resultados limpa a busca
+          if(!roleSale && !roleRental)
+            clearSearch()
         }
 
-        //busca por tipo de anuncio e bairro
-        if(category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search?.label)){
-          valueMin > 0 || valueMax > 0 ? setResearch(minMax(item)) : setResearch(item)
-        }
+          // if(!search?.label.includes(localStorage.getItem("neighborhood"))){
+          //   localStorage.setItem("neighborhood", search.label)
+          // }
+
+          //busca por localstorage (mantem o bairro)
+          // if(localStorage.length > 0 && item?.Bairro.includes(localStorage.getItem("neighborhood")) && category == ''){
+          //   setResearch(minMax(item))
+          // }
+
+          //busca por bairro valor min e max
+          if(item.Bairro.includes(search?.label) && category == ''){
+            console.log('tayf')
+            setResearch(minMax(item))
+          }
+
+          //busca por tipo de anuncio e bairro
+          // if(category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search?.label)){
+          //   setResearch(minMax(item))
+          // }
       })
 
       //se não houver setado localstorage registra o bairro
