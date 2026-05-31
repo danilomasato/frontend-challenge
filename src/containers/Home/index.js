@@ -175,7 +175,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
             setResearch(minMax(item))
           }
 
-          busca por tipo de anuncio e bairro
+          //busca por tipo de anuncio e bairro
           if(category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search?.label)){
             setResearch(minMax(item))
           }
