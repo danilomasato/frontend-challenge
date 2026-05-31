@@ -158,16 +158,16 @@ const Home = ({ character, imoveisCache, pagination}) => {
           //se não encontrar resultados limpa a busca
           if(!roleSale && !roleRental)
             clearSearch()
-        }
+          }
 
-          // if(!search?.label.includes(localStorage.getItem("neighborhood"))){
-          //   localStorage.setItem("neighborhood", search.label)
-          // }
+          if(!search?.label.includes(localStorage.getItem("neighborhood"))){
+            localStorage.setItem("neighborhood", search.label)
+          }
 
           //busca por localstorage (mantem o bairro)
-          // if(localStorage.length > 0 && item?.Bairro.includes(localStorage.getItem("neighborhood")) && category == ''){
-          //   setResearch(minMax(item))
-          // }
+          if(localStorage.length > 0 && item?.Bairro.includes(localStorage.getItem("neighborhood")) && category == ''){
+            setResearch(minMax(item))
+          }
 
           //busca por bairro valor min e max
           if(item.Bairro.includes(search?.label) && category == ''){
@@ -175,10 +175,10 @@ const Home = ({ character, imoveisCache, pagination}) => {
             setResearch(minMax(item))
           }
 
-          //busca por tipo de anuncio e bairro
-          // if(category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search?.label)){
-          //   setResearch(minMax(item))
-          // }
+          busca por tipo de anuncio e bairro
+          if(category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search?.label)){
+            setResearch(minMax(item))
+          }
       })
 
       //se não houver setado localstorage registra o bairro
