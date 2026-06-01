@@ -130,11 +130,14 @@ const Home = ({ character, imoveisCache, pagination}) => {
 
       let valueMin, valueMax
       let roleSale, roleRental
-      let itemValueAluguel, itemValueVenda 
-          console.log('local', optionsValue)
+      let itemValueAluguel, itemValueVenda
 
-      valueMin = parseInt(optionsValue?.min > 0 && optionsValue?.min?.replace(',','')?.replace('R$',''))
-      valueMax = parseInt(optionsValue?.max?.replace(',','')?.replace('R$',''))
+      const isString = value => {
+        return typeof value == 'string'
+      }
+
+      valueMin = parseInt(isString(optionsValue?.min) && optionsValue?.min?.replace(',','')?.replace('R$',''))
+      valueMax = parseInt(isString(optionsValue?.max) && optionsValue?.max?.replace(',','')?.replace('R$',''))
 
       imoveis.filter((item, index) => {
 
@@ -160,6 +163,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
             clearSearch()
           }
 
+          //seta um novo bairro no localStorage quando Onchange Options
           if(!search?.label.includes(localStorage.getItem("neighborhood"))){
             localStorage.setItem("neighborhood", search.label)
           }
@@ -171,8 +175,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
 
           //busca por bairro valor min e max
           if(item.Bairro.includes(search?.label) && category == ''){
-            console.log('tayf')
-            setResearch(minMax(item))
+            isString(optionsValue?.min) || isString(optionsValue?.max) ? setResearch(minMax(item)) : setResearch(item)
           }
 
           //busca por tipo de anuncio e bairro
