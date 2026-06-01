@@ -51,6 +51,20 @@ div[role="alert"] {
     display: none;
 }
 
+.minMax .selectType {
+	min-width: 100%;
+  margin-top: 16px;
+}
+
+.minMax .selectType div {
+	font-size: 0.8rem;
+    line-height: 10px;
+		padding-bottom: 46px;
+}
+.minMax .MuiSelect-root {
+    height: 42px;
+}
+
 .minMax > div div:nth-child(2)::before, 
 .minMax > div div.Mui-focused::after {
  border-bottom: none !important;
@@ -71,11 +85,6 @@ div[role="alert"] {
     margin: 0 !important;
     font-family: 'quicksand-regular', helvetica, arial !important;
     font-size: 0.8rem !important;
-}
-
-.minMax fieldset {
-    top: 11px;
-    height: 23px !important;
 }
 
 /* Botão "Buscar Imóveis" */

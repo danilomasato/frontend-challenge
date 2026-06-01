@@ -29,13 +29,13 @@ const Contact = ({ props }) => {
 console.log("formData=====================>", payload)
 
 
-    // fetch('/api/endpoint', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: payload,
-    // }).then(() => console.log('Posted data successfully!'));
+    fetch('./dispatch.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: payload,
+    }).then(() => console.log('Posted data successfully!'));
   };
 
   return (
@@ -71,7 +71,7 @@ console.log("formData=====================>", payload)
                   rows={4}
                   defaultValue=""
                 />
-                <Button onClick={(e) => handleSubmit(e)}type="submit" variant="contained" endIcon={<SendIcon />}>
+                <Button onClick={(e) => handleSubmit(e)} type="submit" variant="contained" endIcon={<SendIcon />}>
                   Enviar
                 </Button>
               </Box>

@@ -293,12 +293,10 @@ const Home = ({ character, imoveisCache, pagination}) => {
                   label="Tipo de Anúncio"
                   value={category}
                   onChange={handleChangeCategory}
-                  helperText="Selecione o tipo de Anúncio"
                   style={{ m: 1, minWidth: '100%' }}
+                  className="selectType"
                 >
-                  <MenuItem value="">
-                    <em>Todos</em>
-                  </MenuItem>
+                  <MenuItem value="todos"> Todos </MenuItem>
                   <MenuItem value={'venda'}>venda</MenuItem>
                   <MenuItem value={'aluguel'}>aluguel</MenuItem>
                   <MenuItem value={'Lançamentos'}>Lançamentos</MenuItem>
