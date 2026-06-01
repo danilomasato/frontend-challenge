@@ -117,6 +117,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
         clearSearch()
 
         const setResearch = imovel => {
+          console.log(imovel)
           if(imovel !== 'undefined' && imovel !== undefined){
             research = research.concat(imovel)
 
@@ -142,7 +143,6 @@ const Home = ({ character, imoveisCache, pagination}) => {
       imoveis.filter((item, index) => {
 
         const minMax = imovel => {
-
           if(imovel?.Valor_Aluguel !== 'undefined' && imovel?.Valor_Aluguel !== undefined && imovel?.Valor_Aluguel !== null)
             itemValueAluguel = parseInt(imovel?.Valor_Aluguel?.replace(".",""))
 
@@ -163,11 +163,6 @@ const Home = ({ character, imoveisCache, pagination}) => {
             clearSearch()
           }
 
-          //seta um novo bairro no localStorage quando Onchange Options
-          if(!search?.label.includes(localStorage.getItem("neighborhood"))){
-            localStorage.setItem("neighborhood", search.label)
-          }
-
           //busca por localstorage (mantem o bairro)
           if(localStorage.length > 0 && item?.Bairro.includes(localStorage.getItem("neighborhood")) && category == ''){
             setResearch(minMax(item))
@@ -183,6 +178,11 @@ const Home = ({ character, imoveisCache, pagination}) => {
             setResearch(minMax(item))
           }
       })
+
+      //seta um novo bairro no localStorage quando Onchange Options
+      if(!search?.label.includes(localStorage.getItem("neighborhood"))){
+        localStorage.setItem("neighborhood", search.label)
+      }
 
       //se não houver setado localstorage registra o bairro
       if(localStorage.length <= 0 ){
