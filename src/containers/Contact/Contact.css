@@ -10,8 +10,31 @@ div[role="alert"] {
 
 }
 
-.form {
-	float: right;
-	width: 450px;
+#contact .form {
+	float: left;
+	width: 45%;
+	margin-left: 30px;
+}
+
+#contact iframe {
+	float: left;
+}
+
+#contact .title {
+    text-align: left !important;
+    margin: 0 !important;
+    border: none;
+    font-size: 1.5rem;
+    color: rgb(11, 44, 61);
+    font-family: 'quicksand-bold', helvetica, arial !important;
+    letter-spacing: -1px;
+}
+
+#contact .title::after, #contact .title::after {
+    content: '';
+    display: block;
+    width: 2rem;
+    border-bottom: 3px solid #c19c64 !important;
+    margin-top: 1rem;
 }
 

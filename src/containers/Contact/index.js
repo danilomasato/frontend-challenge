@@ -43,11 +43,11 @@ console.log("formData=====================>", payload)
       <TopInfo />
       <Header />
 
-      <div className="row center">
+      <div id="contact" className="row center">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>
           
             <Box sx={{ width: '100%' }}>
-              <Typography variant="h5" gutterBottom>
+              <Typography className="title" variant="h5" gutterBottom>
                 Fale Conosco
               </Typography>
             </Box>
