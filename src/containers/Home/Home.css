@@ -59,8 +59,8 @@ div[role="alert"] {
 .minMax .selectType div {
 	font-size: 0.8rem;
     line-height: 10px;
-		padding-bottom: 46px;
 }
+
 .minMax .MuiSelect-root {
     height: 42px;
 }
