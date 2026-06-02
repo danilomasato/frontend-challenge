@@ -143,6 +143,15 @@ div[role="alert"] {
 		width: 1230px;
 	}
 }
+
+@media only screen and (max-width: 1024px) {
+	.home .content > div > div {
+		grid-template-columns: none !important;
+    grid-template-rows: 4fr;
+	}
+}
+
+
   
 
 
