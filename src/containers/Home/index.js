@@ -61,8 +61,6 @@ const Home = ({ character, imoveisCache, pagination}) => {
 
   //useEffect for not loop, and many request's
   useEffect(() => {
-console.log(imoveis)
-
     //data for card
     if(imoveis?.length > 0 ){
 
@@ -86,21 +84,7 @@ console.log(imoveis)
           return 0;
       }))
     } 
-
-    //Disable click right mouse
-    const handleContextMenu = (e) => {
-      e.preventDefault(); // Prevent the default context menu
-    };
-
-    //Attach the event listener to the document body
-    document.body.addEventListener('contextmenu', handleContextMenu);
-
-    //Clean up the event listener when the component unmounts
-    return () => {
-      document.body.removeEventListener('contextmenu', handleContextMenu);
-    };
-
-  }, [imoveis, search]);
+  }, [imoveis]);
   
   const clearSearch = () => {
     setRealEstate({character: {
@@ -194,6 +178,7 @@ console.log(imoveis)
       closeLoad()
     }
   }
+
   // Limpa o localStorage quando o usuário fecha a aba ou o navegador
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -205,6 +190,19 @@ console.log(imoveis)
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+
+    //Disable click right mouse
+    const handleContextMenu = (e) => {
+      e.preventDefault(); // Prevent the default context menu
+    };
+
+    //Attach the event listener to the document body
+    document.body.addEventListener('contextmenu', handleContextMenu);
+
+    //Clean up the event listener when the component unmounts
+    return () => {
+      document.body.removeEventListener('contextmenu', handleContextMenu);
     };
   }, []);
 
