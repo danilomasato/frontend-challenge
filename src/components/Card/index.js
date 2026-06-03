@@ -306,12 +306,12 @@ export default function MultiActionAreaCard(props) {
         step={Math.ceil(slideOptions.rent / 6)}
         orientation="horizontal"
       >
-        <Slider>
+        <Slider style={{ height: '325px' }}>
           {articles?.length > 0 && articles.map(
           (card, index) => (
             <>
             {card.Tipo_de_Anuncio !== null && card.Tipo_de_Anuncio?.includes('Lançamentos') ? (
-              <Slide index={index} style={{ height: index ? '325px' : '' }}>
+              <Slide index={index} >
                 <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
                   <ThumbSLider 
                       height="200"
