@@ -46,10 +46,10 @@ const Home = ({ character, imoveisCache, pagination}) => {
 
   useEffect(() => {
     const payload = pagination?.length > 0 ? pagination : character.character?.data
+// console.log(payload)
 
-    payload?.length > 0 ? setImoveis(payload) : setImoveis(imoveisCache.data)
-  
-    payload?.length > 0 ? setRealEstate({character: { data: payload }}) : setRealEstate(imoveisCache.data)
+    if(payload?.length > 0)
+    setRealEstate({character: { data: payload }})
 
     if(research?.length <= 0) {
       closeLoad()

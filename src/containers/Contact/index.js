@@ -12,8 +12,12 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
 import Typography from '@mui/material/Typography';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Contact = ({ props }) => {
+  const [open, setOpen] = React.useState(false);
   const [contact, SetContact] = useState({ 
     name: "", 
     email: "", 
@@ -35,7 +39,19 @@ console.log("formData=====================>", payload)
         'Content-Type': 'application/json',
       },
       body: payload,
-    }).then(() => console.log('Posted data successfully!'));
+    }).then(() => {
+      setOpen(true);
+
+      console.log('Posted data successfully!')
+      setTimeout(()=> {
+        //abre modal
+        setOpen(false);
+      }, 3000)
+    });
+  };
+
+   const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -80,6 +96,28 @@ console.log("formData=====================>", payload)
       </div>
 
       <Footer />
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth="lg"
+        maxWidth="lg"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent className="success">
+          <div className="row center">
+            <div className="content" style={{ minHeight: "auto",  display: "block", width: "500px" }}>
+              <img src="https://tudosobreap.com.br/assets/images/loading.gif" width="100"/>
+              <Typography variant="h2" className="description">
+                Enviado com Sucesso ! <br />
+                A TSA retorná em breve ! 
+              </Typography>     
+            </div>
+          </div>
+        </DialogContent>
+        <CloseIcon className="modal-close" onClick={handleClose} />
+      </Dialog>
     </React.Fragment>
   );
 };

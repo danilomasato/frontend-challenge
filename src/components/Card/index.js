@@ -35,6 +35,12 @@ export default function MultiActionAreaCard(props) {
     launch: ''
   });
 
+  const [slideOptions, setSlideOptions] = useState({
+    sale: 0,
+    rent: 0,
+    launch: 0
+  });
+
   const Root = styled('div')(({ theme }) => ({
     width: '100%',
     ...theme.typography.body2,
@@ -47,42 +53,37 @@ export default function MultiActionAreaCard(props) {
   let character
 //first load
   useEffect(() => {
-    if(props.data.character?.data?.length > 0) {
+    if(props.data.character?.data?.length > 0) 
       setArticles(props.data.character.data)
-    } else {
-      setArticles(props.data.imoveisCache?.data)
-    }
- }, [articles, props]);
+ }, [props]);
 
   //first load
   useEffect(() => {
-    if (articles?.length > 0) {
-      // setArticles(articles);
-      articles.filter(item => {
-
-        if(item.Valor_Venda !== null)
-          setSalePrice(true)
-
-        if(item.Valor_Aluguel !== null)
+    let slideCount = 1
+      props.data.character.data.map(item => {
+        switch (item.Tipo_de_Anuncio) {
+          case 'venda':
+             setSlideOptions({...slideOptions, sale: slideOptions.sale++})
           setRentalValue(true)
-
-        if(item.Tipo_de_Anuncio.includes('Lançamentos'))
-          setAdtype({...adtype, // Copy all existing properties from the 'adtype' object  
-            launch: item.Tipo_de_Anuncio
-        })
-      })
-    } else {
-      if(articles?.length > 0){
-        articles.filter(item => {
-          if(item.Valor_Venda !== null)
+            break;
+          case 'aluguel':
             setSalePrice(true)
+            setSlideOptions({...slideOptions, rent: slideOptions.rent++})
+            break;
+          
+          default:
+            setAdtype({...adtype, // Copy all existing properties from the 'adtype' object  
+              launch: item.Tipo_de_Anuncio
+            })
+            setSlideOptions({...slideOptions, launch: slideOptions.launch++})
+        }
+      })
+    
+  }, []);
 
-          if(item.Valor_Aluguel !== null)
-            setRentalValue(true)
-        })
-      }
-    }
-  }, [props, articles]);
+  useEffect(() => {
+    console.log('slidesOptions', slideOptions)
+  }, []);
 
   const handleClick = (cardID, card) => {
     dispatch({
@@ -107,9 +108,9 @@ export default function MultiActionAreaCard(props) {
         <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={29}
-        visibleSlides={9.1}
-        step={6}
+        totalSlides={slideOptions.sale}
+        visibleSlides={6}
+        step={(Math.ceil(slideOptions.sale / 6)+0.95)}
         orientation="horizontal"
       >
         <Slider>
@@ -207,16 +208,16 @@ export default function MultiActionAreaCard(props) {
       <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={12}
-        visibleSlides={9.1}
-        step={6}
+        totalSlides={slideOptions.rent}
+        visibleSlides={slideOptions.rent}
+        step={Math.ceil(slideOptions.rent / 6)}
         orientation="horizontal"
       >
         <Slider>
         {articles?.length > 0 && articles.map(
         (card, index) => (
           <>
-          {card.Valor_Aluguel !== null && card.Tipo_de_Anuncio !== "Lançamentos" ? (
+          {card.Tipo_de_Anuncio.includes('aluguel') ? (
             <Slide index={index}>
               <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
                 <ThumbSLider 
@@ -300,9 +301,9 @@ export default function MultiActionAreaCard(props) {
       <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={29}
-        visibleSlides={9.1}
-        step={6}
+        totalSlides={slideOptions.launch}
+        visibleSlides={slideOptions.launch}
+        step={Math.ceil(slideOptions.rent / 6)}
         orientation="horizontal"
       >
         <Slider>
