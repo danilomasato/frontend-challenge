@@ -209,7 +209,7 @@ export default function MultiActionAreaCard(props) {
         naturalSlideWidth={345}
         naturalSlideHeight={350}
         totalSlides={slideOptions.rent}
-        visibleSlides={slideOptions.rent}
+        visibleSlides={6}
         step={Math.ceil(slideOptions.rent / 6)}
         orientation="horizontal"
       >
