@@ -306,7 +306,7 @@ export default function MultiActionAreaCard(props) {
         step={Math.ceil(slideOptions.rent / 6)}
         orientation="horizontal"
       >
-        <Slider style={{ height: slideOptions.launch > 3 ? '325px' : '' }}>
+        <Slider style={{ height: slideOptions.launch <= 3 ? '325px' : '' }}>
           {articles?.length > 0 && articles.map(
           (card, index) => (
             <>
