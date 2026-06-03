@@ -113,7 +113,7 @@ export default function MultiActionAreaCard(props) {
         step={(Math.ceil(slideOptions.sale / 6)+0.95)}
         orientation="horizontal"
       >
-        <Slider>
+        <Slider style={{ height: slideOptions.sale > 3 ? 'initial' : '0px' }}>
           {articles?.length > 0 && articles.map(
             (card, index) => (
               <>
@@ -213,7 +213,7 @@ export default function MultiActionAreaCard(props) {
         step={Math.ceil(slideOptions.rent / 6)}
         orientation="horizontal"
       >
-        <Slider>
+        <Slider style={{ height: slideOptions.rent > 3 ? 'initial' : '0px' }}>
         {articles?.length > 0 && articles.map(
         (card, index) => (
           <>
@@ -306,7 +306,7 @@ export default function MultiActionAreaCard(props) {
         step={Math.ceil(slideOptions.rent / 6)}
         orientation="horizontal"
       >
-        <Slider style={{ height: '325px' }}>
+        <Slider style={{ height: slideOptions.launch > 3 ? '325px' : '' }}>
           {articles?.length > 0 && articles.map(
           (card, index) => (
             <>
