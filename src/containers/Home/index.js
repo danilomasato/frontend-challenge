@@ -46,11 +46,12 @@ const Home = ({ character, imoveisCache, pagination}) => {
 
   useEffect(() => {
     const payload = pagination?.length > 0 ? pagination : character.character?.data
-// console.log(payload)
 
-    if(payload?.length > 0)
-    setRealEstate({character: { data: payload }})
-
+    if(payload?.length > 0){
+      setRealEstate({character: { data: payload }})
+      setImoveis(payload)
+    }
+ 
     if(research?.length <= 0) {
       closeLoad()
     }
@@ -60,6 +61,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
 
   //useEffect for not loop, and many request's
   useEffect(() => {
+console.log(imoveis)
 
     //data for card
     if(imoveis?.length > 0 ){
