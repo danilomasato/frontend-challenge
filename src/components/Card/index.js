@@ -311,7 +311,7 @@ export default function MultiActionAreaCard(props) {
           (card, index) => (
             <>
             {card.Tipo_de_Anuncio !== null && card.Tipo_de_Anuncio?.includes('Lançamentos') ? (
-              <Slide index={index}>
+              <Slide index={index} style={{ height: index ? '325px' : '' }}>
                 <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
                   <ThumbSLider 
                       height="200"
