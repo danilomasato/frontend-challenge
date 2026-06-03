@@ -171,7 +171,19 @@
 }
 
 .carousel__slider-tray-wrap--horizontal {
-	margin-left: -15px;
+	margin-left: -20px;
+}
+
+.carousel__back-button,
+.carousel__next-button {
+	color: #c8c5c5;
+	border: 1px solid #c8c5c5;
+}
+
+button[disabled] {
+	color: #e3e3e3;
+	border: 1px solid #e3e3e3;
+
 }
 
 .home .content {
