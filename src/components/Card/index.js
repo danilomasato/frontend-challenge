@@ -27,8 +27,6 @@ export default function MultiActionAreaCard(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const baseURL = process.env.REACT_APP_URL;
-  const [rentalValue, setRentalValue] = useState(null)
-  const [salePrice, setSalePrice] = useState(null)
   const [adtype, setAdtype] = useState({
     sale: '',
     rent: '',
@@ -63,18 +61,16 @@ export default function MultiActionAreaCard(props) {
       props.data.character.data.map(item => {
         switch (item.Tipo_de_Anuncio) {
           case 'venda':
-             setSlideOptions({...slideOptions, sale: slideOptions.sale++})
-          setRentalValue(true)
+            setSlideOptions({...slideOptions, sale: slideOptions.sale++})
+            setAdtype({...adtype, sale: item.Tipo_de_Anuncio })
             break;
           case 'aluguel':
-            setSalePrice(true)
             setSlideOptions({...slideOptions, rent: slideOptions.rent++})
+            setAdtype({...adtype, rent: item.Tipo_de_Anuncio })
             break;
           
           default:
-            setAdtype({...adtype, // Copy all existing properties from the 'adtype' object  
-              launch: item.Tipo_de_Anuncio
-            })
+            setAdtype({...adtype, launch: item.Tipo_de_Anuncio })
             setSlideOptions({...slideOptions, launch: slideOptions.launch++})
         }
       })
@@ -96,7 +92,7 @@ export default function MultiActionAreaCard(props) {
   return (
     <>
     
-      {salePrice ? ( 
+      {adtype.sale !== '' ? ( 
         <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip label="Imóveis à Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff",  fontSize: "1.1rem", padding: "1rem" }} />
@@ -196,7 +192,7 @@ export default function MultiActionAreaCard(props) {
       </CarouselProvider>
     </Container>
 
-    {rentalValue ? (
+    {adtype.rent !== '' ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip className="separator" label="Imóveis para Alugar" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
