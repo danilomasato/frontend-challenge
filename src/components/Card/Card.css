@@ -171,6 +171,11 @@
 }
 
 .carousel__slider-tray-wrap--horizontal {
+	margin-left: -16px;
+}
+
+
+#sale-content .carousel__slider-tray-wrap--horizontal {
 	margin-left: -20px;
 }
 

@@ -27,12 +27,6 @@ export default function MultiActionAreaCard(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const baseURL = process.env.REACT_APP_URL;
-  const [adtype, setAdtype] = useState({
-    sale: '',
-    rent: '',
-    launch: ''
-  });
-
   const [slideOptions, setSlideOptions] = useState({
     sale: 0,
     rent: 0,
@@ -48,38 +42,36 @@ export default function MultiActionAreaCard(props) {
     },
   }));
   
-  let character
+  let character = props.data.character?.data
 //first load
   useEffect(() => {
-    if(props.data.character?.data?.length > 0) 
-      setArticles(props.data.character.data)
+    if(character?.length > 0) 
+      setArticles(character)
  }, [props]);
 
-  //first load
+  //Count Slides para Categorias
   useEffect(() => {
-    let slideCount = 1
-      props.data.character.data.map(item => {
+      character.map(item => {
         switch (item.Tipo_de_Anuncio) {
           case 'venda':
             setSlideOptions({...slideOptions, sale: slideOptions.sale++})
-            setAdtype({...adtype, sale: item.Tipo_de_Anuncio })
             break;
           case 'aluguel':
             setSlideOptions({...slideOptions, rent: slideOptions.rent++})
-            setAdtype({...adtype, rent: item.Tipo_de_Anuncio })
             break;
           
-          default:
-            setAdtype({...adtype, launch: item.Tipo_de_Anuncio })
+          case 'Lançamentos':
             setSlideOptions({...slideOptions, launch: slideOptions.launch++})
+            break;
+          default:
+          break;
         }
       })
-    
   }, []);
 
-  useEffect(() => {
-    console.log('slidesOptions', slideOptions)
-  }, []);
+  // useEffect(() => {
+  //   console.log('slidesOptions', slideOptions)
+  // }, [slideOptions]);
 
   const handleClick = (cardID, card) => {
     dispatch({
@@ -91,8 +83,7 @@ export default function MultiActionAreaCard(props) {
 
   return (
     <>
-    
-      {adtype.sale !== '' ? ( 
+      {slideOptions.sale > 0 ? ( 
         <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip label="Imóveis à Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff",  fontSize: "1.1rem", padding: "1rem" }} />
@@ -100,7 +91,7 @@ export default function MultiActionAreaCard(props) {
         </Root> 
       ) : '' }
  
-      <Container className="home">
+      <Container id="sale-content" className="home">
         <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
@@ -187,12 +178,18 @@ export default function MultiActionAreaCard(props) {
             </>
           ))}
         </Slider>
-        <ButtonBack> ‹ </ButtonBack>
-        <ButtonNext> › </ButtonNext>
+
+        {slideOptions.sale > 0 ? ( 
+          <>
+            <ButtonBack> ‹ </ButtonBack>
+            <ButtonNext> › </ButtonNext>
+          </> 
+        ) : '' }
+        
       </CarouselProvider>
     </Container>
 
-    {adtype.rent !== '' ? (
+    {slideOptions.rent > 0 ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip className="separator" label="Imóveis para Alugar" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
@@ -280,12 +277,16 @@ export default function MultiActionAreaCard(props) {
           </>
         ))}
         </Slider>
-        <ButtonBack> ‹ </ButtonBack>
-        <ButtonNext> › </ButtonNext>
+        {slideOptions.rent > 0 ? ( 
+          <>
+            <ButtonBack> ‹ </ButtonBack>
+            <ButtonNext> › </ButtonNext>
+          </> 
+        ) : '' }
       </CarouselProvider>
     </Container>
     
-    {adtype.launch !== '' ? (
+    {slideOptions.launch > 0  ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip label="Lançamentos" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
@@ -369,13 +370,15 @@ export default function MultiActionAreaCard(props) {
               )
                 : ''
               }
-
-              
             </>
           ))}
         </Slider>
-        <ButtonBack> ‹ </ButtonBack>
-        <ButtonNext> › </ButtonNext>
+        {slideOptions.launch > 0 ? ( 
+          <>
+            <ButtonBack> ‹ </ButtonBack>
+            <ButtonNext> › </ButtonNext>
+          </> 
+        ) : '' }
       </CarouselProvider>
     </Container>
     </>
