@@ -30,6 +30,9 @@
   height: 400px !important;
 }
 
+.ThumbSLider-highligh .slick-slide > div { padding: 0 5px; }
+.ThumbSLider-highligh .slick-slide:first-child > div { padding-left: 0; }
+
 .ThumbSLider-highligh .slick-track img {
   height: 400px;
 	object-fit: cover;

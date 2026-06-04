@@ -83,8 +83,6 @@
   color: black;
 }
 
-.slick-slide > div { padding: 0 5px; }
-
 .slick-next {
 	margin-right: 25px;
   position: absolute;
