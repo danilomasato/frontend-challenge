@@ -39,16 +39,14 @@ const Home = ({ character, imoveisCache, pagination}) => {
     max: 0
   });
 
-   const closeLoad = () => {
-      setTimeout(() => {
-      setLoading(false)
-      // setSearch('')
-      }, 2000);
-    }
+  const closeLoad = () => {
+    setTimeout(() => {
+    setLoading(false)
+    }, 2000);
+  }
 
   useEffect(() => {
     const payload = pagination?.length > 0 ? pagination : character.character?.data
-
     if(payload?.length > 0){
       setRealEstate({character: { data: payload }})
       setImoveis(payload)
@@ -88,24 +86,27 @@ const Home = ({ character, imoveisCache, pagination}) => {
     } 
   }, [imoveis]);
   
-  const clearSearch = () => {
+  const clearSearch = (clear) => {
+    //loading
+    setLoading(true)
+
     setRealEstate({character: {
-      data: []
+      data: clear ? imoveis : []
     }})
+
+    //close loading
+    closeLoad()
   }
 
   const handleClick = () => {
       if(!("neighborhood" in localStorage) && search?.label?.length === undefined) {
         alert("Selecione um Bairro para fazer a Busca...")
       } else {
-        //loading
-        setLoading(true)
 
         //limpa array imóveis
         clearSearch()
 
         const setResearch = imovel => {
-          console.log(imovel)
           if(imovel !== 'undefined' && imovel !== undefined){
             research = research.concat(imovel)
 
@@ -247,7 +248,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
                       
                     />
                     <LocationPinIcon className="LocationPinIcon" />
-                    <CloseIcon className="search-clear" onClick={() => { clearSearch() }} />
+                    <CloseIcon className="search-clear" onClick={() => { clearSearch('clear') }} />
                   </Box>
                 </>)
                 : 
@@ -348,8 +349,8 @@ const Home = ({ character, imoveisCache, pagination}) => {
                       Tente ajustar os filtros de busca ou explorar
                       outras regiões e oportunidades incríveis.
                   </p>
-                  <button class="empty-state__button" onClick={() => { clearSearch() }}>
-                      🧹 Limpar filtros
+                  <button class="empty-state__button" onClick={() => { clearSearch('clear') }}>
+                    🧹 Limpar filtros
                   </button>
               </div>
             </Container>
