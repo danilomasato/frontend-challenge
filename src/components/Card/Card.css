@@ -169,7 +169,7 @@
 
 .LocationPinIcon {
 	float: left;
-	width: 15px;
+	width: 15px !important;
 	margin-right: 5px;
 }
 
