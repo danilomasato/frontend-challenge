@@ -38,7 +38,7 @@ div[role="alert"] {
 .search-neighborhoods label {
 	font-size: 12px;
 	letter-spacing: 0;
-	margin: -3px 0 5px 0;
+	margin: -3px 0 5px 22px;
     font-family: 'quicksand-regular', helvetica, arial;
 } 
 
@@ -128,13 +128,44 @@ div[role="alert"] {
     z-index: 9;
 }
 
+.wrap-search .LocationPinIcon {
+	position: absolute;
+	margin: -36px 0 0 10px;
+}
+
+.wrap-input {
+	float: left;
+	position: relative;
+}
+
+.wrap-input svg path {
+	stroke: #c29c5f !important;
+  stroke-width: 0.1rem !important;
+}
+
+.wrap-input svg  {
+	width: 18px;
+}
+
+.wrap-input .MonetizationOnIcon {
+	position: absolute;
+	top: 27px;
+	right: 10px;
+}
+
 .search-clear {
 	position: absolute;
-    margin: -36px 0 0 245px;
-    cursor: pointer;
-    width: 15px !important;
-    background: #f7f7f8;
-    padding: 0 10px 0 0;
+	margin: -36px 0 0 245px;
+	cursor: pointer;
+	width: 15px !important;
+	background: #f7f7f8;
+	padding: 0 10px 0 0;
+}
+
+.wrap-input .search-clear path {
+	fill: #a2a1a1;
+	stroke: none !important;
+  stroke-width: none !important;
 }
 
 @media only screen and (min-width: 1025px) {

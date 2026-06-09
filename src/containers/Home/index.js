@@ -22,6 +22,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { NumericFormat } from 'react-number-format';
 import Typography from '@mui/material/Typography';
 import { Container } from "../../components";
+import LocationPinIcon from '@mui/icons-material/LocationOn';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 const Home = ({ character, imoveisCache, pagination}) => {
 
@@ -222,28 +224,31 @@ const Home = ({ character, imoveisCache, pagination}) => {
             <Grid className="wrap-search" container spacing={2}>
               <Grid size={8}>
                 { imoveis?.length > 0 ? (<>
-                  <label style={{ 
-                    fontFamily: 'quicksand-regular', 
-                    fontSize: '0.6rem', 
-                    color: 'rgba(0, 0, 0, 0.6)',
-                    margin: '-3px 0 10px 0',
-                    display: 'block'
-                    }}> 
-                    Selecione o Bairro
-                  </label>
-                  <Autocomplete
-                    className="search-neighborhoods"
-                    disablePortal
-                    options={options}
-                    InputProps={{
-                      className: 'search-neighborhoods',
-                      style: { backgroundColor: 'lightgray' }, // Estilo inline para o input
-                    }}
-                    onChange={(event, value) => { setSearch(value) }}
-                    renderInput={(params) => <TextField {...params} label="Selecione o Bairro" />}
-                    
-                  />
-                  <CloseIcon className="search-clear" onClick={() => { clearSearch() }} />
+                  <Box className="wrap-input">
+                    <label style={{ 
+                      fontFamily: 'quicksand-regular', 
+                      fontSize: '0.6rem', 
+                      color: 'rgba(0, 0, 0, 0.6)',
+                      margin: '-3px 0 10px 0',
+                      display: 'block'
+                      }}> 
+                      Selecione o Bairro
+                    </label>
+                    <Autocomplete
+                      className="search-neighborhoods"
+                      disablePortal
+                      options={options}
+                      InputProps={{
+                        className: 'search-neighborhoods',
+                        style: { backgroundColor: 'lightgray' }, // Estilo inline para o input
+                      }}
+                      onChange={(event, value) => { setSearch(value) }}
+                      renderInput={(params) => <TextField {...params} label="Selecione o Bairro" />}
+                      
+                    />
+                    <LocationPinIcon className="LocationPinIcon" />
+                    <CloseIcon className="search-clear" onClick={() => { clearSearch() }} />
+                  </Box>
                 </>)
                 : 
                 ""
@@ -256,7 +261,9 @@ const Home = ({ character, imoveisCache, pagination}) => {
                 noValidate
                 autoComplete="off"
                 className="minMax"
-              >
+              > 
+                <Box className="wrap-input">
+                  <MonetizationOnIcon className="MonetizationOnIcon" />
                   <NumericFormat
                   value={optionsValue.min}
                   onFocus={(e) => setOptionsValue({...optionsValue, min: '' })}
@@ -264,14 +271,18 @@ const Home = ({ character, imoveisCache, pagination}) => {
                     setOptionsValue({...optionsValue, min: '' })
                     setOptionsValue({...optionsValue, min: e.target.value })
                   }}
-                  customInput={TextField}
-                  thousandSeparator
-                  valueIsNumericString
-                  prefix="R$"
-                  variant="standard"
-                  label="Valor Min"
-                />
-               <NumericFormat
+                    customInput={TextField}
+                    thousandSeparator
+                    valueIsNumericString
+                    prefix="R$"
+                    variant="standard"
+                    label="Valor Min"
+                  />
+                </Box>
+
+                <Box className="wrap-input">
+                  <MonetizationOnIcon className="MonetizationOnIcon" />
+                  <NumericFormat
                   value={optionsValue.max}
                   onFocus={(e) => setOptionsValue({...optionsValue, max: '' })}
                   onChange={(e) => {setOptionsValue({...optionsValue, max: e.target.value }) }}
@@ -281,7 +292,8 @@ const Home = ({ character, imoveisCache, pagination}) => {
                   prefix="R$"
                   variant="standard"
                   label="Valor Max"
-                style={{ marginLeft: "15px"}}/>
+                  style={{ marginLeft: "15px"}}/>
+                </Box>
               </Grid>
               <Grid size={12} className="minMax">
                 <TextField

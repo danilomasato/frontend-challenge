@@ -167,13 +167,14 @@
     z-index: 2;
 }
 
-.card .LocationPinIcon {
+.LocationPinIcon {
 	float: left;
 	width: 15px;
 	margin-right: 5px;
 }
 
-.card .LocationPinIcon path {
+.LocationPinIcon path,
+.MonetizationOnIcon path {
 	fill: none;
   stroke: #646464;
   stroke-width: 1px;
