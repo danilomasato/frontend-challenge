@@ -219,18 +219,14 @@ const Home = ({ character, imoveisCache, pagination}) => {
       <div className="row center home">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2} style={{ 
-              gridColumnGap: "20px",
-              display: "grid",
-              gridTemplateColumns: "320px 359px 210px 220px"
-             }}>
+            <Grid className="wrap-search" container spacing={2}>
               <Grid size={8}>
                 { imoveis?.length > 0 ? (<>
                   <label style={{ 
                     fontFamily: 'quicksand-regular', 
                     fontSize: '0.6rem', 
                     color: 'rgba(0, 0, 0, 0.6)',
-                    margin: '-3px 0 10px 20px',
+                    margin: '-3px 0 10px 0',
                     display: 'block'
                     }}> 
                     Selecione o Bairro

@@ -21,6 +21,7 @@ import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
+import LocationPinIcon from '@mui/icons-material/LocationOn';
 
 export default function MultiActionAreaCard(props) {
   const [articles, setArticles] = useState([]);
@@ -114,13 +115,14 @@ export default function MultiActionAreaCard(props) {
                           title={card.imovel}
                           home="true"
                         />
+                      {index <= 3 && <span class="badge-destaque">Destaque</span>}
                       <CardActionArea onClick={(e) => {handleClick(card.id, card) }}>
                         <CardContent className="CardContent">
                           <Typography className="title-imovel" gutterBottom variant="h5">
                             {card.titulo}
                           </Typography>
                           <Typography className="descripition" gutterBottom variant="h5">
-                            {card.Bairro}
+                            <LocationPinIcon className="LocationPinIcon" /> {card.Bairro}
                           </Typography>
                         </CardContent>
 
@@ -226,7 +228,7 @@ export default function MultiActionAreaCard(props) {
                       {card.titulo}
                     </Typography>
                     <Typography className="descripition" gutterBottom variant="h5">
-                      {card.Bairro}
+                      <LocationPinIcon className="LocationPinIcon" /> {card.Bairro}
                     </Typography>
                   </CardContent>
 
@@ -294,7 +296,7 @@ export default function MultiActionAreaCard(props) {
         </Root> 
     ) : '' }
 
-    <Container className="home">
+    <Container className="home lauch">
       <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
@@ -323,7 +325,7 @@ export default function MultiActionAreaCard(props) {
                         {card.titulo}
                       </Typography>
                       <Typography className="descripition" gutterBottom variant="h5">
-                        {card.Bairro}
+                        <LocationPinIcon className="LocationPinIcon" /> {card.Bairro}
                       </Typography>
                     </CardContent>
                     <CardContent className="CardContent">
@@ -373,7 +375,7 @@ export default function MultiActionAreaCard(props) {
             </>
           ))}
         </Slider>
-        {slideOptions.launch > 0 ? ( 
+        {slideOptions.launch > 3 ? ( 
           <>
             <ButtonBack> ‹ </ButtonBack>
             <ButtonNext> › </ButtonNext>

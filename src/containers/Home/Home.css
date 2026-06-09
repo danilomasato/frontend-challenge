@@ -23,7 +23,6 @@ div[role="alert"] {
 
 .search-neighborhoods {
 	width: 300px;
-	margin-left: 15px;
 	border: 1px solid #be9f6061;
 	border-radius: 5px;
 	height: 45px;
@@ -39,7 +38,7 @@ div[role="alert"] {
 .search-neighborhoods label {
 	font-size: 12px;
 	letter-spacing: 0;
-	margin: -3px 0px 0px 5px;
+	margin: -3px 0 5px 0;
     font-family: 'quicksand-regular', helvetica, arial;
 } 
 
@@ -131,7 +130,7 @@ div[role="alert"] {
 
 .search-clear {
 	position: absolute;
-    margin: -36px 0 0 255px;
+    margin: -36px 0 0 245px;
     cursor: pointer;
     width: 15px !important;
     background: #f7f7f8;
@@ -141,6 +140,23 @@ div[role="alert"] {
 @media only screen and (min-width: 1025px) {
 	.home.center {
 		width: 1230px;
+	}
+
+	 .wrap-search {
+		width: 1200px;
+		display: grid !important;
+		grid-template-columns: 320px 359px 210px 220px !important;
+		box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+		padding: 15px;	 
+		border-radius: 10px;
+		margin-left: -20px;
+		grid-column-gap: "20px";
+	}
+
+	div[role="separator"] {
+		width: 1265px;
+		margin: 0 auto;
+		margin-top: 45px;
 	}
 }
 

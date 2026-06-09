@@ -73,26 +73,45 @@
 }
 
 .card .slick-prev, .card .slick-next {
-    background-color: rgba(11, 44, 61, 1) !important;
-  outline: none;
-  border: 0;
-  color: whitesmoke;
-  font-size: 0;
-  height: 40px;
-  width: 30px;
-  border-radius: initial;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.15),
+        inset 0 1px 0 rgba(255,255,255,.15) !important;
+
+    transition: all .25s ease;
+}
+
+.card .slick-prev:hover, .card .slick-next:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: translateY(-50%) scale(1.08);
 }
 
 .card .slick-prev {
-  left: -25px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+  left: -15px;
 }
 
 .card .slick-next {
-	right: -25px;
-	border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+	right: -15px;
 }
 
 .card .slick-dots {
@@ -119,13 +138,46 @@
 }
 
 .card .descripition {
-  max-height: 40px;
-  height: 30px;
-  overflow: hidden;
-  font-size: 1.05rem;
-  font-weight: initial;
-  color: #9d9d9d;
-  letter-spacing: 0.1px;
+	max-height: 40px;
+	height: 30px;
+	overflow: hidden;
+	font-size: 0.85rem;
+	line-height: 1.5rem;
+	font-weight: initial;
+	color: #9d9d9d;
+}
+
+.card .badge-destaque {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    background: linear-gradient(90deg, #1da1ff, #0066ff);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 999px;
+    line-height: 1;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(0, 102, 255, 0.25);
+    z-index: 2;
+}
+
+.card .LocationPinIcon {
+	float: left;
+	width: 15px;
+	margin-right: 5px;
+}
+
+.card .LocationPinIcon path {
+	fill: none;
+  stroke: #646464;
+  stroke-width: 1px;
+  stroke-linejoin: round;
 }
 
 .card .wrap-see-more {
@@ -141,20 +193,48 @@
 
 .home  .buttonBack___1mlaL,
 .home  .buttonNext___2mOCa {
-	top: 140px;
+	top: 330px;
   position: absolute;
 	-webkit-user-select: none;
-  user-select: none
+  user-select: none;
+	width: 45px;
+	height: 45px;
+	cursor: pointer;
+	opacity: 0.95;
+  background: rgba(255,255,255,.96);
+
+	border: 1px solid #e8edf3;
+	border-radius: 50%;
+
+	box-shadow:
+			0 4px 12px rgba(0,0,0,.06),
+			0 1px 3px rgba(0,0,0,.04);
+
+	transition: all .25s ease;
+
+	color: #1f6fff;
+}
+
+.home.lauch  .buttonBack___1mlaL,
+.home.lauch  .buttonNext___2mOCa {
+	top: 140px;
+}
+
+.home  .buttonBack___1mlaL:hover,
+.home  .buttonNext___2mOCa:hover {
+    transform: scale(1.05);
+    box-shadow:
+		0 8px 20px rgba(0,0,0,.10),
+		0 2px 6px rgba(0,0,0,.06);
 }
 
 .home  .buttonBack___1mlaL {
-	margin-left: -70px;
+	margin-left: -90px;
 }
 
 
 .home  .buttonNext___2mOCa {
-	position: absolute;
-  right: -70px;
+  right: -90px;
 }
 
 .slideHorizontal___1NzNV {
