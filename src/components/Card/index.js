@@ -116,7 +116,11 @@ export default function MultiActionAreaCard(props) {
                           home="true"
                         />
                       {index <= 3 && <span class="badge-destaque">Destaque</span>}
-                      <CardActionArea onClick={(e) => {handleClick(card.id, card) }}>
+                      <CardActionArea sx={{
+                          '&:hover .MuiCardActionArea-focusHighlight': {
+                            opacity: 0,
+                          },
+                        }} onClick={(e) => {handleClick(card.id, card) }}>
                         <CardContent className="CardContent">
                           <Typography className="title-imovel" gutterBottom variant="h5">
                             {card.titulo}
@@ -222,7 +226,11 @@ export default function MultiActionAreaCard(props) {
                     title={card.imovel}
                     home="true"
                   />
-                <CardActionArea onClick={(e) => {handleClick(card.id, card) }}>
+                <CardActionArea sx={{
+                      '&:hover .MuiCardActionArea-focusHighlight': {
+                        opacity: 0,
+                      },
+                    }} onClick={(e) => {handleClick(card.id, card) }}>
                   <CardContent className="CardContent">
                     <Typography className="title-imovel" gutterBottom variant="h5">
                       {card.titulo}
@@ -319,7 +327,11 @@ export default function MultiActionAreaCard(props) {
                       title={card.imovel}
                       home="true"
                     />
-                  <CardActionArea onClick={(e) => {handleClick(card.id, card) }}>
+                  <CardActionArea sx={{
+                      '&:hover .MuiCardActionArea-focusHighlight': {
+                        opacity: 0,
+                      },
+                    }} onClick={(e) => {handleClick(card.id, card) }}>
                     <CardContent className="CardContent">
                       <Typography className="title-imovel" gutterBottom variant="h5">
                         {card.titulo}
