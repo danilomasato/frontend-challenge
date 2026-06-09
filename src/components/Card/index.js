@@ -103,9 +103,9 @@ export default function MultiActionAreaCard(props) {
         <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={slideOptions.sale}
+        totalSlides={(slideOptions.sale - 1 )}
         visibleSlides={6}
-        step={(Math.ceil(slideOptions.sale / 6)+0.95)}
+        step={(Math.ceil((slideOptions.sale - 1 ) / 6) +0.95)}
         orientation="horizontal"
       >
         <Slider style={{ height: slideOptions.sale > 1 ? 'initial' : '0px' }}>
@@ -214,9 +214,9 @@ export default function MultiActionAreaCard(props) {
       <CarouselProvider
         naturalSlideWidth={345}
         naturalSlideHeight={350}
-        totalSlides={slideOptions.rent}
+        totalSlides={(slideOptions.rent - 1 )}
         visibleSlides={ slideOptions.rent > 6 ? 6 : slideOptions.rent}
-        step={Math.ceil(slideOptions.rent / 6)}
+        step={Math.ceil((slideOptions.rent - 1 ) / 6)}
         orientation="horizontal"
       >
         <Slider style={{ height: slideOptions.rent > 1 ? 'initial' : '0px' }}>
@@ -317,7 +317,7 @@ export default function MultiActionAreaCard(props) {
         naturalSlideHeight={350}
         totalSlides={slideOptions.launch}
         visibleSlides={slideOptions.launch}
-        step={Math.ceil(slideOptions.rent / 6)}
+        step={Math.ceil((slideOptions.rent - 1) / 6)}
         orientation="horizontal"
       >
         <Slider style={{ height: slideOptions.launch > 1 ? '325px' : '' }}>
