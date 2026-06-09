@@ -29,9 +29,9 @@ export default function MultiActionAreaCard(props) {
   const dispatch = useDispatch();
   const baseURL = process.env.REACT_APP_URL;
   const [slideOptions, setSlideOptions] = useState({
-    sale: 0,
-    rent: 0,
-    launch: 0
+    sale: 1,
+    rent: 1,
+    launch: 1
   });
 
   const Root = styled('div')(({ theme }) => ({
@@ -42,17 +42,24 @@ export default function MultiActionAreaCard(props) {
       marginTop: theme.spacing(2),
     },
   }));
-  
-  let character = props.data.character?.data
-//first load
+
+  //first load
   useEffect(() => {
-    if(character?.length > 0) 
-      setArticles(character)
- }, [props]);
+    let data = props.data.character?.data
+
+    if(data.length > 0) {
+      setArticles(data)
+    } 
+  }, [props]);
+
+  useEffect(() => {
+    console.log('data================>', props.data.character?.data)
+    category(props.data.character?.data)
+  }, []);
 
   //Count Slides para Categorias
-  useEffect(() => {
-      character.map(item => {
+  const category = imoveis => {
+      imoveis.map(item => {
         switch (item.Tipo_de_Anuncio) {
           case 'venda':
             setSlideOptions({...slideOptions, sale: slideOptions.sale++})
@@ -68,7 +75,7 @@ export default function MultiActionAreaCard(props) {
           break;
         }
       })
-  }, []);
+  };
 
   // useEffect(() => {
   //   console.log('slidesOptions', slideOptions)
@@ -84,7 +91,7 @@ export default function MultiActionAreaCard(props) {
 
   return (
     <>
-      {slideOptions.sale > 0 ? ( 
+      {slideOptions.sale > 1 ? ( 
         <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip label="Imóveis à Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff",  fontSize: "1.1rem", padding: "1rem" }} />
@@ -105,7 +112,7 @@ export default function MultiActionAreaCard(props) {
           {articles?.length > 0 && articles.map(
             (card, index) => (
               <>
-                {card.Valor_Venda !== null && card.Tipo_de_Anuncio !== "Lançamentos" ? (
+                {card.Tipo_de_Anuncio == "venda" ? (
                   <Slide index={index}>
                     <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
                       <ThumbSLider 
@@ -185,7 +192,7 @@ export default function MultiActionAreaCard(props) {
           ))}
         </Slider>
 
-        {slideOptions.sale > 0 ? ( 
+        {slideOptions.sale > 3 ? ( 
           <>
             <ButtonBack> ‹ </ButtonBack>
             <ButtonNext> › </ButtonNext>
@@ -195,7 +202,7 @@ export default function MultiActionAreaCard(props) {
       </CarouselProvider>
     </Container>
 
-    {slideOptions.rent > 0 ? (
+    {slideOptions.rent > 1 ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip className="separator" label="Imóveis para Alugar" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
@@ -208,7 +215,7 @@ export default function MultiActionAreaCard(props) {
         naturalSlideWidth={345}
         naturalSlideHeight={350}
         totalSlides={slideOptions.rent}
-        visibleSlides={6}
+        visibleSlides={ slideOptions.rent > 6 ? 6 : slideOptions.rent}
         step={Math.ceil(slideOptions.rent / 6)}
         orientation="horizontal"
       >
@@ -287,7 +294,7 @@ export default function MultiActionAreaCard(props) {
           </>
         ))}
         </Slider>
-        {slideOptions.rent > 0 ? ( 
+        {slideOptions.rent > 3 ? ( 
           <>
             <ButtonBack> ‹ </ButtonBack>
             <ButtonNext> › </ButtonNext>
@@ -296,7 +303,7 @@ export default function MultiActionAreaCard(props) {
       </CarouselProvider>
     </Container>
     
-    {slideOptions.launch > 0  ? (
+    {slideOptions.launch > 1  ? (
       <Root>
           <Divider style={{ marginTop: "40px"}}>
             <Chip label="Lançamentos" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />

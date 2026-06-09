@@ -212,7 +212,6 @@ const Home = ({ character, imoveisCache, pagination}) => {
   const handleChangeCategory = (evento) => {
     setCategory(evento.target.value);
   };
-  
 
   return (
     <React.Fragment>
