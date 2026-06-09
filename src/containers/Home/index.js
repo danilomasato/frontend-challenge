@@ -326,11 +326,32 @@ const Home = ({ character, imoveisCache, pagination}) => {
       }
 
       {!loading && realEstate?.character?.data?.length <= 0 &&
-            <Container>
-              <img style={{ float: 'left', marginLeft: '180px' }}src="https://static.vecteezy.com/ti/vetor-gratis/p1/26391345-busca-sem-resultados-nao-encontrado-ilustracao-de-conceito-design-plano-eps10-elemento-grafico-moderno-para-pagina-de-destino-ui-de-estado-vazio-infografico-icone-vetor.jpg" width="300"/>
-              <Typography style={{ float: 'left', textAlign: 'center', fontWeight: 'bold', fontSize: '2rem', alignSelf: 'center'}}>
-                Nenhum Resultado Encontrado...
-              </Typography>
+            <Container className="empty-state">
+              <div class="empty-state__illustration">
+                  <div class="empty-state__decor">
+                      <span>✦</span>
+                      <span>+</span>
+                      <span>✦</span>
+                  </div>
+
+                  <div class="empty-state__icon"></div>
+              </div>
+
+              <div class="empty-state__content">
+                  <div class="empty-state__tag">
+                      Ops, nada por aqui
+                  </div>
+                  <h2 class="empty-state__title">
+                      Nenhum resultado encontrado.
+                  </h2>
+                  <p class="empty-state__description">
+                      Tente ajustar os filtros de busca ou explorar
+                      outras regiões e oportunidades incríveis.
+                  </p>
+                  <button class="empty-state__button" onClick={() => { clearSearch() }}>
+                      🧹 Limpar filtros
+                  </button>
+              </div>
             </Container>
           }
 
