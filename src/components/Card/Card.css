@@ -4,7 +4,7 @@
 }
 
 .card .see-more {
-	background: #187985;
+	background: #247ac8;
 	box-shadow: none;
 	font-size: 14px;
 	text-transform: initial;
@@ -41,7 +41,7 @@
 .card .icon-card svg {
 	float: left;
 	margin: 0 4px 0 0;
-	color: #187985;
+	color: #247ac8;
 }
 
 .row .title {
@@ -297,7 +297,7 @@ button[disabled] {
 	}
 
 	.card .see-more:hover {
-		background-color: rgb(11, 44, 61);
+		background-color: #216eb6;
 		box-shadow: none;
 	}
 }
