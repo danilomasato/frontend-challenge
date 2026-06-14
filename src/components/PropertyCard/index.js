@@ -18,12 +18,12 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocationPinIcon from '@mui/icons-material/LocationOn';
 
 
-const PropertyCard = ({ card, count }) => {
+const PropertyCard = ({ key, card, count }) => {
 
   const history = useHistory();
   const dispatch = useDispatch();
   const handleClick = (card) => {
-    // console.log('click card', card)
+    console.log('click card', card)
     dispatch({
       type: types.RECEIVE_CHARACTER,
       payload: card
@@ -52,7 +52,7 @@ const PropertyCard = ({ card, count }) => {
               opacity: 0,
             },
           }}
-          onClick={() => handleClick(card.id, card)}
+          onClick={() => handleClick(card)}
         >
           <CardContent className="CardContent">
             <Typography
@@ -133,7 +133,7 @@ const PropertyCard = ({ card, count }) => {
               <Button
                 className="see-more"
                 variant="contained"
-                onClick={() => handleClick(card.id, card)}
+                onClick={() => handleClick(card)}
               >
                 Ver Mais
               </Button>

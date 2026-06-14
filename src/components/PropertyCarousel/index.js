@@ -9,7 +9,7 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 import PropertyCard from "../PropertyCard";
 
 const PropertyCarousel = ({ title, items }) => {
-console.log(title, items)
+
   const Root = styled('div')(({ theme }) => ({
     width: '100%',
     ...theme.typography.body2,
