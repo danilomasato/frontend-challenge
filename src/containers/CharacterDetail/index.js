@@ -3,7 +3,6 @@ import { withRouter, useHistory } from "react-router-dom";
 import { connect   } from "react-redux";
 import { Container } from "../../components";
 import CardDetail from "../../components/CardDetail";
-// import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { Header } from "../../components/Header";
 import { TopInfo } from "../../components/TopInfo";
@@ -33,14 +32,12 @@ import ThumbSLider from "../../components/ThumbSlider";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import axios from 'axios';
 
-const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }) => {
+const idMount = parseInt(window.location.hash.substring(9, 12).replace('#/imovel/',''))
 
-  const [infoImoveis, setInfoImoveis] = useState([]);
-  const [imoveis, setImoveis] = useState([]);
+const CharacterDetail = ({ data, realestate }) => {
+
   const history = useHistory();
-  const urlShare = window.location.href
-  const idMount = parseInt(window.location.hash.substring(9, 12).replace('#/imovel/',''))
-
+  let imoveis
   let rows = []
 
   function getParameterByName(name, url = window.location.href) {
@@ -52,49 +49,27 @@ const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
 
+  const paramID  = getParameterByName('dcID')
+    // console.log(realestate  )
 
-    useEffect(() => {
-      const paramID  = getParameterByName('dcID')
-      if( data?.length > 0){
-        
-        if(paramID == null){
-          setImoveis(pagination?.length > 0 ? pagination : (data?.length > 0 ? data : imoveisCache.data))
-        } else {
+
+  imoveis = realestate && realestate.length > 0 ? realestate[0] : data
+
+  if(paramID !== null){
+    axios.get(`https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`)
+    .then(response => {
+      // Handle success.
+      imoveis = response.data.data
+    })
+    .catch(error => {
+      // Handle error.
+      console.log('An error occurred:', error.response);
+    });
+  }
   
-          axios.get(`https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`)
-          .then(response => {
-            // Handle success.
-            setImoveis(response.data.data)
-          })
-          .catch(error => {
-            // Handle error.
-            console.log('An error occurred:', error.response);
-          });
-        }
-      }
-    }, [data]);
-  useEffect(() => {
-    // if(authors.data?.length > 0){
-    //   authors.data.filter((item, index) =>  {
-    //     if(infoImoveis?.autor !== null && infoImoveis?.autor.name.includes(item.name)){
-    //       Object.assign(realRstate, {
-    //         avatar: item.avatar.url
-    //       })
-    //     }
-    //   })
-    // }
-    
-    if(imoveis?.length > 0) {
-      imoveis.filter((item, index) => {
-        if(item.id === parseInt(idMount)){
-          realRstate = item
-          setInfoImoveis(item)
-          setImoveis(item)
-        }
-      })
-    }
 
-    //Disable click right mouse
+  //Disable click right mouse
+  useEffect(() => {
     const handleContextMenu = (e) => {
       e.preventDefault(); // Prevent the default context menu
     };
@@ -106,8 +81,7 @@ const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }
     return () => {
       document.body.removeEventListener('contextmenu', handleContextMenu);
     };
-
-  }, [imoveis, infoImoveis]);
+  }, []);
 
   function createData(
     name: string,
@@ -115,32 +89,32 @@ const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }
   ) {
     return { name, info};
   }
-
-  if(infoImoveis?.Valor_Venda !== null) {
+if(imoveis && Object.keys(imoveis).length > 0){
+  if(imoveis.Tipo_de_Anuncio == 'venda') {
     rows = [
-      createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar + 'º' : ''),
-      createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
-      createData('Ano de construção', infoImoveis?.Ano_de_Construcao !== null ? infoImoveis.Ano_de_Construcao  : 'Sem Informação'),
-      createData('Condomínio', infoImoveis?.Condominio !== null && infoImoveis.Condominio ? 'R$' + infoImoveis.Condominio  : 'Sem Informação'),
-      createData('IPTU (anual)', infoImoveis?.IPTU !== null ? parseInt(infoImoveis.IPTU).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Sem Informação'),
-      createData('Quartos', infoImoveis?.Quartos !== null ? infoImoveis.Quartos  : 'Sem Informação'),
-      createData('Suítes', infoImoveis?.Suites !== null ? infoImoveis.Suites  : 'Sem Informação'),
-      createData('Banheiros', infoImoveis?.Banheiros !== null ? infoImoveis.Banheiros  : 'Sem Informação'),
+      createData('Andar', imoveis?.Andar !== null ? imoveis.Andar + 'º' : ''),
+      createData('Área terreno', imoveis?.Area_Terreno !== null ? imoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
+      createData('Ano de construção', imoveis?.Ano_de_Construcao !== null ? imoveis.Ano_de_Construcao  : 'Sem Informação'),
+      createData('Condomínio', imoveis?.Condominio !== null && imoveis.Condominio ? 'R$' + imoveis.Condominio  : 'Sem Informação'),
+      createData('IPTU (anual)', imoveis?.IPTU !== null ? parseInt(imoveis.IPTU).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Sem Informação'),
+      createData('Quartos', imoveis?.Quartos !== null ? imoveis.Quartos  : 'Sem Informação'),
+      createData('Suítes', imoveis?.Suites !== null ? imoveis.Suites  : 'Sem Informação'),
+      createData('Banheiros', imoveis?.Banheiros !== null ? imoveis.Banheiros  : 'Sem Informação'),
     ]
     rows = rows.filter(item => item.info !== '');
   } else {
     rows = [
-      createData('Andar', infoImoveis?.Andar !== null ? infoImoveis.Andar + 'º' : ''),
-      createData('Área terreno', infoImoveis?.Area_Terreno !== null ? infoImoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
-      createData('Condomínio', infoImoveis?.Condominio !== null && infoImoveis.Condominio ? 'R$' + infoImoveis?.Condominio  : 'Sem Informação'),
-      createData('IPTU (anual)', infoImoveis?.IPTU !== null ? parseInt(infoImoveis.IPTU).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''),
-      createData('Quartos', infoImoveis?.Quartos !== null ? infoImoveis.Quartos  : ''),
-      createData('Suítes', infoImoveis?.Suites !== null ? infoImoveis.Suites  : ''),
-      createData('Banheiros', infoImoveis?.Banheiros !== null ? infoImoveis.Banheiros  : 'Sem Informação'),
+      createData('Andar', imoveis?.Andar !== null ? imoveis.Andar + 'º' : ''),
+      createData('Área terreno', imoveis?.Area_Terreno !== null ? imoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
+      createData('Condomínio', imoveis?.Condominio !== null && imoveis.Condominio ? 'R$' + imoveis?.Condominio  : 'Sem Informação'),
+      createData('IPTU (anual)', imoveis?.IPTU !== null ? parseInt(imoveis.IPTU).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''),
+      createData('Quartos', imoveis?.Quartos !== null ? imoveis.Quartos  : ''),
+      createData('Suítes', imoveis?.Suites !== null ? imoveis.Suites  : ''),
+      createData('Banheiros', imoveis?.Banheiros !== null ? imoveis.Banheiros  : 'Sem Informação'),
     ]
     rows = rows.filter(item => item.info !== '');
   }
-
+}
   const [openToggle, setOpenToggle] = React.useState(false);
   const [open, setOpen] = React.useState(false);
 
@@ -171,7 +145,7 @@ const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }
             <span className="imovel"> {imoveis?.titulo || ''} </span>
         </div>
 
-        <CardDetail data={imoveis} imovel={infoImoveis} />
+        <CardDetail data={imoveis} imovel={imoveis} />
 
         <Box className="propertyDetails" sx={{ width: '100%' }}>
           <Box sx={{ width: '100%' }} className={`caracteristicas ${(openToggle ? 'active' : '')}`} style={{maxHeight: (openToggle ? (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length + 'px'): ''), minHeight: (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length > 250 ?  '': '150px' ) }}>
@@ -254,20 +228,13 @@ const CharacterDetail = ({ data, pagination, realRstate, authors, imoveisCache }
 };
 
 const mapStateToProps = state => ({
-  imoveisCache: state.home.imoveisCache,
-  data: state.home.character.data,
-  realRstate: state.character.characterDetail[0],
-  authors: state.character.authors,
-  pagination: state.home.pagination?.data
+  realestate: state.character.realestate.data
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      // getAuthors: dispatch(getAuthors()),
-      getArticles: dispatch(getArticles()),
-      getImoveisCache: dispatch(getImoveisCache()),
-      getCharacterData: dispatch(getCharacterData()),
+      realestate: dispatch(getCharacterData(idMount)),
     },
     dispatch
   );

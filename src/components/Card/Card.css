@@ -238,27 +238,21 @@
   right: -90px;
 }
 
-.slideHorizontal___1NzNV {
-  width: 396px !important;
-	height: 343px !important;
-	padding: 0 !important;
-	margin: 0 20px 30px 20px !important;
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
 .carousel__slider--horizontal {
 	min-height: 0px !important;
-	max-height: 720px !important;
+	max-height: 790px !important;
 	width: 1300px;
-	margin-left: -20px;
+	margin-left: -30px;
 }
 
 .carousel__slider-tray-wrap--horizontal {
-	margin-left: -14px;
-}
-
-
-#sale-content .carousel__slider-tray-wrap--horizontal {
-	margin-left: -18px;
+	margin-left: -2px;
 }
 
 .carousel__back-button,
@@ -277,12 +271,24 @@ button[disabled] {
 	display: inherit !important;
 }
 
+.divider:nth-child(1) {
+	margin-top: 40px;
+}
+
+.divider-chip {
+	background: rgb(11, 44, 61) !important;
+	color: #fff !important; 
+	font-size: 1.1rem !important;
+	padding: 1rem !important;
+	box-shadow: 1px 20px 50px 70px rgb(255 255 255 / 35%);
+}
+
+.divider-chip span {
+	cursor: default;
+	user-select: none;
+}
+
 @media only screen and (min-width: 1025px) {
-	.home.center {
-		width: 1230px;
-		margin: 0 auto;
-		margin-top: 40px;
-	}
 
 	.card {
 		width: 100%;

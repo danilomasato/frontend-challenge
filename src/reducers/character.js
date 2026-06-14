@@ -1,18 +1,19 @@
 import {
   RECEIVE_CHARACTER,
-  RECEIVE_AUTHORS
+  RECEIVE_PAGINATION
 } from "../constants/ActionTypes";
 
 const character = (state = {
-  characterDetail: [],
-  authors: []
+  realestate: [],
+  pagination: []
     }, action) => {
 
     switch (action.type) {  
         case RECEIVE_CHARACTER:
-            return {...state, characterDetail: action.payload};
-        case RECEIVE_AUTHORS:
-            return {...state, authors: action.payload};          
+          // console.log('reducer ctr', action)
+            return {realestate: action.payload};
+        case RECEIVE_PAGINATION:
+            return {...state, pagination: action.payload};          
     default:
         return state;
   }

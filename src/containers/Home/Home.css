@@ -27,7 +27,7 @@ div[role="alert"] {
 	border-radius: 5px;
 	height: 45px;
 	line-height: 45px;
-	background: #f7f7f8;
+	/*background: #f7f7f8;*/
 	position: relative;
 }
 
@@ -162,7 +162,7 @@ div[role="alert"] {
 	margin: -36px 0 0 245px;
 	cursor: pointer;
 	width: 15px !important;
-	background: #f7f7f8;
+	/*background: #f7f7f8;*/
 	padding: 0 10px 0 0;
 }
 
@@ -186,12 +186,7 @@ div[role="alert"] {
 		border-radius: 10px;
 		margin-left: -20px;
 		grid-column-gap: "20px";
-	}
-
-	div[role="separator"] {
-		width: 1265px;
-		margin: 0 auto;
-		margin-top: 45px;
+		background-color: ghostwhite;
 	}
 }
 
@@ -407,7 +402,13 @@ div[role="alert"] {
 @media only screen and (max-width: 1024px) {
 	.home .content > div > div {
 		grid-template-columns: none !important;
-    grid-template-rows: 4fr;
+        grid-template-rows: 4fr;
+	}
+
+    div[role="separator"] {
+		width: 1265px;
+		margin: 0 auto;
+		margin-top: 45px;
 	}
 }
 

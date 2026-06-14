@@ -8,7 +8,8 @@ import "slick-carousel/slick/slick-theme.css";
 
   const baseURL = process.env.REACT_APP_URL;
   const deviceWidth = document.documentElement.clientWidth || window.innerWidth || window.screen.width
-  const ThumbSLider = (image) => {
+
+const ThumbSLider = (image) => {
   const fotos = image.image;
   const home = image?.home;
   const detail = image?.detail;

@@ -22,386 +22,57 @@ import Chip from '@mui/material/Chip';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import LocationPinIcon from '@mui/icons-material/LocationOn';
+import PropertyCarousel from "../PropertyCarousel";
 
 export default function MultiActionAreaCard(props) {
   const [articles, setArticles] = useState([]);
-  const history = useHistory();
-  const dispatch = useDispatch();
   const baseURL = process.env.REACT_APP_URL;
-  const [slideOptions, setSlideOptions] = useState({
-    sale: 1,
-    rent: 1,
-    launch: 1
-  });
 
-  const Root = styled('div')(({ theme }) => ({
-    width: '100%',
-    ...theme.typography.body2,
-    color: (theme.vars || theme).palette.text.secondary,
-    '& > :not(style) ~ :not(style)': {
-      marginTop: theme.spacing(2),
-    },
-  }));
+//first load
+useEffect(() => {
+  const data = props.data?.character?.data || [];
 
-  //first load
-  useEffect(() => {
-    let data = props.data.character?.data
+  setArticles(data);
+}, [props.data]);
 
-    if(data.length > 0) {
-      setArticles(data)
-    } 
-  }, [props]);
-
-  useEffect(() => {
-    console.log('data================>', props.data.character?.data)
-    category(props.data.character?.data)
-  }, []);
-
-  //Count Slides para Categorias
-  const category = imoveis => {
-      imoveis.map(item => {
-        switch (item.Tipo_de_Anuncio) {
-          case 'venda':
-            setSlideOptions({...slideOptions, sale: slideOptions.sale++})
-            break;
-          case 'aluguel':
-            setSlideOptions({...slideOptions, rent: slideOptions.rent++})
-            break;
-          
-          case 'Lançamentos':
-            setSlideOptions({...slideOptions, launch: slideOptions.launch++})
-            break;
-          default:
-          break;
-        }
-      })
-  };
-
-  // useEffect(() => {
-  //   console.log('slidesOptions', slideOptions)
-  // }, [slideOptions]);
-
-  const handleClick = (cardID, card) => {
-    dispatch({
-      type: types.RECEIVE_CHARACTER,
-      payload: articles.filter(item => item.id === cardID)
-    })
-    history.push(`/imovel/${card.id}/${card.titulo.replace(/[\s,]/g,"-").replace("/","-")}`)
-  };
-
-  return (
-    <>
-      {slideOptions.sale > 1 ? ( 
-        <Root>
-          <Divider style={{ marginTop: "40px"}}>
-            <Chip label="Imóveis à Venda" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff",  fontSize: "1.1rem", padding: "1rem" }} />
-          </Divider>
-        </Root> 
-      ) : '' }
- 
-      <Container id="sale-content" className="home">
-        <CarouselProvider
-        naturalSlideWidth={345}
-        naturalSlideHeight={350}
-        totalSlides={(slideOptions.sale - 1 )}
-        visibleSlides={6}
-        step={(Math.ceil((slideOptions.sale - 1 ) / 6) +0.95)}
-        orientation="horizontal"
-      >
-        <Slider style={{ height: slideOptions.sale > 1 ? 'initial' : '0px' }}>
-          {articles?.length > 0 && articles.map(
-            (card, index) => (
-              <>
-                {card.Tipo_de_Anuncio == "venda" ? (
-                  <Slide index={index}>
-                    <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
-                      <ThumbSLider 
-                          height="180"
-                          image={card.Fotos?.slice(1)}
-                          alt={card.imovel}
-                          title={card.imovel}
-                          home="true"
-                        />
-                      {index <= 3 && <span class="badge-destaque">Destaque</span>}
-                      <CardActionArea sx={{
-                          '&:hover .MuiCardActionArea-focusHighlight': {
-                            opacity: 0,
-                          },
-                        }} onClick={(e) => {handleClick(card.id, card) }}>
-                        <CardContent className="CardContent">
-                          <Typography className="title-imovel" gutterBottom variant="h5">
-                            {card.titulo}
-                          </Typography>
-                          <Typography className="descripition" gutterBottom variant="h5">
-                            <LocationPinIcon className="LocationPinIcon" /> {card.Bairro}
-                          </Typography>
-                        </CardContent>
-
-                        <CardContent  className="CardContent">
-                          <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                            {card.Valor_Venda !== null ? (
-                              <div>
-                                {parseFloat(card?.Valor_Venda.replace('.',''))?.toLocaleString('pt-BR', {
-                                  style: 'currency',
-                                  currency: 'BRL'
-                                })}
-                              </div>
-                            )
-                              : ''
-                            }
-                          </Typography>
-                          <Typography className="icon-card" variant="body2" color="text.secondary">
-                            {card.Area_Terreno !== null ? (
-                              <div>
-                                <FullscreenIcon />
-                                {card.Area_Terreno} m<span className="mcubico">2</span>
-                              </div>
-                            )
-                              : ''
-                            }
-                          </Typography>
-                          <Typography className="icon-card" variant="body2" color="text.secondary">
-                            
-                            {card.Quartos !== null ? (
-                              <div>
-                                <BedIcon /> {card.Quartos}
-                              </div>
-                            )
-                              : ''
-                            }
-                          </Typography>
-                          <Typography className="icon-card" variant="body2" color="text.secondary">
-                            <ShowerIcon /> {card.Banheiros} 
-                          </Typography>
-                          <Typography className="icon-card" variant="body2" color="text.secondary">
-                            <DirectionsCarIcon /> {card.Vagas} 
-                          </Typography>
-                          <CardActions className="wrap-see-more">
-                            <Button className="see-more" variant="contained" onClick={(e) => {handleClick(card.id, card) }}>
-                              Ver Mais
-                            </Button>
-                          </CardActions>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  </Slide>
-                  )
-                  : ''
-              }
-            </>
-          ))}
-        </Slider>
-
-        {slideOptions.sale > 3 ? ( 
-          <>
-            <ButtonBack> ‹ </ButtonBack>
-            <ButtonNext> › </ButtonNext>
-          </> 
-        ) : '' }
-        
-      </CarouselProvider>
-    </Container>
-
-    {slideOptions.rent > 1 ? (
-      <Root>
-          <Divider style={{ marginTop: "40px"}}>
-            <Chip className="separator" label="Imóveis para Alugar" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
-          </Divider>
-        </Root> 
-    ) : '' }
-
-    <Container className="home">
-      <CarouselProvider
-        naturalSlideWidth={345}
-        naturalSlideHeight={350}
-        totalSlides={(slideOptions.rent - 1 )}
-        visibleSlides={ slideOptions.rent > 6 ? 6 : slideOptions.rent}
-        step={Math.ceil((slideOptions.rent - 1 ) / 6)}
-        orientation="horizontal"
-      >
-        <Slider style={{ height: slideOptions.rent > 1 ? 'initial' : '0px' }}>
-        {articles?.length > 0 && articles.map(
-        (card, index) => (
-          <>
-          {card.Tipo_de_Anuncio.includes('aluguel') ? (
-            <Slide index={index}>
-              <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
-                <ThumbSLider 
-                    height="200"
-                    image={card.Fotos}
-                    alt={card.imovel}
-                    title={card.imovel}
-                    home="true"
-                  />
-                <CardActionArea sx={{
-                      '&:hover .MuiCardActionArea-focusHighlight': {
-                        opacity: 0,
-                      },
-                    }} onClick={(e) => {handleClick(card.id, card) }}>
-                  <CardContent className="CardContent">
-                    <Typography className="title-imovel" gutterBottom variant="h5">
-                      {card.titulo}
-                    </Typography>
-                    <Typography className="descripition" gutterBottom variant="h5">
-                      <LocationPinIcon className="LocationPinIcon" /> {card.Bairro}
-                    </Typography>
-                  </CardContent>
-
-                  <CardContent className="CardContent">
-                    <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                      {card.Valor_Aluguel !== null ? (
-                        <div>
-                          {parseFloat(card?.Valor_Aluguel)?.toLocaleString('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL'
-                          })}
-                        </div>
-                      )
-                        : ''
-                      }
-                    </Typography>
-                    <Typography className="icon-card" variant="body2" color="text.secondary">
-                      {card.Area_Terreno !== null ? (
-                            <div>
-                              <FullscreenIcon />
-                              {card.Area_Terreno} m<span className="mcubico">2</span>
-                            </div>
-                          )
-                            : ''
-                          }
-                    </Typography>
-                    <Typography className="icon-card" variant="body2" color="text.secondary">
-                      <BedIcon /> {card.Quartos} 
-                    </Typography>
-                    <Typography className="icon-card" variant="body2" color="text.secondary">
-                      <ShowerIcon /> {card.Banheiros} 
-                    </Typography>
-                    <Typography className="icon-card" variant="body2" color="text.secondary">
-                      <DirectionsCarIcon /> {card.Vagas} 
-                    </Typography>
-                    <CardActions className="wrap-see-more">
-                      <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
-                        Ver Mais
-                      </Button>
-                    </CardActions>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Slide>
-            )
-              : ''
-            }
-          </>
-        ))}
-        </Slider>
-        {slideOptions.rent > 3 ? ( 
-          <>
-            <ButtonBack> ‹ </ButtonBack>
-            <ButtonNext> › </ButtonNext>
-          </> 
-        ) : '' }
-      </CarouselProvider>
-    </Container>
-    
-    {slideOptions.launch > 1  ? (
-      <Root>
-          <Divider style={{ marginTop: "40px"}}>
-            <Chip label="Lançamentos" size="small" style={{ background: "rgb(11, 44, 61)", color: "#fff", fontSize: "1.1rem", padding: "1rem" }} />
-          </Divider>
-        </Root> 
-    ) : '' }
-
-    <Container className="home lauch">
-      <CarouselProvider
-        naturalSlideWidth={345}
-        naturalSlideHeight={350}
-        totalSlides={slideOptions.launch}
-        visibleSlides={slideOptions.launch}
-        step={Math.ceil((slideOptions.rent - 1) / 6)}
-        orientation="horizontal"
-      >
-        <Slider style={{ height: slideOptions.launch > 1 ? '325px' : '' }}>
-          {articles?.length > 0 && articles.map(
-          (card, index) => (
-            <>
-            {card.Tipo_de_Anuncio !== null && card.Tipo_de_Anuncio?.includes('Lançamentos') ? (
-              <Slide index={index} >
-                <Card className="card" key={card.id} sx={{ maxWidth: 345 }}>
-                  <ThumbSLider 
-                      height="200"
-                      image={card.Fotos?.slice(1)}
-                      alt={card.imovel}
-                      title={card.imovel}
-                      home="true"
-                    />
-                  <CardActionArea sx={{
-                      '&:hover .MuiCardActionArea-focusHighlight': {
-                        opacity: 0,
-                      },
-                    }} onClick={(e) => {handleClick(card.id, card) }}>
-                    <CardContent className="CardContent">
-                      <Typography className="title-imovel" gutterBottom variant="h5">
-                        {card.titulo}
-                      </Typography>
-                      <Typography className="descripition" gutterBottom variant="h5">
-                        <LocationPinIcon className="LocationPinIcon" /> {card.Bairro}
-                      </Typography>
-                    </CardContent>
-                    <CardContent className="CardContent">
-                      <Typography className="icon-card icon-sale" variant="body2" color="text.secondary">
-                        {card.Valor_Aluguel !== null ? (
-                          <div>
-                            {parseFloat(card?.Valor_Aluguel).toLocaleString('pt-BR', {
-                              style: 'currency',
-                              currency: 'BRL'
-                            })}
-                          </div>
-                        )
-                          : ''
-                        }
-                      </Typography>
-                      <Typography className="icon-card" variant="body2" color="text.secondary">
-                          {card.Area_Terreno !== null ? (
-                              <div>
-                                <FullscreenIcon />
-                                {card.Area_Terreno} m<span className="mcubico">2</span>
-                              </div>
-                            )
-                              : ''
-                            }
-                      </Typography>
-                      <Typography className="icon-card" variant="body2" color="text.secondary">
-                        <BedIcon /> {card.Quartos} 
-                      </Typography>
-                      <Typography className="icon-card" variant="body2" color="text.secondary">
-                        <ShowerIcon /> {card.Banheiros} 
-                      </Typography>
-                      <Typography className="icon-card" variant="body2" color="text.secondary">
-                        <DirectionsCarIcon /> {card.Vagas} 
-                      </Typography>
-                      <CardActions className="wrap-see-more">
-                        <Button className="see-more" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(card.id, card) }}>
-                          Ver Mais
-                        </Button>
-                      </CardActions>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Slide>
-              )
-                : ''
-              }
-            </>
-          ))}
-        </Slider>
-        {slideOptions.launch > 3 ? ( 
-          <>
-            <ButtonBack> ‹ </ButtonBack>
-            <ButtonNext> › </ButtonNext>
-          </> 
-        ) : '' }
-      </CarouselProvider>
-    </Container>
-    </>
+  let sales = articles.filter(
+    item => item.Tipo_de_Anuncio === "venda"
   );
+
+  let rents = articles.filter(
+    item => item.Tipo_de_Anuncio?.includes("aluguel")
+  );
+
+  let launches = articles.filter(
+    item => item.Tipo_de_Anuncio?.includes("Lançamentos")
+  );
+
+  const chunkArray = (array, size = 6) => {
+    const chunks = [];
+
+    for (let i = 0; i < array.length; i += size) {
+      chunks.push(array.slice(i, i + size));
+    }
+
+    return chunks;
+  };
+
+return (
+    <> 
+      <PropertyCarousel
+        title="Imóveis à Venda"
+        items={sales}
+      />
+
+      <PropertyCarousel
+        title="Imóveis para Alugar"
+        items={rents}
+      />
+
+      <PropertyCarousel
+        title="Lançamentos"
+        items={launches}
+      />
+    </>
+  )
 }

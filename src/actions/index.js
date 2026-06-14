@@ -1,12 +1,14 @@
 import * as api from "../api";
 import * as types from "../constants/ActionTypes";
 
-export const getCharacterData = () => dispatch => {
-  return api.getCharacterData().then(response =>
+export const getCharacterData = id => dispatch => {
+  return api.getCharacterData(id).then(response => {
+    console.log(response, id)
     dispatch({
-      type: types.RECEIVE_HOME,
-      home: response
+      type: types.RECEIVE_CHARACTER,
+      payload: response
     })
+    }
   );
 };
 
@@ -14,7 +16,7 @@ export const getArticles = () => dispatch => {
   return api.getArticles().then(response => {
     dispatch({
       type: types.RECEIVE_HOME,
-      home: response
+      payload: response
     })
   });
 };

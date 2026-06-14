@@ -17,15 +17,19 @@ import { Loading } from "../../components/Loading";
 import { TopInfo } from "../../components/TopInfo";
 import { Footer } from "../../components/Footer";
 import { GetAPI } from "../../utils";
-import { CustomerTestimonials } from "../../components/CustomerTestimonials";
+// import { CustomerTestimonials } from "../../components/CustomerTestimonials";
 import CloseIcon from '@mui/icons-material/Close';
 import { NumericFormat } from 'react-number-format';
 import Typography from '@mui/material/Typography';
 import { Container } from "../../components";
 import LocationPinIcon from '@mui/icons-material/LocationOn';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import PreloadCard from "../../components/PreloadCard";
+import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
+import { styled } from '@mui/material/styles';
 
-const Home = ({ character, imoveisCache, pagination}) => {
+const Home = ({ realstate, pagination}) => {
 
   const [realEstate, setRealEstate] = useState([]);
   const [search, setSearch] = useState();
@@ -39,6 +43,9 @@ const Home = ({ character, imoveisCache, pagination}) => {
     max: 0
   });
 
+
+  const configPreload = 6;
+
   const closeLoad = () => {
     setTimeout(() => {
     setLoading(false)
@@ -46,7 +53,8 @@ const Home = ({ character, imoveisCache, pagination}) => {
   }
 
   useEffect(() => {
-    const payload = pagination?.length > 0 ? pagination : character.character?.data
+    // console.log(realstate)
+    const payload = pagination?.length > 0 ? pagination : realstate
     if(payload?.length > 0){
       setRealEstate({character: { data: payload }})
       setImoveis(payload)
@@ -55,7 +63,7 @@ const Home = ({ character, imoveisCache, pagination}) => {
     if(research?.length <= 0) {
       closeLoad()
     }
-  }, [character, pagination]);
+  }, [realstate, pagination]);
   
   let research= [];
 
@@ -97,6 +105,22 @@ const Home = ({ character, imoveisCache, pagination}) => {
     //close loading
     closeLoad()
   }
+
+  useEffect(() => {
+  //Disable click right mouse
+    const handleContextMenu = (e) => {
+      e.preventDefault(); // Prevent the default context menu
+    };
+
+    //Attach the event listener to the document body
+    document.body.addEventListener('contextmenu', handleContextMenu);
+
+    //Clean up the event listener when the component unmounts
+    return () => {
+      document.body.removeEventListener('contextmenu', handleContextMenu);
+    };
+
+  }, []);
 
   const handleClick = () => {
       if(!("neighborhood" in localStorage) && search?.label?.length === undefined) {
@@ -213,6 +237,15 @@ const Home = ({ character, imoveisCache, pagination}) => {
     setCategory(evento.target.value);
   };
 
+  const Root = styled('div')(({ theme }) => ({
+    width: '100%',
+    ...theme.typography.body2,
+    color: (theme.vars || theme).palette.text.secondary,
+    '& > :not(style) ~ :not(style)': {
+      marginTop: theme.spacing(2),
+    },
+  }));
+
   return (
     <React.Fragment>
       <TopInfo />
@@ -321,8 +354,30 @@ const Home = ({ character, imoveisCache, pagination}) => {
         </div>
       </div>
   
-      { realEstate?.character?.data?.length > 0 &&
+      { realEstate?.character?.data?.length > 0 ?
         <Card data={realEstate} /> 
+        :
+        (
+          <>
+            <Root>
+              <Divider className="divider">
+                <Chip className="divider-chip" label="Imóveis à Venda" size="small"/>
+              </Divider>
+            </Root> 
+            <Box id="preload" className="preload" style={{
+                display: 'grid',
+                gap: '30px',
+                width: '1265px',
+                marginInline: 'auto',
+                marginTop: '40px',
+                gridTemplateColumns: '1fr 1fr 1fr'
+            }}>
+              {Array.from({ length: configPreload }).map((_, index) => (
+                <PreloadCard />
+              ))}
+          </Box>
+          </>
+        )
       }
 
       {!loading && realEstate?.character?.data?.length <= 0 &&
@@ -366,17 +421,15 @@ const Home = ({ character, imoveisCache, pagination}) => {
 };
 
 const mapStateToProps = state => ({
-  character: state.home,
-  imoveisCache: state.home.imoveisCache,
+  realstate: state.home.realestate.data,
   pagination: state.home.pagination?.data
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      getArticles: dispatch(getArticles()),
-      getImoveisCache: dispatch(getImoveisCache()),
-      getCharacterData: dispatch(getCharacterData())
+      realstate: dispatch(getArticles())
+      // pagination: dispatch(getCharacterData())
     },
     dispatch
   );
