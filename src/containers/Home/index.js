@@ -49,7 +49,7 @@ const Home = ({ realstate, pagination}) => {
   const closeLoad = () => {
     setTimeout(() => {
     setLoading(false)
-    }, 2000);
+    }, 3500);
   }
 
   useEffect(() => {
