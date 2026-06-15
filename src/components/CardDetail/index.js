@@ -65,7 +65,7 @@ const CardDetail = ({ data }) => {
     setTipoAnuncio(imovel?.Tipo_de_Anuncio)
     console.log('share', data)
   
-    if(data.documentId) {
+    if(data?.documentId) {
 
       axios.post(`https://api.url.gratis/shortener/shortlinks`,{
         "destination":"https://tudosobreap.com.br/#/imovel/tsa/share/?dcID="+ data?.documentId,
