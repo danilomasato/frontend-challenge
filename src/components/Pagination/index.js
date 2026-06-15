@@ -20,7 +20,7 @@ export default function CustomIcons(props) {
 
     setTimeout(() => {
       api.getArticles(page).then(response => {
-        console.log('page', response)
+        // console.log('page', response)
          dispatch({
             type: types.RECEIVE_HOME,
             payload: response

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import "../Card/Card.css";
 import { Container } from "../../components";
 import { styled } from '@mui/material/styles';
@@ -28,6 +28,7 @@ const PropertyCarousel = ({ title, items }) => {
 
     return chunks;
   };
+
   const slides = chunkArray(items, 6);
 
   if (!items.length) return null;
@@ -44,7 +45,7 @@ const PropertyCarousel = ({ title, items }) => {
         </Divider>
       </Root>
 
-      <Container className="home" style={{ height: title.includes('Lançamentos') ? '360px' : 'auto' }}>
+      <Container className="home" style={{ height: items.length <= 3 ? '360px' : '720px' }}>
         <CarouselProvider
           naturalSlideWidth={400}
           naturalSlideHeight={342}
@@ -52,7 +53,7 @@ const PropertyCarousel = ({ title, items }) => {
           visibleSlides={1}
           step={1}
         >
-          <Slider style={{ height: title.includes('Lançamentos') ? '360px' : 'auto' }}>
+          <Slider style={{ height: items.length <= 3 ? '360px' : '720px' }}>
             {slides.map((group, index) => (
               <Slide key={index} index={index}>
                 <div className="cards-grid">

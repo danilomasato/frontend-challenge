@@ -17,7 +17,6 @@ import SellIcon from '@mui/icons-material/Sell';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocationPinIcon from '@mui/icons-material/LocationOn';
 
-
 const PropertyCard = ({ key, card, count }) => {
 
   const history = useHistory();

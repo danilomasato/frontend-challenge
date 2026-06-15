@@ -53,7 +53,6 @@ const Home = ({ realstate, pagination}) => {
   }
 
   useEffect(() => {
-    console.log(realstate)
     const payload = pagination?.length > 0 ? pagination : realstate
     if(payload?.length > 0){
       setRealEstate({character: { data: payload }})
