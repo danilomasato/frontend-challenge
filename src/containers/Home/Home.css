@@ -197,7 +197,7 @@ div[role="alert"] {
     gap: 80px;
     padding: 80px 40px;
     min-height: 500px;
-
+    box-sizing: border-box;
     background:
         radial-gradient(circle at top left,
             rgba(194, 169, 109, 0.04),
@@ -246,6 +246,7 @@ div[role="alert"] {
     align-items: center;
     justify-content: center;
     position: relative;
+    user-select: none;
 }
 
 /* Círculo de fundo */
@@ -270,8 +271,8 @@ div[role="alert"] {
 /* Lupa */
 .empty-state__icon {
     position: relative;
-    width: 130px;
-    height: 130px;
+    width: 100px;
+    height: 100px;
     border: 6px solid #0e2f5a;
     border-radius: 50%;
     z-index: 2;
@@ -323,6 +324,7 @@ div[role="alert"] {
 /* Conteúdo */
 .empty-state__content {
     max-width: 500px;
+    user-select: none;
 }
 
 /* Ops, nada por aqui */
@@ -350,7 +352,7 @@ div[role="alert"] {
 
 /* Título */
 .empty-state__title {
-    font-size: 56px;
+    font-size: 2.5rem;
     line-height: 1.1;
     font-weight: 700;
     color: #08254c;
@@ -359,7 +361,7 @@ div[role="alert"] {
 
 /* Descrição */
 .empty-state__description {
-    font-size: 20px;
+    font-size: 1rem;
     line-height: 1.8;
     color: #667085;
     margin-bottom: 40px;
