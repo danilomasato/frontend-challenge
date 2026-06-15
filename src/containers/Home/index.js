@@ -359,23 +359,27 @@ const Home = ({ realstate, pagination}) => {
         :
         (
           <>
-            <Root>
-              <Divider className="divider">
-                <Chip className="divider-chip" label="Imóveis à Venda" size="small"/>
-              </Divider>
-            </Root> 
-            <Box id="preload" className="preload" style={{
-                display: 'grid',
-                gap: '30px',
-                width: '1230px',
-                marginInline: 'auto',
-                marginTop: '40px',
-                gridTemplateColumns: 'repeat(3, 1fr)'
-            }}>
+          {loading && (
+            <>
+              <Root>
+                <Divider className="divider">
+                  <Chip className="divider-chip" label="Imóveis à Venda" size="small"/>
+                </Divider>
+              </Root> 
+              <Box id="preload" className="preload" style={{
+                  display: 'grid',
+                  gap: '30px',
+                  width: '1230px',
+                  marginInline: 'auto',
+                  marginTop: '40px',
+                  gridTemplateColumns: 'repeat(3, 1fr)'
+              }}>
               {Array.from({ length: configPreload }).map((_, index) => (
                 <PreloadCard />
               ))}
-          </Box>
+            </Box>
+            </>
+          )} 
           </>
         )
       }
