@@ -19,10 +19,11 @@ export default function CustomIcons(props) {
     setChangePage(true)
 
     setTimeout(() => {
-      api.getCharacterData(page).then(response => {
+      api.getArticles(page).then(response => {
+        console.log('page', response)
          dispatch({
-            type: types.RECEIVE_PAGINATION,
-            pagination: response
+            type: types.RECEIVE_HOME,
+            payload: response
           })
         setChangePage(false)
       })
