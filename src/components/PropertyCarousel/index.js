@@ -46,7 +46,7 @@ const PropertyCarousel = ({ title, items }) => {
 
       <Container className="home" style={{ height: title.includes('Lançamentos') ? '360px' : 'auto' }}>
         <CarouselProvider
-          naturalSlideWidth={100}
+          naturalSlideWidth={400}
           naturalSlideHeight={342}
           totalSlides={slides.length}
           visibleSlides={1}

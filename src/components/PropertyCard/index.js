@@ -23,7 +23,7 @@ const PropertyCard = ({ key, card, count }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const handleClick = (card) => {
-    console.log('click card', card)
+    // console.log('click card', card)
     dispatch({
       type: types.RECEIVE_CHARACTER,
       payload: card

@@ -32,8 +32,6 @@ import ThumbSLider from "../../components/ThumbSlider";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import axios from 'axios';
 
-const idMount = parseInt(window.location.hash.substring(9, 12).replace('#/imovel/',''))
-
 const CharacterDetail = ({ data, realestate }) => {
 
   const history = useHistory();
@@ -234,7 +232,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      realestate: dispatch(getCharacterData(idMount)),
+      realestate: dispatch(getCharacterData(parseInt(window.location.hash.substring(9, 12).replace('#/imovel/','').replace(/\D/g, "")))),
     },
     dispatch
   );

@@ -3,7 +3,10 @@ import React from "react";
 export const PreloadCard = data => {
   return (
     <>
-      <svg width="400" height="340" viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="400" height="340" viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ 
+        boxShadow: '0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)',
+        borderRadius: '10px'
+        }}>
         <defs>
           <linearGradient id="shimmer">
             <stop offset="0%" stop-color="#F2F3F5"/>

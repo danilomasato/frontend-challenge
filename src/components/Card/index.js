@@ -28,12 +28,12 @@ export default function MultiActionAreaCard(props) {
   const [articles, setArticles] = useState([]);
   const baseURL = process.env.REACT_APP_URL;
 
-//first load
-useEffect(() => {
-  const data = props.data?.character?.data || [];
+  //first load
+  useEffect(() => {
+    const data = props.data?.character?.data || [];
 
-  setArticles(data);
-}, [props.data]);
+    setArticles(data);
+  }, [props.data]);
 
   let sales = articles.filter(
     item => item.Tipo_de_Anuncio === "venda"

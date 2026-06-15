@@ -3,7 +3,6 @@ import * as types from "../constants/ActionTypes";
 
 export const getCharacterData = id => dispatch => {
   return api.getCharacterData(id).then(response => {
-    console.log(response, id)
     dispatch({
       type: types.RECEIVE_CHARACTER,
       payload: response

@@ -254,7 +254,7 @@ const Home = ({ realstate, pagination}) => {
       <div className="row center home">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Grid className="wrap-search" container spacing={2}>
+            <Grid className="wrap-search" container>
               <Grid size={8}>
                 { imoveis?.length > 0 ? (<>
                   <Box className="wrap-input">
@@ -353,7 +353,7 @@ const Home = ({ realstate, pagination}) => {
           </Box>
         </div>
       </div>
-  
+
       { realEstate?.character?.data?.length > 0 ?
         <Card data={realEstate} /> 
         :
@@ -367,10 +367,10 @@ const Home = ({ realstate, pagination}) => {
             <Box id="preload" className="preload" style={{
                 display: 'grid',
                 gap: '30px',
-                width: '1265px',
+                width: '1230px',
                 marginInline: 'auto',
                 marginTop: '40px',
-                gridTemplateColumns: '1fr 1fr 1fr'
+                gridTemplateColumns: 'repeat(3, 1fr)'
             }}>
               {Array.from({ length: configPreload }).map((_, index) => (
                 <PreloadCard />
