@@ -54,6 +54,8 @@ const CharacterDetail = ({ data, realestate }) => {
   imoveis = realestate && realestate.length > 0 ? realestate[0] : data
 
   if(paramID !== null){
+    console.log(paramID  )
+
     axios.get(`https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`)
     .then(response => {
       // Handle success.

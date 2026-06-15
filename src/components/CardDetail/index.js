@@ -56,34 +56,19 @@ const CardDetail = ({ data }) => {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
-  
+ 
   useEffect(() => {
     const paramID  = getParameterByName('dcID')
-    if( data?.length > 0){
-      //seta imóvel apartir do reducer
-      if(paramID == null){
-        setImovel(data.filter(item => item.id === parseInt(idMount))[0])
-      } else {
-        //get endpoint via documentID quando vindo do componente share (pois perde a referencia dos dados reducer por ser SPA)
-        axios.get(`https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`)
-        .then(response => {
-          // Handle success.
-          setImovel(response.data.data)
-        })
-        .catch(error => {
-          // Handle error.
-          console.log('An error occurred:', error.response);
-        });
-      }
-    }
-
+  
+    setImovel(data)
     setVideo(imovel?.Fotos)
     setTipoAnuncio(imovel?.Tipo_de_Anuncio)
-    if(imovel?.documentId !==undefined) {
-    console.log('share', imovel?.documentId)
+    console.log('share', data)
+  
+    if(data.documentId) {
 
       axios.post(`https://api.url.gratis/shortener/shortlinks`,{
-        "destination":"https://tudosobreap.com.br/#/imovel/tsa/share/?dcID="+ imovel?.documentId,
+        "destination":"https://tudosobreap.com.br/#/imovel/tsa/share/?dcID="+ data?.documentId,
         "slug":""
       })
         .then(response => {
@@ -96,7 +81,7 @@ const CardDetail = ({ data }) => {
           console.log('An error occurred:', error.response);
         });
     } 
-  }, [data]);
+  }, []);
   
   const handleClickOpen = () => {
     setOpen(true);
