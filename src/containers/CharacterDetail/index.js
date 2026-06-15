@@ -49,11 +49,11 @@ const CharacterDetail = ({ realestate }) => {
   let rows = []
 
   const paramID  = getParameterByName('dcID')
-  useEffect(() => {
 
-  if(realestate?.length > 0){
-    setImoveis (realestate[0])
-  }
+  //busca dados
+  useEffect(() => {
+    if(realestate?.length > 0)
+      setImoveis (realestate[0])
   }, [realestate]);
 
   useEffect(() => {

@@ -77,14 +77,15 @@ const PropertyCard = ({ key, card, count }) => {
               variant="body2"
               color="text.secondary"
             >
-              {card.Valor_Venda &&
-                parseFloat(card.Valor_Venda.replace('.', '')).toLocaleString(
+              {
+                parseFloat((card.Tipo_de_Anuncio !== 'aluguel' ? card.Valor_Venda : card.Valor_Aluguel).replace('.', '')).toLocaleString(
                   'pt-BR',
                   {
                     style: 'currency',
                     currency: 'BRL',
                   }
-                )}
+                )
+              }
             </Typography>
 
             <Typography
