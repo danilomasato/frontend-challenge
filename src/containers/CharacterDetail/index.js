@@ -32,44 +32,48 @@ import ThumbSLider from "../../components/ThumbSlider";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import axios from 'axios';
 
-const CharacterDetail = ({ data, realestate }) => {
+function getParameterByName(name, url = window.location.href) {
+  name = name.replace(/[\[\]]/g, '\\$&');
+  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+      results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+const CharacterDetail = ({ realestate }) => {
 
   const history = useHistory();
-  let imoveis
+  const [imoveis, setImoveis] = useState();
+  
   let rows = []
 
-  function getParameterByName(name, url = window.location.href) {
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-  }
-
   const paramID  = getParameterByName('dcID')
-    // console.log(realestate  )
-
-
-  imoveis = realestate && realestate.length > 0 ? realestate[0] : data
-
-  if(paramID !== null){
-    console.log(paramID  )
-
-    axios.get(`https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`)
-    .then(response => {
-      // Handle success.
-      imoveis = response.data.data
-    })
-    .catch(error => {
-      // Handle error.
-      console.log('An error occurred:', error.response);
-    });
-  }
-  
-
-  //Disable click right mouse
   useEffect(() => {
+
+  if(realestate?.length > 0){
+    setImoveis (realestate[0])
+  }
+  }, [realestate]);
+
+  useEffect(() => {
+
+    
+    //busca api por documentID
+    if(paramID !== null){
+
+      axios.get(`https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`)
+      .then(response => {
+        // Handle success.
+        setImoveis(response.data.data)
+      })
+      .catch(error => {
+        // Handle error.
+        console.log('An error occurred:', error.response);
+      });
+    }
+
+    //Disable click right mouse
     const handleContextMenu = (e) => {
       e.preventDefault(); // Prevent the default context menu
     };
@@ -81,6 +85,7 @@ const CharacterDetail = ({ data, realestate }) => {
     return () => {
       document.body.removeEventListener('contextmenu', handleContextMenu);
     };
+
   }, []);
 
   function createData(
@@ -89,32 +94,33 @@ const CharacterDetail = ({ data, realestate }) => {
   ) {
     return { name, info};
   }
-if(imoveis && Object.keys(imoveis).length > 0){
-  if(imoveis.Tipo_de_Anuncio == 'venda') {
-    rows = [
-      createData('Andar', imoveis?.Andar !== null ? imoveis.Andar + 'º' : ''),
-      createData('Área terreno', imoveis?.Area_Terreno !== null ? imoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
-      createData('Ano de construção', imoveis?.Ano_de_Construcao !== null ? imoveis.Ano_de_Construcao  : 'Sem Informação'),
-      createData('Condomínio', imoveis?.Condominio !== null && imoveis.Condominio ? 'R$' + imoveis.Condominio  : 'Sem Informação'),
-      createData('IPTU (anual)', imoveis?.IPTU !== null ? parseInt(imoveis.IPTU).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Sem Informação'),
-      createData('Quartos', imoveis?.Quartos !== null ? imoveis.Quartos  : 'Sem Informação'),
-      createData('Suítes', imoveis?.Suites !== null ? imoveis.Suites  : 'Sem Informação'),
-      createData('Banheiros', imoveis?.Banheiros !== null ? imoveis.Banheiros  : 'Sem Informação'),
-    ]
-    rows = rows.filter(item => item.info !== '');
-  } else {
-    rows = [
-      createData('Andar', imoveis?.Andar !== null ? imoveis.Andar + 'º' : ''),
-      createData('Área terreno', imoveis?.Area_Terreno !== null ? imoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
-      createData('Condomínio', imoveis?.Condominio !== null && imoveis.Condominio ? 'R$' + imoveis?.Condominio  : 'Sem Informação'),
-      createData('IPTU (anual)', imoveis?.IPTU !== null ? parseInt(imoveis.IPTU).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''),
-      createData('Quartos', imoveis?.Quartos !== null ? imoveis.Quartos  : ''),
-      createData('Suítes', imoveis?.Suites !== null ? imoveis.Suites  : ''),
-      createData('Banheiros', imoveis?.Banheiros !== null ? imoveis.Banheiros  : 'Sem Informação'),
-    ]
-    rows = rows.filter(item => item.info !== '');
+
+  if(imoveis && Object.keys(imoveis).length > 0){
+    if(imoveis.Tipo_de_Anuncio == 'venda') {
+      rows = [
+        createData('Andar', imoveis?.Andar !== null ? imoveis.Andar + 'º' : ''),
+        createData('Área terreno', imoveis?.Area_Terreno !== null ? imoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
+        createData('Ano de construção', imoveis?.Ano_de_Construcao !== null ? imoveis.Ano_de_Construcao  : 'Sem Informação'),
+        createData('Condomínio', imoveis?.Condominio !== null && imoveis.Condominio ? 'R$' + imoveis.Condominio  : 'Sem Informação'),
+        createData('IPTU (anual)', imoveis?.IPTU !== null ? parseInt(imoveis.IPTU).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Sem Informação'),
+        createData('Quartos', imoveis?.Quartos !== null ? imoveis.Quartos  : 'Sem Informação'),
+        createData('Suítes', imoveis?.Suites !== null ? imoveis.Suites  : 'Sem Informação'),
+        createData('Banheiros', imoveis?.Banheiros !== null ? imoveis.Banheiros  : 'Sem Informação'),
+      ]
+      rows = rows.filter(item => item.info !== '');
+    } else {
+      rows = [
+        createData('Andar', imoveis?.Andar !== null ? imoveis.Andar + 'º' : ''),
+        createData('Área terreno', imoveis?.Area_Terreno !== null ? imoveis.Area_Terreno + ' (m²)' : 'Sem Informação'),
+        createData('Condomínio', imoveis?.Condominio !== null && imoveis.Condominio ? 'R$' + imoveis?.Condominio  : 'Sem Informação'),
+        createData('IPTU (anual)', imoveis?.IPTU !== null ? parseInt(imoveis.IPTU).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''),
+        createData('Quartos', imoveis?.Quartos !== null ? imoveis.Quartos  : ''),
+        createData('Suítes', imoveis?.Suites !== null ? imoveis.Suites  : ''),
+        createData('Banheiros', imoveis?.Banheiros !== null ? imoveis.Banheiros  : 'Sem Informação'),
+      ]
+      rows = rows.filter(item => item.info !== '');
+    }
   }
-}
   const [openToggle, setOpenToggle] = React.useState(false);
   const [open, setOpen] = React.useState(false);
 
@@ -145,7 +151,7 @@ if(imoveis && Object.keys(imoveis).length > 0){
             <span className="imovel"> {imoveis?.titulo || ''} </span>
         </div>
 
-        <CardDetail data={imoveis} imovel={imoveis} />
+        <CardDetail data={imoveis} />
 
         <Box className="propertyDetails" sx={{ width: '100%' }}>
           <Box sx={{ width: '100%' }} className={`caracteristicas ${(openToggle ? 'active' : '')}`} style={{maxHeight: (openToggle ? (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length + 'px'): ''), minHeight: (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length > 250 ?  '': '150px' ) }}>
@@ -234,7 +240,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      realestate: dispatch(getCharacterData(parseInt(window.location.hash.substring(9, 12).replace('#/imovel/','').replace(/\D/g, "")))),
+      realestate: !getParameterByName('dcID') && dispatch(getCharacterData(parseInt(window.location.hash.substring(9, 12).replace('#/imovel/','').replace(/\D/g, "")))),
     },
     dispatch
   );

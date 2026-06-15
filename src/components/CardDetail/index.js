@@ -63,10 +63,8 @@ const CardDetail = ({ data }) => {
     setImovel(data)
     setVideo(imovel?.Fotos)
     setTipoAnuncio(imovel?.Tipo_de_Anuncio)
-    console.log('share', data)
   
     if(data?.documentId) {
-
       axios.post(`https://api.url.gratis/shortener/shortlinks`,{
         "destination":"https://tudosobreap.com.br/#/imovel/tsa/share/?dcID="+ data?.documentId,
         "slug":""
@@ -74,14 +72,13 @@ const CardDetail = ({ data }) => {
         .then(response => {
           // Handle success.
           setUrlShare(response.data.domain + '/' + response.data.slug )
-          console.log('share', urlShare)
         })
         .catch(error => {
           // Handle error.
           console.log('An error occurred:', error.response);
         });
     } 
-  }, []);
+  }, [data]);
   
   const handleClickOpen = () => {
     setOpen(true);
