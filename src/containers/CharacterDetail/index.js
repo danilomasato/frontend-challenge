@@ -154,7 +154,7 @@ const CharacterDetail = ({ realestate }) => {
         <CardDetail data={imoveis} />
 
         <Box className="propertyDetails" sx={{ width: '100%' }}>
-          <Box sx={{ width: '100%' }} className={`caracteristicas ${(openToggle ? 'active' : '')}`} style={{maxHeight: (openToggle ? (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length + 'px'): ''), minHeight: (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length > 250 ?  '': '150px' ) }}>
+          <Box sx={{ width: '100%' }} className={`caracteristicas ${(openToggle ? 'active' : '')}`} style={{maxHeight: (openToggle ? (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length + 'px'): ''), minHeight: (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length > 250 ?  '': '110px' ) }}>
 						<h2>
 							Descrição
 						</h2>
