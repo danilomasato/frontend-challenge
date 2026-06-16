@@ -163,20 +163,25 @@
   display: block;
 }
 
-.GroupBelowHighligh .imovel-info,
-.GroupBelowHighligh .ButtonGroup,
-.GroupBelowHighligh .ThumbSLider-author {
-    float: left;
-}
-
 .GroupBelowHighligh .imovel-info {
-    width: 280px;
+    width: 285px;
     margin: 0;
 }
 
-.GroupBelowHighligh .imovel-info button { cursor: auto; }
-.GroupBelowHighligh .imovel-info button:hover { background-color: transparent; }
+.GroupBelowHighligh .imovel-info:nth-child(2) {
+    float: left;
+    background: ghostwhite;
+    border-radius: 10px;
+    padding: 10px
+}
 
+.GroupBelowHighligh .imovel-info:nth-child(2) p {
+    padding-right: 10px;
+    border-right: 1px solid #cfcfe461;
+}
+.GroupBelowHighligh .imovel-info:nth-child(2) p:last-child {
+    border: none;
+}
 
 .GroupBelowHighligh .ButtonGroup {
     margin: 10px 0 0 130px;
@@ -193,6 +198,12 @@
 .GroupBelowHighligh .ButtonGroup svg {
     width: 18px;
     margin-right: 5px;
+}
+
+@media only screen and (min-width: 1025px) {
+	.GroupBelowHighligh .imovel-info:nth-child(2){
+		margin: 20px 0 10px -295px;
+	}	
 }
 
 @media only screen and (max-width: 1024px) {

@@ -199,6 +199,24 @@
   align-items: center;
 }
 
+.countSlides {
+  position: absolute;
+  bottom: 10px;
+  left: 15px;
+  border-radius: 10px;
+  padding: 10px;
+  color: #fff;
+  background: #0000007b;
+}
+
+.countSlides svg {
+  float: left;
+  width: 15px;
+  fill: #fff;
+  margin-top: -5px;
+  padding-right: 8px;
+}
+
 @keyframes l3 {to{transform: rotate(1turn)}}  
 
 @media only screen and (min-width: 1025px) {

@@ -271,6 +271,16 @@ button[disabled] {
 	margin-top: 40px;
 }
 
+.card .countSlides {
+	padding: 5px 10px;
+	font-size: 0.8rem;
+	line-height: 1rem;
+	top: 160px;
+	right: 10px;
+	left: inherit;
+	bottom: inherit;
+}
+
 .divider-chip {
 	background: rgb(11, 44, 61) !important;
 	color: #fff !important; 

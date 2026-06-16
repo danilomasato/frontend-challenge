@@ -223,6 +223,8 @@ const CardDetail = ({ data }) => {
                 </div>
               }
             </Typography>
+          </Box>
+          <Box className="card imovel-info" key={imovel?.id}>
             <Typography className="icon-card" variant="body2" color="text.secondary">
 
               {imovel?.Area_Terreno !== null ? (
