@@ -185,7 +185,7 @@ div[role="alert"] {
 		padding: 15px;	 
 		border-radius: 10px;
 		grid-column-gap: 20px !important;
-		background-color: ghostwhite;
+		/* background-color: ghostwhite; */
 	}
 }
 
