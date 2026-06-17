@@ -152,8 +152,9 @@ const CardDetail = ({ data }) => {
           maxWidth="lg"
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
+          id="detail-imovel"
         >
-          <DialogContent style={{ height: "660px", overflowY: 'hidden'}}>
+          <DialogContent>
             <ThumbSLider
               image={imovel?.Fotos?.slice(1)}
               alt={imovel?.imovel}

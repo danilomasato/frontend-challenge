@@ -73,10 +73,38 @@
     font-weight: bold;
 }
 
-.MuiDialog-container .slick-slide img {
-    display: block;
-    object-fit: contain;
+#detail-imovel .MuiDialogContent-root {
+    padding: 0;
     height: 660px;
+    overflow: hidden;
+}
+
+#detail-imovel .slick-slide img {
+    display: block;
+    object-fit: cover;
+    height: 660px;
+}
+
+#detail-imovel .slick-list {
+    margin-left: -23px;
+}
+
+#detail-imovel .slick-prev {
+    left: 0;
+}
+
+#detail-imovel .slick-next {
+    right: 0;
+}
+
+#detail-imovel .modal-close {
+    color: #ffffff;
+    padding: 5px;
+    border-radius: 50%;
+    margin: 10px;
+    font-size: 1rem;
+    background-color: rgb(255 255 255 / 44%);
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 @media only screen and (max-width: 1024px) {
