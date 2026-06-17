@@ -238,7 +238,17 @@ const CardDetail = ({ data }) => {
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <BedIcon /> 
                 <Box className="icon-info">
-                  <strong>{imovel?.Quartos + ' '}{parseInt(imovel?.Quartos) > 1 ? 'Quartos' : 'Quarto'} </strong> 
+                  <strong>{imovel?.Quartos + ' '}{imovel?.Quartos > 1 ? 'Quartos' : 'Quarto'} </strong> 
+                  <span>Privativo</span>
+                </Box>
+              </Typography>
+            )}
+
+            {imovel?.Suites && (
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <BedIcon /> 
+                <Box className="icon-info">
+                  <strong>{imovel?.Suites + ' '}{imovel?.Suites > 1 ? 'Suites' : 'Suite'} </strong> 
                   <span>Privativo</span>
                 </Box>
               </Typography>
@@ -248,7 +258,7 @@ const CardDetail = ({ data }) => {
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <ShowerIcon /> 
                 <Box className="icon-info">
-                  <strong>{imovel?.Banheiros + ' '}{parseInt(imovel?.Banheiros) > 1 ? 'Suites' : 'Suite'} </strong> 
+                  <strong>{imovel?.Banheiros + ' '}{imovel?.Banheiros > 1 ? 'Banheiros' : 'Banheiros'} </strong> 
                   <span>Privativo</span>
                 </Box>
               </Typography>
@@ -258,7 +268,7 @@ const CardDetail = ({ data }) => {
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <DirectionsCarIcon /> 
                 <Box className="icon-info">
-                  <strong>{imovel?.Vagas + ' '}{parseInt(imovel?.Vagas) > 1 ? 'Vagas' : 'Vaga'} </strong> 
+                  <strong>{imovel?.Vagas + ' '}{imovel?.Vagas > 1 ? 'Vagas' : 'Vaga'} </strong> 
                   <span>Garagem Exclusiva</span>
                 </Box>
               </Typography>

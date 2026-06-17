@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import * as types from "../../constants/ActionTypes";
 import ThumbSLider from "../ThumbSlider";
-
 import BedIcon from '@mui/icons-material/Bed';
 import ShowerIcon from '@mui/icons-material/Shower';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
@@ -87,47 +86,34 @@ const PropertyCard = ({ key, card, count }) => {
               }
             </Typography>
 
-            <Typography
-              className="icon-card"
-              variant="body2"
-              color="text.secondary"
-            >
-              {card.Area_Terreno && (
-                <>
-                  <FullscreenIcon />
-                  {card.Area_Terreno} m
-                  <span className="mcubico">2</span>
-                </>
-              )}
-            </Typography>
+            {card?.Area_Terreno && parseInt(card.Area_Terreno) > 0 && (
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <FullscreenIcon />
+                {card.Area_Terreno} m<span className="mcubico" style={{ display: 'inline-block'}}>2</span>
+              </Typography>
+            )}
 
-            <Typography
-              className="icon-card"
-              variant="body2"
-              color="text.secondary"
-            >
-              {card.Quartos && (
-                <>
-                  <BedIcon /> {card.Quartos}
-                </>
-              )}
-            </Typography>
+            {card?.Quartos && card.Quartos > 0 && (
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <BedIcon /> 
+                {card.Quartos}
+              </Typography>
+            )}
+            
+            
+            {card?.Banheiros && card.Banheiros > 0 && (
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <ShowerIcon /> 
+                {card.Banheiros}
+              </Typography>
+            )}
 
-            <Typography
-              className="icon-card"
-              variant="body2"
-              color="text.secondary"
-            >
-              <ShowerIcon /> {card.Banheiros}
-            </Typography>
-
-            <Typography
-              className="icon-card"
-              variant="body2"
-              color="text.secondary"
-            >
-              <DirectionsCarIcon /> {card.Vagas}
-            </Typography>
+            {card?.Vagas && card.Vagas > 0 &&  (
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <DirectionsCarIcon /> 
+                {card.Vagas}
+              </Typography>
+            )}
 
             <CardActions className="wrap-see-more">
               <Button
