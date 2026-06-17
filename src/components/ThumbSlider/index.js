@@ -28,12 +28,17 @@ const ThumbSLider = (image) => {
     speed: 500,
     // current is the active slide, next is the one coming up
     beforeChange: (current, next) => {
-      setCurrentSlideIndex(current + 1);
+      
+      setCurrentSlideIndex(currentSlideIndex + 1);
+
+      if(totalSlides === currentSlideIndex){
+        setCurrentSlideIndex(1)
+      }
       setNextSlideIndex(next);
     },
-    afterChange: (current) => {
+    afterChange: (current, next) => {
       // If you only care about updating *after* the animation finishes
-      console.log(`Now viewing slide: ${current}`);
+      // console.log(`Now viewing slide: ${current}`);
     }
   }
 
