@@ -173,6 +173,10 @@
 	float: left;
 }
 
+.GroupBelowHighligh .imovel-info:nth-child(2) svg {
+	margin: 7px 10px 0 0;
+}
+
 .GroupBelowHighligh .imovel-info:nth-child(2) .icon-info {
 	font-size: 0.9rem;
 	color: #494949;
@@ -204,8 +208,10 @@
 }
 
 .GroupBelowHighligh .ButtonGroup button {
-    background: rgb(11, 44, 61);
-    border-color: rgb(37 79 101);
+    color: #494949;
+		height: 53px;
+    background: #f8f8ff;
+    border-color: #cfcfe461;
     font-size: small;
     text-transform: capitalize;
 }
@@ -213,17 +219,25 @@
 .GroupBelowHighligh .ButtonGroup svg {
     width: 18px;
     margin-right: 5px;
+		fill: #494949;
 }
 
 @media only screen and (min-width: 1025px) {
+
+	.GroupBelowHighligh {
+		position: relative;
+	}
+
 	.GroupBelowHighligh .imovel-info:nth-child(2){
 		margin: 20px 0 10px 0;
 	}
 
-    .GroupBelowHighligh .ButtonGroup {
-			margin: 25px 0 0 200px;
-			box-shadow: none;
-    }
+	.GroupBelowHighligh .ButtonGroup {
+		position: absolute;
+		top: 45px;
+		right: 30%;
+		box-shadow: none;
+	}
 }
 
 @media only screen and (max-width: 1024px) {
