@@ -225,27 +225,44 @@ const CardDetail = ({ data }) => {
             </Typography>
           </Box>
           <Box className="card imovel-info" key={imovel?.id}>
-            <Typography className="icon-card" variant="body2" color="text.secondary">
+            {imovel?.Area_Terreno !== null && (
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <FullscreenIcon />
+                <Box className="icon-info">
+                  <strong>{imovel?.Area_Terreno} m<span className="mcubico" style={{ display: 'inline-block'}}>2</span></strong> 
+                  <span>Área terreno</span>
+                </Box>
+              </Typography>
+            )}
+            {imovel?.Quartos && (
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <BedIcon /> 
+                <Box className="icon-info">
+                  <strong>{imovel?.Quartos + ' '}{parseInt(imovel?.Quartos) > 1 ? 'Quartos' : 'Quarto'} </strong> 
+                  <span>Privativo</span>
+                </Box>
+              </Typography>
+            )}
+            
+            {imovel?.Banheiros && (
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <ShowerIcon /> 
+                <Box className="icon-info">
+                  <strong>{imovel?.Banheiros + ' '}{parseInt(imovel?.Banheiros) > 1 ? 'Suites' : 'Suite'} </strong> 
+                  <span>Privativo</span>
+                </Box>
+              </Typography>
+            )}
 
-              {imovel?.Area_Terreno !== null ? (
-                <div>
-                  <FullscreenIcon />
-                  {imovel?.Area_Terreno} m<span className="mcubico">2</span>
-                </div>
-                )
-                : ''
-              }
-            </Typography>
-            <Typography className="icon-card" variant="body2" color="text.secondary">
-              <BedIcon /> {imovel?.Quartos || ''} 
-            </Typography>
-            <Typography className="icon-card" variant="body2" color="text.secondary">
-              <ShowerIcon /> {imovel?.Banheiros || ''} 
-            </Typography>
-            <Typography className="icon-card" variant="body2" color="text.secondary">
-              <DirectionsCarIcon /> {imovel?.Vagas || ''} 
-            </Typography>
-
+            {imovel?.Vagas && (
+              <Typography className="icon-card" variant="body2" color="text.secondary">
+                <DirectionsCarIcon /> 
+                <Box className="icon-info">
+                  <strong>{imovel?.Vagas + ' '}{parseInt(imovel?.Vagas) > 1 ? 'Vagas' : 'Vaga'} </strong> 
+                  <span>Garagem Exclusiva</span>
+                </Box>
+              </Typography>
+            )}
           </Box>
 
           <ButtonGroup className="ButtonGroup" variant="contained" aria-label="Basic button group">

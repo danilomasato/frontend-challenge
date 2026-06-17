@@ -164,12 +164,30 @@
 }
 
 .GroupBelowHighligh .imovel-info {
-    width: 285px;
+    width: 100%;
     margin: 0;
+}
+
+.GroupBelowHighligh .imovel-info:nth-child(2) svg,
+.GroupBelowHighligh .imovel-info:nth-child(2) .icon-info {
+	float: left;
+}
+
+.GroupBelowHighligh .imovel-info:nth-child(2) .icon-info {
+	font-size: 0.9rem;
+	color: #494949;
+}
+
+.GroupBelowHighligh .imovel-info:nth-child(2) .icon-info span {
+	display: block;
+	font-size: 0.75rem;
+	line-height: 0.65rem;
+	letter-spacing: 0;
 }
 
 .GroupBelowHighligh .imovel-info:nth-child(2) {
     float: left;
+    width: max-content;
     background: ghostwhite;
     border-radius: 10px;
     padding: 10px
@@ -181,11 +199,8 @@
 }
 .GroupBelowHighligh .imovel-info:nth-child(2) p:last-child {
     border: none;
-}
-
-.GroupBelowHighligh .ButtonGroup {
-    margin: 10px 0 0 130px;
-		box-shadow: none;
+    padding: 0;
+		margin: 0;
 }
 
 .GroupBelowHighligh .ButtonGroup button {
@@ -202,8 +217,13 @@
 
 @media only screen and (min-width: 1025px) {
 	.GroupBelowHighligh .imovel-info:nth-child(2){
-		margin: 20px 0 10px -295px;
-	}	
+		margin: 20px 0 10px 0;
+	}
+
+    .GroupBelowHighligh .ButtonGroup {
+			margin: 25px 0 0 300px;
+			box-shadow: none;
+    }
 }
 
 @media only screen and (max-width: 1024px) {
