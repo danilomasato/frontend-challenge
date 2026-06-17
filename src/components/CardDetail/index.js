@@ -234,7 +234,7 @@ const CardDetail = ({ data }) => {
                 </Box>
               </Typography>
             )}
-            {imovel?.Quartos && (
+            {imovel?.Quartos ? (
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <BedIcon /> 
                 <Box className="icon-info">
@@ -242,9 +242,9 @@ const CardDetail = ({ data }) => {
                   <span>Privativo</span>
                 </Box>
               </Typography>
-            )}
+            ) : ''}
 
-            {imovel?.Suites && (
+            {imovel?.Suites ? (
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <BedIcon /> 
                 <Box className="icon-info">
@@ -252,19 +252,19 @@ const CardDetail = ({ data }) => {
                   <span>Privativo</span>
                 </Box>
               </Typography>
-            )}
+            ) : ''}
             
-            {imovel?.Banheiros && (
+            {imovel?.Banheiros ? (
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <ShowerIcon /> 
                 <Box className="icon-info">
-                  <strong>{imovel?.Banheiros + ' '}{imovel?.Banheiros > 1 ? 'Banheiros' : 'Banheiros'} </strong> 
+                  <strong>{imovel?.Banheiros + ' '}{imovel?.Banheiros > 1 ? 'Banheiros' : 'Banheiro'} </strong> 
                   <span>Privativo</span>
                 </Box>
               </Typography>
-            )}
+            ) : ''}
 
-            {imovel?.Vagas && (
+            {imovel?.Vagas ? (
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <DirectionsCarIcon /> 
                 <Box className="icon-info">
@@ -272,7 +272,7 @@ const CardDetail = ({ data }) => {
                   <span>Garagem Exclusiva</span>
                 </Box>
               </Typography>
-            )}
+            ) : ''}
           </Box>
 
           <ButtonGroup className="ButtonGroup" variant="contained" aria-label="Basic button group">

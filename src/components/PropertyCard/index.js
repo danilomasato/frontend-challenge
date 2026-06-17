@@ -93,27 +93,27 @@ const PropertyCard = ({ key, card, count }) => {
               </Typography>
             )}
 
-            {card?.Quartos && card.Quartos > 0 && (
+            {card?.Quartos ? (
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <BedIcon /> 
                 {card.Quartos}
               </Typography>
-            )}
+            ) : ''}
             
             
-            {card?.Banheiros && card.Banheiros > 0 && (
+            {card?.Banheiros ? (
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <ShowerIcon /> 
                 {card.Banheiros}
               </Typography>
-            )}
+            ) : ''}
 
-            {card?.Vagas && card.Vagas > 0 &&  (
+            {card?.Vagas ?  (
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <DirectionsCarIcon /> 
                 {card.Vagas}
               </Typography>
-            )}
+            ) : ''}
 
             <CardActions className="wrap-see-more">
               <Button
