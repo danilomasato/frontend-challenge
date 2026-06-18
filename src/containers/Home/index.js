@@ -38,6 +38,7 @@ const Home = ({ realstate, pagination}) => {
   const [error, setError] = useState(null);
   const [options, setOptions] = useState([]);
   const [category, setCategory] = useState('');
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [optionsValue, setOptionsValue] = useState({
     min: 0,
     max: 0
@@ -60,7 +61,11 @@ const Home = ({ realstate, pagination}) => {
     }
  
     if(research?.length <= 0) {
-      closeLoad()
+      closeLoad();
+
+      if (isMobile) {
+        setMobileSearchOpen(false);
+      }
     }
   }, [realstate, pagination]);
   
@@ -201,7 +206,11 @@ const Home = ({ realstate, pagination}) => {
         localStorage.setItem("neighborhood", search.label)
       }
 
-      closeLoad()
+      closeLoad();
+
+      if (window.innerWidth <= 1024) {
+        setMobileSearchOpen(false);
+      }
     }
   }
 
@@ -245,6 +254,39 @@ const Home = ({ realstate, pagination}) => {
     },
   }));
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const resetFilters = () => {
+    setSearch(null);
+
+    setCategory('');
+
+    setOptionsValue({
+      min: 0,
+      max: 0
+    });
+
+    localStorage.removeItem("neighborhood");
+
+    clearSearch("clear");
+
+    if (window.innerWidth <= 1024) {
+      setMobileSearchOpen(false);
+    }
+  };
+
   return (
     <React.Fragment>
       <TopInfo />
@@ -253,102 +295,287 @@ const Home = ({ realstate, pagination}) => {
       <div className="row center home">
         <div className="content" style={{ minHeight: "auto",  display: "block" }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Grid className="wrap-search" container>
-              <Grid size={8}>
-                { imoveis?.length > 0 ? (<>
-                  <Box className="wrap-input">
-                    <label style={{ 
-                      fontFamily: 'quicksand-regular', 
-                      fontSize: '0.6rem', 
-                      color: 'rgba(0, 0, 0, 0.6)',
-                      margin: '-3px 0 10px 0',
-                      display: 'block'
-                      }}> 
-                      Selecione o Bairro
-                    </label>
-                    <Autocomplete
-                      className="search-neighborhoods"
-                      disablePortal
-                      options={options}
-                      InputProps={{
-                        className: 'search-neighborhoods',
-                        style: { backgroundColor: 'lightgray' }, // Estilo inline para o input
-                      }}
-                      onChange={(event, value) => { setSearch(value) }}
-                      renderInput={(params) => <TextField {...params} label="Selecione o Bairro" />}
-                      
-                    />
-                    <LocationPinIcon className="LocationPinIcon" />
-                    <CloseIcon className="search-clear" onClick={() => { clearSearch('clear') }} />
-                  </Box>
-                </>)
-                : 
-                ""
-                }
-                
-              </Grid>
-               <Grid
-                component="form"
-                sx={{ '& > :not(style)': { width: '15ch' } }}
-                noValidate
-                autoComplete="off"
-                className="minMax"
-              > 
-                <Box className="wrap-input">
-                  <MonetizationOnIcon className="MonetizationOnIcon" />
-                  <NumericFormat
-                  value={optionsValue.min}
-                  onFocus={(e) => setOptionsValue({...optionsValue, min: '' })}
-                  onChange={(e) => {
-                    setOptionsValue({...optionsValue, min: '' })
-                    setOptionsValue({...optionsValue, min: e.target.value })
-                  }}
-                    customInput={TextField}
-                    thousandSeparator
-                    valueIsNumericString
-                    prefix="R$"
-                    variant="standard"
-                    label="Valor Min"
+            {isMobile && (
+              <>
+                {mobileSearchOpen && (
+                  <div
+                    className="mobile-search-overlay"
+                    onClick={() => setMobileSearchOpen(false)}
                   />
-                </Box>
+                )}
 
-                <Box className="wrap-input">
-                  <MonetizationOnIcon className="MonetizationOnIcon" />
-                  <NumericFormat
-                  value={optionsValue.max}
-                  onFocus={(e) => setOptionsValue({...optionsValue, max: '' })}
-                  onChange={(e) => {setOptionsValue({...optionsValue, max: e.target.value }) }}
-                  customInput={TextField}
-                  thousandSeparator
-                  valueIsNumericString
-                  prefix="R$"
-                  variant="standard"
-                  label="Valor Max"
-                  style={{ marginLeft: "15px"}}/>
-                </Box>
-              </Grid>
-              <Grid size={12} className="minMax">
-                <TextField
-                  select
-                  label="Tipo de Anúncio"
-                  value={category}
-                  onChange={handleChangeCategory}
-                  style={{ m: 1, minWidth: '100%' }}
-                  className="selectType"
+                <div className="mobile-search-trigger">
+                  <Button
+                    fullWidth
+                    className="mobile-search-button"
+                    onClick={() => setMobileSearchOpen(true)}
+                  >
+                    <SearchIcon />
+                    Buscar Imóveis
+                  </Button>
+                </div>
+
+                <div
+                  className={`mobile-search-panel ${
+                    mobileSearchOpen ? "mobile-open" : ""
+                  }`}
                 >
-                  <MenuItem value="todos"> Todos </MenuItem>
-                  <MenuItem value={'venda'}>venda</MenuItem>
-                  <MenuItem value={'aluguel'}>aluguel</MenuItem>
-                  <MenuItem value={'Lançamentos'}>Lançamentos</MenuItem>
-                </TextField>
+                  <div className="mobile-search-header">
+                    <h2>Buscar Imóveis</h2>
+
+                    <CloseIcon
+                      className="mobile-search-close-icon"
+                      onClick={() => setMobileSearchOpen(false)}
+                    />
+                  </div>
+
+                  <div className="mobile-search-content">
+
+                    {imoveis?.length > 0 && (
+                      <Box className="wrap-input neighborhood-mobile">
+                      <Autocomplete
+                        value={search || null}
+                        className="search-neighborhoods"
+                        disablePortal
+                        options={options}
+                        onChange={(event, value) => {
+                          setSearch(value);
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Selecione o Bairro"
+                          />
+                        )}
+                      />
+
+                      <LocationPinIcon className="LocationPinIcon mobile-location-icon" />
+
+                      {search && (
+                        <CloseIcon
+                        className="search-clear mobile-search-clear"
+                        onClick={resetFilters}
+                      />
+                      )}
+                    </Box>
+                    )}
+
+                    <Box className="wrap-input">
+                      <NumericFormat
+                        value={optionsValue.min}
+                        onChange={(e) =>
+                          setOptionsValue({
+                            ...optionsValue,
+                            min: e.target.value
+                          })
+                        }
+                        customInput={TextField}
+                        thousandSeparator
+                        valueIsNumericString
+                        prefix="R$ "
+                        variant="outlined"
+                        label="Valor Mínimo"
+                        fullWidth
+                      />
+                    </Box>
+
+                    <Box className="wrap-input">
+                      <NumericFormat
+                        value={optionsValue.max}
+                        onChange={(e) =>
+                          setOptionsValue({
+                            ...optionsValue,
+                            max: e.target.value
+                          })
+                        }
+                        customInput={TextField}
+                        thousandSeparator
+                        valueIsNumericString
+                        prefix="R$ "
+                        variant="outlined"
+                        label="Valor Máximo"
+                        fullWidth
+                      />
+                    </Box>
+
+                    <TextField
+                      select
+                      fullWidth
+                      label="Tipo de Anúncio"
+                      value={category}
+                      onChange={handleChangeCategory}
+                      SelectProps={{
+                        MenuProps: {
+                          disableScrollLock: true
+                        }
+                      }}
+                    >
+                      <MenuItem value="">Todos</MenuItem>
+                      <MenuItem value="venda">Venda</MenuItem>
+                      <MenuItem value="aluguel">Aluguel</MenuItem>
+                      <MenuItem value="Lançamentos">
+                        Lançamentos
+                      </MenuItem>
+                    </TextField>
+
+                    <Button
+                      className="search-button"
+                      variant="contained"
+                      onClick={handleClick}
+                    >
+                      Buscar Imóveis
+                      <SearchIcon />
+                    </Button>
+                    <Button
+                    className="clear-filters-button"
+                    variant="outlined"
+                    onClick={resetFilters}
+                  >
+                    Limpar filtros
+                  </Button>
+
+                  </div>
+                </div>
+              </>
+            )}
+
+            {!isMobile && (
+              <Grid className="wrap-search" container>
+
+                <Grid size={8}>
+                  {imoveis?.length > 0 && (
+                    <>
+                      <Box className="wrap-input">
+                        <label
+                          style={{
+                            fontFamily: "quicksand-regular",
+                            fontSize: "0.6rem",
+                            color: "rgba(0,0,0,.6)",
+                            margifn: "-3px 0 10px 0",
+                            display: "block"
+                          }}
+                        >
+                          Selecione o Bairro
+                        </label>
+
+                        <Autocomplete
+                          value={search || null}
+                          className="search-neighborhoods"
+                          disablePortal
+                          options={options}
+                          onChange={(event, value) => {
+                            setSearch(value);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Selecione o Bairro"
+                            />
+                          )}
+                        />
+
+                        <LocationPinIcon className="LocationPinIcon" />
+
+                        <CloseIcon
+                          className="search-clear"
+                          onClick={resetFilters}
+                        />
+                      </Box>
+                    </>
+                  )}
+                </Grid>
+
+                <Grid
+                  component="form"
+                  sx={{ "& > :not(style)": { width: "15ch" } }}
+                  noValidate
+                  autoComplete="off"
+                  className="minMax"
+                >
+                  <Box className="wrap-input">
+                    <MonetizationOnIcon className="MonetizationOnIcon" />
+
+                    <NumericFormat
+                      value={optionsValue.min}
+                      onFocus={() =>
+                        setOptionsValue({
+                          ...optionsValue,
+                          min: ""
+                        })
+                      }
+                      onChange={(e) =>
+                        setOptionsValue({
+                          ...optionsValue,
+                          min: e.target.value
+                        })
+                      }
+                      customInput={TextField}
+                      thousandSeparator
+                      valueIsNumericString
+                      prefix="R$"
+                      variant="standard"
+                      label="Valor Min"
+                    />
+                  </Box>
+
+                  <Box className="wrap-input">
+                    <MonetizationOnIcon className="MonetizationOnIcon" />
+
+                    <NumericFormat
+                      value={optionsValue.max}
+                      onFocus={() =>
+                        setOptionsValue({
+                          ...optionsValue,
+                          max: ""
+                        })
+                      }
+                      onChange={(e) =>
+                        setOptionsValue({
+                          ...optionsValue,
+                          max: e.target.value
+                        })
+                      }
+                      customInput={TextField}
+                      thousandSeparator
+                      valueIsNumericString
+                      prefix="R$"
+                      variant="standard"
+                      label="Valor Max"
+                      style={{ marginLeft: "15px" }}
+                    />
+                  </Box>
+                </Grid>
+
+                <Grid size={12} className="minMax">
+                  <TextField
+                    select
+                    label="Tipo de Anúncio"
+                    value={category}
+                    onChange={handleChangeCategory}
+                    style={{ minWidth: '100%' }}
+                    className="selectType"
+                  >
+                    <MenuItem value="">Todos</MenuItem>
+                    <MenuItem value="venda">Venda</MenuItem>
+                    <MenuItem value="aluguel">Aluguel</MenuItem>
+                    <MenuItem value="Lançamentos">Lançamentos</MenuItem>
+                  </TextField>
+                </Grid>
+
+                <Grid size={4}>
+                  <Button
+                    className="search-button"
+                    variant="contained"
+                    style={{ width: "100%" }}
+                    onClick={handleClick}
+                  >
+                    Buscar Imóveis
+                    <SearchIcon />
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid size={4}>
-                <Button className="search-button" variant="contained" style={{ width: "100%" }} onClick={(e) => {handleClick(e) }}>
-                  Buscar Imóveis
-                  <SearchIcon   />
-                </Button>
-              </Grid>
-            </Grid>
+            )}
+
           </Box>
         </div>
       </div>

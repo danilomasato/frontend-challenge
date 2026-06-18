@@ -400,6 +400,331 @@ div[role="alert"] {
     font-size: 18px;
 }
 
+
+.MuiMenu-paper {
+    z-index: 999999 !important;
+}
+
+.MuiPopover-root {
+    z-index: 999999 !important;
+}
+
+.MuiModal-root {
+    z-index: 999999 !important;
+}
+
+/* ==========================================
+   MOBILE SEARCH
+========================================== */
+
+.mobile-search-trigger,
+.mobile-search-panel,
+.mobile-search-overlay {
+    display: none;
+}
+
+.MuiAutocomplete-clearIndicator {
+    display: none !important;
+}
+
+@media (max-width: 1024px) {
+
+    /* botão abrir busca */
+
+    .mobile-search-trigger {
+        display: block;
+        width: calc(100% - 30px);
+        margin: 15px auto;
+    }
+
+    .mobile-search-button {
+        height: 54px !important;
+        border-radius: 16px !important;
+
+        background: linear-gradient(
+            135deg,
+            #16c4f3 0%,
+            #2b7cff 100%
+        ) !important;
+
+        color: #fff !important;
+
+        text-transform: none !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* overlay */
+
+    .mobile-search-overlay {
+        display: block;
+
+        position: fixed;
+        inset: 0;
+
+        background: rgba(0,0,0,.45);
+
+        backdrop-filter: blur(3px);
+
+        z-index: 9998;
+    }
+
+    /* drawer */
+
+    .mobile-search-panel {
+        display: block;
+
+        position: fixed;
+
+        top: 0;
+        right: -100%;
+
+        width: 92%;
+        max-width: 420px;
+
+        height: 100vh;
+
+        background: #fff;
+
+        z-index: 9999;
+
+        transition: .35s ease;
+
+        overflow-y: auto;
+
+        box-shadow:
+            -20px 0 50px rgba(0,0,0,.15);
+    }
+
+    .mobile-search-panel.mobile-open {
+        right: 0;
+    }
+
+    /* header */
+
+    .mobile-search-header {
+        position: sticky;
+        top: 0;
+
+        background: #fff;
+
+        padding: 25px 20px;
+
+        border-bottom: 1px solid #ececec;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+
+        z-index: 2;
+    }
+
+    .mobile-search-header h2 {
+        margin: 0;
+
+        font-size: 1.5rem;
+        line-height: 1.3;
+
+        color: #08254c;
+        font-weight: 700;
+    }
+
+    .mobile-search-close-icon {
+        cursor: pointer;
+
+        width: 42px !important;
+        height: 42px !important;
+
+        padding: 8px;
+
+        border-radius: 50%;
+
+        background: #f3f5f7;
+
+        color: #08254c;
+    }
+
+    /* conteúdo */
+
+    .mobile-search-content {
+        padding: 20px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .mobile-label {
+        display: block;
+
+        margin-bottom: 8px;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        color: #08254c;
+    }
+
+    .mobile-search-content .wrap-input {
+        width: 100%;
+        position: relative;
+    }
+
+    .mobile-search-content .search-neighborhoods {
+        width: 100% !important;
+    }
+
+    /* textfield */
+
+    .mobile-search-content .MuiFormControl-root {
+        width: 100% !important;
+    }
+
+    .mobile-search-content .MuiOutlinedInput-root {
+        border-radius: 14px;
+        background: #fff;
+    }
+
+    .mobile-search-content .MuiOutlinedInput-root input {
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+
+    /* select */
+
+    .mobile-search-content .selectType {
+        width: 100%;
+    }
+
+    .MuiPopover-root,
+    .MuiMenu-root,
+    .MuiModal-root {
+        z-index: 100000 !important;
+    }
+
+    .MuiMenu-paper {
+        z-index: 100000 !important;
+        border-radius: 14px !important;
+    }
+
+    /* icones */
+
+    .mobile-search-content .LocationPinIcon {
+        position: absolute;
+
+        top: 18px;
+        left: 12px;
+
+        color: #c29c5f;
+    }
+
+    .mobile-search-content .MonetizationOnIcon {
+        position: absolute;
+
+        top: 18px;
+        right: 12px;
+
+        color: #c29c5f;
+        z-index: 2;
+    }
+
+    /* botão buscar */
+
+    .mobile-search-content .search-button {
+        width: 100% !important;
+
+        min-width: 100% !important;
+
+        height: 54px !important;
+
+        margin-top: 10px !important;
+
+        border-radius: 14px !important;
+
+        background: linear-gradient(
+            135deg,
+            #16c4f3 0%,
+            #2b7cff 100%
+        ) !important;
+
+        font-weight: 600 !important;
+
+        text-transform: none !important;
+    }
+
+    /* esconde desktop */
+
+    .wrap-search {
+        display: none !important;
+    }
+		
+		.mobile-search-content .neighborhood-mobile {
+				position: relative;
+		}
+
+		.mobile-search-content .mobile-location-icon {
+			position: absolute !important;
+
+			left: 12px;
+			top: 22px;
+
+			color: #c29c5f;
+
+			z-index: 100;
+
+			pointer-events: none;
+		}
+
+		.mobile-search-content .mobile-search-clear {
+				position: absolute !important;
+
+				right: 42px;
+				top: 22px;
+
+				width: 18px !important;
+				height: 18px !important;
+
+				color: #999;
+				cursor: pointer;
+
+				z-index: 100;
+		}
+
+		.mobile-search-content .mobile-search-clear:hover {
+				color: #666;
+		}
+
+		.mobile-search-content .MuiOutlinedInput-input {
+				padding-left: 42px !important;
+				padding-right: 42px !important;
+		}
+
+		.clear-filters-button {
+			width: 100% !important;
+			height: 50px !important;
+
+			border-radius: 14px !important;
+
+			text-transform: none !important;
+			font-weight: 600 !important;
+
+			border: 1px solid #d9d9d9 !important;
+
+			color: #555 !important;
+			background: #fff !important;
+
+			margin-top: -5px !important;
+	}
+
+	.clear-filters-button:hover {
+			background: #f7f7f7 !important;
+	}
+}
 @media only screen and (max-width: 1024px) {
 	.home .content > div > div {
 		grid-template-columns: none !important;
