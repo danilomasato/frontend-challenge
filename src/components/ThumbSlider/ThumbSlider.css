@@ -217,7 +217,64 @@
   padding-right: 8px;
 }
 
-@keyframes l3 {to{transform: rotate(1turn)}}  
+@keyframes l3 {to{transform: rotate(1turn)}}
+
+/* ====================================
+   Skeleton Loading das Imagens
+==================================== */
+
+.slide-image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.slider-image {
+  width: 100%;
+  opacity: 0;
+  filter: blur(10px);
+  transform: scale(1.05);
+  transition:
+    opacity .4s ease,
+    filter .4s ease,
+    transform .4s ease;
+}
+
+.slider-image.loaded {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.slider-image:not(.loaded) {
+  opacity: 0;
+}
+
+.image-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  background: linear-gradient(
+    90deg,
+    #ececec 0%,
+    #f7f7f7 50%,
+    #ececec 100%
+  );
+
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.5s ease infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
 
 @media only screen and (min-width: 1025px) {
   .MuiDialog-container .slider__item img {
