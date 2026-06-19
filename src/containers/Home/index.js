@@ -32,7 +32,7 @@ import { styled } from '@mui/material/styles';
 const Home = ({ realstate, pagination}) => {
 
   const [realEstate, setRealEstate] = useState([]);
-  const [search, setSearch] = useState({label: ''});
+  const [search, setSearch] = useState({label: '', id: ''});
   const [loading, setLoading] = useState(true);
   const [imoveis, setImoveis] = useState([]);
   const [error, setError] = useState(null);
@@ -342,12 +342,15 @@ const Home = ({ realstate, pagination}) => {
                     {imoveis?.length > 0 && (
                       <Box className="wrap-input neighborhood-mobile">
                       <Autocomplete
-                        value={search || null}
+                        value={search.label || null}
                         className="search-neighborhoods"
                         disablePortal
                         options={options}
                         onChange={(event, value) => {
-                          setSearch({label: value});
+                          setSearch({...search, 
+                            label: value.label,
+                            id: value.id
+                          });
                         }}
                         renderInput={(params) => (
                           <TextField
@@ -467,12 +470,15 @@ const Home = ({ realstate, pagination}) => {
                         </label>
 
                         <Autocomplete
-                          value={search || null}
+                          value={search.label || null}
                           className="search-neighborhoods"
                           disablePortal
                           options={options}
                           onChange={(event, value) => {
-                            setSearch({label: value});
+                            setSearch({...search, 
+                              label: value.label,
+                              id: value.id
+                            });
                           }}
                           renderInput={(params) => (
                             <TextField
