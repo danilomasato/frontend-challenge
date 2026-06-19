@@ -32,7 +32,7 @@ import { styled } from '@mui/material/styles';
 const Home = ({ realstate, pagination}) => {
 
   const [realEstate, setRealEstate] = useState([]);
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState({label: ''});
   const [loading, setLoading] = useState(true);
   const [imoveis, setImoveis] = useState([]);
   const [error, setError] = useState(null);
@@ -127,10 +127,6 @@ const Home = ({ realstate, pagination}) => {
   }, []);
 
   const handleClick = () => {
-      if(!("neighborhood" in localStorage) && search?.label?.length === undefined) {
-        alert("Selecione um Bairro para fazer a Busca...")
-      } else {
-
         //limpa array imóveis
         clearSearch()
 
@@ -186,13 +182,26 @@ const Home = ({ realstate, pagination}) => {
           }
 
           //busca por bairro valor min e max
-          if(item.Bairro.includes(search?.label) && category == ''){
+          if(search.label !== '' && item.Bairro.includes(search?.label) && category == ''){
             isString(optionsValue?.min) || isString(optionsValue?.max) ? setResearch(minMax(item)) : setResearch(item)
           }
 
           //busca por tipo de anuncio e bairro
-          if(category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search?.label)){
+          if(search !== '' && category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search.label)){
             isString(optionsValue?.min) || isString(optionsValue?.max) ? setResearch(minMax(item)) : setResearch(item)
+          }
+
+          //Busca somente por categoria
+          if(category !== '' && item.Tipo_de_Anuncio.includes(category)){
+            isString(optionsValue?.min) || isString(optionsValue?.max) ? setResearch(minMax(item)) : setResearch(item)
+          }
+
+          if(optionsValue.max > 0 ) {
+            setResearch(minMax(item))
+          }
+
+           if(optionsValue.min > 0 ) {
+            setResearch(minMax(item))
           }
       })
 
@@ -211,7 +220,6 @@ const Home = ({ realstate, pagination}) => {
       if (window.innerWidth <= 1024) {
         setMobileSearchOpen(false);
       }
-    }
   }
 
   // Limpa o localStorage quando o usuário fecha a aba ou o navegador
@@ -269,7 +277,7 @@ const Home = ({ realstate, pagination}) => {
   }, []);
 
   const resetFilters = () => {
-    setSearch(null);
+    setSearch({label: null});
 
     setCategory('');
 
@@ -339,7 +347,7 @@ const Home = ({ realstate, pagination}) => {
                         disablePortal
                         options={options}
                         onChange={(event, value) => {
-                          setSearch(value);
+                          setSearch({label: value});
                         }}
                         renderInput={(params) => (
                           <TextField
@@ -410,7 +418,7 @@ const Home = ({ realstate, pagination}) => {
                         }
                       }}
                     >
-                      <MenuItem value="">Todos</MenuItem>
+                      <MenuItem value="todos">Todos</MenuItem>
                       <MenuItem value="venda">Venda</MenuItem>
                       <MenuItem value="aluguel">Aluguel</MenuItem>
                       <MenuItem value="Lançamentos">
@@ -464,7 +472,7 @@ const Home = ({ realstate, pagination}) => {
                           disablePortal
                           options={options}
                           onChange={(event, value) => {
-                            setSearch(value);
+                            setSearch({label: value});
                           }}
                           renderInput={(params) => (
                             <TextField
