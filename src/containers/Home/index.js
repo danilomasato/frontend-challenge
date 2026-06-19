@@ -182,17 +182,16 @@ const Home = ({ realstate, pagination}) => {
           }
 
           //busca por bairro valor min e max
-          if(search.label !== '' && item.Bairro.includes(search?.label) && category == ''){
+          if(search.label !== '' && item.Bairro.includes(search.label) && category == ''){
             isString(optionsValue?.min) || isString(optionsValue?.max) ? setResearch(minMax(item)) : setResearch(item)
           }
-
           //busca por tipo de anuncio e bairro
-          if(search !== '' && category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search.label)){
+          if(search.label !== '' && category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search.label)){
             isString(optionsValue?.min) || isString(optionsValue?.max) ? setResearch(minMax(item)) : setResearch(item)
           }
 
           //Busca somente por categoria
-          if(category !== '' && item.Tipo_de_Anuncio.includes(category)){
+          if(search.label == '' && category !== '' && item.Tipo_de_Anuncio.includes(category)){
             isString(optionsValue?.min) || isString(optionsValue?.max) ? setResearch(minMax(item)) : setResearch(item)
           }
 
