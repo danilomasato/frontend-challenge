@@ -85,12 +85,10 @@ const Home = ({ realstate, pagination}) => {
       let objetosUnicosPorId = Array.from(mapa.values());
 
       //monta array options bairros e ordena por ordem alfabetica
-      setOptions(objetosUnicosPorId.map(((item, index) => (
-              {
-                "label": item.Bairro, 
-                "id": index
-              }
-            ))).sort(function(a,b) {
+      setOptions(objetosUnicosPorId.map((item) => ({
+          label: item.Bairro,
+          id: item.id || item.Codigo || `${item.Bairro}-${Math.random()}`
+        })).sort(function(a,b) {
           if(a.label < b.label) return -1;
           if(a.label > b.label) return 1;
           return 0;
@@ -98,17 +96,18 @@ const Home = ({ realstate, pagination}) => {
     } 
   }, [imoveis]);
   
-  const clearSearch = (clear) => {
-    //loading
-    setLoading(true)
+const clearSearch = () => {
 
-    setRealEstate({character: {
-      data: clear ? imoveis : []
-    }})
+  setLoading(true);
 
-    //close loading
-    closeLoad()
-  }
+  setRealEstate({
+    character: {
+      data: []
+    }
+  });
+
+  closeLoad();
+};
 
   useEffect(() => {
   //Disable click right mouse
@@ -127,99 +126,137 @@ const Home = ({ realstate, pagination}) => {
   }, []);
 
   const handleClick = () => {
-        //limpa array imóveis
-        clearSearch()
 
-        const setResearch = imovel => {
-          if(imovel !== 'undefined' && imovel !== undefined){
-            research = research.concat(imovel)
+    // abre loading
+    setLoading(true);
 
-            setTimeout(() => {
-              setRealEstate({character: {
-                data: research
-              }})
-            }, 1500);
-          }
+    const parseValue = (value) => {
+      if (!value) return 0;
+
+      return Number(
+        value
+          .toString()
+          .replace("R$", "")
+          .replace(/\./g, "")
+          .replace(",", "")
+          .trim()
+      );
+    };
+
+    const valueMin = parseValue(optionsValue?.min);
+    const valueMax = parseValue(optionsValue?.max);
+
+    const results = imoveis.filter((item) => {
+
+      const hasBairro = !!search?.label;
+      const hasCategory = !!category;
+      const hasMin = valueMin > 0;
+      const hasMax = valueMax > 0;
+
+      // ==========================
+      // BAIRRO
+      // ==========================
+
+      const bairroMatch =
+        !hasBairro ||
+        item?.Bairro
+          ?.toLowerCase()
+          ?.includes(search.label.toLowerCase());
+
+      // ==========================
+      // CATEGORIA
+      // ==========================
+
+      const categoryMatch =
+        !hasCategory ||
+        item?.Tipo_de_Anuncio === category;
+
+      // ==========================
+      // VALOR
+      // ==========================
+
+      let valorImovel = null;
+
+      if (
+        item?.Tipo_de_Anuncio?.toLowerCase() === "venda" &&
+        item?.Valor_Venda
+      ) {
+        valorImovel = Number(
+          item.Valor_Venda
+            .toString()
+            .replace(/\./g, "")
+            .replace(",", "")
+        );
+      }
+
+      if (
+        item?.Tipo_de_Anuncio?.toLowerCase() === "aluguel" &&
+        item?.Valor_Aluguel
+      ) {
+        valorImovel = Number(
+          item.Valor_Aluguel
+            .toString()
+            .replace(/\./g, "")
+            .replace(",", "")
+        );
+      }
+
+      // Se estiver pesquisando por valor
+      // e o imóvel não possui valor cadastrado
+      // remove ele da busca
+      if ((hasMin || hasMax) && (!valorImovel || valorImovel <= 0)) {
+        return false;
+      }
+
+      const valorMinMatch =
+        !hasMin || valorImovel >= valueMin;
+
+      const valorMaxMatch =
+        !hasMax || valorImovel <= valueMax;
+
+      return (
+        bairroMatch &&
+        categoryMatch &&
+        valorMinMatch &&
+        valorMaxMatch
+      );
+    });
+
+    // remove ids duplicados
+    const uniqueResults = Array.from(
+      new Map(
+        results.map(item => [
+          item.id || item.ID || item.Codigo || Math.random(),
+          item
+        ])
+      ).values()
+    );
+
+    // mantém compatibilidade com sua busca antiga
+    if (search?.label) {
+      localStorage.setItem(
+        "neighborhood",
+        search.label
+      );
+    }
+
+    // simula busca e exibe loading
+    setTimeout(() => {
+
+      setRealEstate({
+        character: {
+          data: uniqueResults
         }
+      });
 
-      let valueMin, valueMax
-      let roleSale, roleRental
-      let itemValueAluguel, itemValueVenda
-
-      const isString = value => {
-        return typeof value == 'string'
-      }
-
-      valueMin = parseInt(isString(optionsValue?.min) && optionsValue?.min?.replace(',','')?.replace('R$',''))
-      valueMax = parseInt(isString(optionsValue?.max) && optionsValue?.max?.replace(',','')?.replace('R$',''))
-
-      imoveis.filter((item, index) => {
-
-        const minMax = imovel => {
-          if(imovel?.Valor_Aluguel !== 'undefined' && imovel?.Valor_Aluguel !== undefined && imovel?.Valor_Aluguel !== null)
-            itemValueAluguel = parseInt(imovel?.Valor_Aluguel?.replace(".",""))
-
-          if(imovel?.Valor_Venda !== 'undefined' && imovel?.Valor_Venda !== undefined && imovel?.Valor_Venda !== null)
-            itemValueVenda = parseInt(imovel?.Valor_Venda?.replace(".",""))
-
-          roleSale = valueMin > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMin || valueMax > 0 && itemValueVenda !== NaN && itemValueVenda <= valueMax
-          roleRental = valueMax > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMax || valueMin > 0 && itemValueAluguel !== NaN && itemValueAluguel <= valueMin
-
-          if(roleSale && imovel.Tipo_de_Anuncio == 'venda')
-            return imovel
-
-          if(roleRental && imovel.Tipo_de_Anuncio == 'aluguel')
-            return imovel
-
-          //se não encontrar resultados limpa a busca
-          if(!roleSale && !roleRental)
-            clearSearch()
-          }
-
-          //busca por localstorage (mantem o bairro)
-          if(localStorage.length > 0 && item?.Bairro.includes(localStorage.getItem("neighborhood")) && category == ''){
-            setResearch(minMax(item))
-          }
-
-          //busca por bairro valor min e max
-          if(search.label !== '' && item.Bairro.includes(search.label) && category == ''){
-            isString(optionsValue?.min) || isString(optionsValue?.max) ? setResearch(minMax(item)) : setResearch(item)
-          }
-          //busca por tipo de anuncio e bairro
-          if(search.label !== '' && category !== '' && item.Tipo_de_Anuncio.includes(category) && item.Bairro.includes(search.label)){
-            isString(optionsValue?.min) || isString(optionsValue?.max) ? setResearch(minMax(item)) : setResearch(item)
-          }
-
-          //Busca somente por categoria
-          if(search.label == '' && category !== '' && item.Tipo_de_Anuncio.includes(category)){
-            isString(optionsValue?.min) || isString(optionsValue?.max) ? setResearch(minMax(item)) : setResearch(item)
-          }
-
-          if(optionsValue.max > 0 ) {
-            setResearch(minMax(item))
-          }
-
-           if(optionsValue.min > 0 ) {
-            setResearch(minMax(item))
-          }
-      })
-
-      //seta um novo bairro no localStorage quando Onchange Options
-      if(!search?.label.includes(localStorage.getItem("neighborhood"))){
-        localStorage.setItem("neighborhood", search.label)
-      }
-
-      //se não houver setado localstorage registra o bairro
-      if(localStorage.length <= 0 ){
-        localStorage.setItem("neighborhood", search.label)
-      }
-
-      closeLoad();
+      setLoading(false);
 
       if (window.innerWidth <= 1024) {
         setMobileSearchOpen(false);
       }
-  }
+
+    }, 1000);
+  };
 
   // Limpa o localStorage quando o usuário fecha a aba ou o navegador
   useEffect(() => {
@@ -287,7 +324,7 @@ const Home = ({ realstate, pagination}) => {
 
     localStorage.removeItem("neighborhood");
 
-    clearSearch("clear");
+    clearSearch();
 
     if (window.innerWidth <= 1024) {
       setMobileSearchOpen(false);
@@ -357,6 +394,8 @@ const Home = ({ realstate, pagination}) => {
                             label="Selecione o Bairro"
                           />
                         )}
+                        getOptionLabel={(option) => option.label}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
                       />
 
                       <LocationPinIcon className="LocationPinIcon mobile-location-icon" />
@@ -614,7 +653,7 @@ const Home = ({ realstate, pagination}) => {
                   gridTemplateColumns: 'repeat(3, 1fr)'
               }}>
               {Array.from({ length: configPreload }).map((_, index) => (
-                <PreloadCard />
+                <PreloadCard key={`preload-${index}`} />
               ))}
             </Box>
             </>
@@ -646,7 +685,7 @@ const Home = ({ realstate, pagination}) => {
                       Tente ajustar os filtros de busca ou explorar
                       outras regiões e oportunidades incríveis.
                   </p>
-                  <button class="empty-state__button" onClick={() => { clearSearch('clear') }}>
+                  <button class="empty-state__button" onClick={() => { clearSearch() }}>
                     🧹 Limpar filtros
                   </button>
               </div>
