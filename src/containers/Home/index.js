@@ -383,6 +383,7 @@ const clearSearch = () => {
                         disablePortal
                         options={options}
                         onChange={(event, value) => {
+                          if (!value) return;
                           setSearch({...search, 
                             label: value.label,
                             id: value.id
@@ -392,6 +393,10 @@ const clearSearch = () => {
                           <TextField
                             {...params}
                             label="Selecione o Bairro"
+                            inputProps={{
+                            ...params.inputProps,
+                              readOnly: isMobile, // 👈 chave da solução
+                            }}
                           />
                         )}
                       />
