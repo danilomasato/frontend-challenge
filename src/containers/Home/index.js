@@ -96,13 +96,13 @@ const Home = ({ realstate, pagination}) => {
     } 
   }, [imoveis]);
   
-const clearSearch = () => {
+const clearSearch = (clear) => {
 
   setLoading(true);
 
   setRealEstate({
     character: {
-      data: []
+      data: clear ? imoveis: [] //clear param retorna os valores de imoveis
     }
   });
 
@@ -324,7 +324,7 @@ const clearSearch = () => {
 
     localStorage.removeItem("neighborhood");
 
-    clearSearch();
+    clearSearch('clear');
 
     if (window.innerWidth <= 1024) {
       setMobileSearchOpen(false);
