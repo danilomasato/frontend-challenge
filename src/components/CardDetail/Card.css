@@ -242,54 +242,139 @@
 
 @media only screen and (max-width: 1024px) {
 
-		.ThumbSLider-highligh {
-			margin: 0;
-		}
+    .ThumbSLider-highligh {
+        margin: 0;
+    }
 
-		.ThumbSLider-author .avatar {
-			display: none;
-		}
+    .ThumbSLider-author .avatar {
+        display: none;
+    }
 
-		.MuiDialog-container .slick-slide img {
-			object-fit: cover;
-		}
+    .MuiDialog-container .slick-slide img {
+        object-fit: cover;
+    }
 
-		.ThumbSLider-author {
-			position: initial;
-			width: 80%;
-			max-width: 100% !important;
-			box-shadow: none !important;
-			border-bottom: 1px solid #ccc;
-		}
+    .ThumbSLider-author .ThumbSLider-author {
+        position: initial;
+        width: 100%;
+        max-width: 100% !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 10px 0;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-columns: 60%;
+        justify-content: center;
+    }
 
-		.GroupBelowHighligh .ButtonGroup {
-			padding: 0 15px;
-			margin: initial;
-			width: 100%;
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			box-sizing: border-box;
-		}
+    .PriceDetails {
+        position: initial;
+        width: 100%;
+        float: none;
+        display: block;
+        background: transparent !important;
+    }
 
-	.PriceDetails {
-		float: left;
-		display: block;
-		box-shadow: none !important;
-		position: initial; 
-		width: 100%;
-	}
+    .PriceDetails ul {
+        margin: 0;
+        border-radius: 12px;
+    }
 
-	.propertyDetails {
-		float: left;
-		margin-top: 20px;
-	}
+    .propertyDetails {
+        float: left;
+        width: 100%;
+        margin-top: 15px;
+    }
 
-	.GroupBelowHighligh .imovel-info {
-		margin: 0 auto;
-		margin-left: 20px;
-	}
+    /* ===== INFORMAÇÕES DO IMÓVEL ===== */
 
-	.GroupBelowHighligh .ThumbSLider-author {
-		margin: 0 0 0 40px;
-	}
+    .GroupBelowHighligh {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 0 15px;
+        box-sizing: border-box;
+    }
+
+    .GroupBelowHighligh .imovel-info {
+        width: 100%;
+        margin: 0;
+    }
+
+    .GroupBelowHighligh .imovel-info:nth-child(2) {
+        width: 100%;
+        float: none;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 15px;
+        border-radius: 12px;
+        box-sizing: border-box;
+    }
+
+    .GroupBelowHighligh .imovel-info:nth-child(2) p {
+        flex: 1;
+        min-width: 90px;
+        margin: 0;
+        padding: 0 10px;
+        border-right: 1px solid #e5e7eb;
+        box-sizing: border-box;
+    }
+
+    .GroupBelowHighligh .imovel-info:nth-child(2) p:last-child {
+        border-right: none;
+    }
+
+    .GroupBelowHighligh .imovel-info:nth-child(2) svg {
+        margin: 0 8px 0 0;
+    }
+
+    .GroupBelowHighligh .imovel-info:nth-child(2) .icon-info {
+        font-size: 0.85rem;
+    }
+
+    .GroupBelowHighligh .imovel-info:nth-child(2) .icon-info span {
+        font-size: 0.7rem;
+        line-height: 1rem;
+    }
+
+    /* ===== BOTÕES ===== */
+
+    .GroupBelowHighligh .ButtonGroup {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        box-shadow: none;
+    }
+
+    .GroupBelowHighligh .ButtonGroup button {
+        width: 100%;
+        height: 50px;
+        margin: 0;
+    }
+
+    .GroupBelowHighligh .ThumbSLider-author {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        position: inherit;
+
+        display: grid;
+        grid-template-columns: 51%;
+        box-sizing: border-box;
+        box-shadow: none;
+        justify-content: center;
+    }
+
+    .GroupBelowHighligh .ThumbSLider-author div:nth-child(2) p {
+        float: left;
+        margin: 0;
+    }
+
 }
