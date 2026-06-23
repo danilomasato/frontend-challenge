@@ -300,7 +300,7 @@ const CardDetail = ({ data }) => {
 
             <Box className="contact"> 
               <Typography className="ThumbSLider-description" gutterBottom>
-                <a target={"_blank"} href={`https://w.app/wjy0f5 ${urlShare}`}>
+                <a target={"_blank"} href={`https://wa.me/+5511961803698?text=Tenho interesse neste imóvel, pode me enviar mais informações? ${urlShare}`}>
                   <Button size="small"><WhatsAppIcon /> Contato</Button>
                 </a>
                 {/* <b style={{ fontWeight: 600 }}>Contato:</b> {card.autor.contato}*/}
