@@ -267,10 +267,6 @@ button[disabled] {
 	display: inherit !important;
 }
 
-.divider:nth-child(1) {
-	margin-top: 40px;
-}
-
 .card .countSlides {
 	padding: 5px 10px;
 	font-size: 0.8rem;
@@ -313,13 +309,153 @@ button[disabled] {
 		background-color: #216eb6;
 		box-shadow: none;
 	}
+
+	.divider:nth-child(1) {
+		margin-top: 40px;
+	}
 }
 
-@media only screen and (max-width: 1025px) {
+@media only screen and (max-width: 1024px) {
 	.card {
 		padding-bottom: 20px;
 	}
+
+	.divider:nth-child(1) {
+		margin-top: 0px;
+	}
+
+  /* Container do carousel */
+  .home.carousel-wrapper {
+    position: relative;
+    overflow: visible;
+  }
+
+  /* Cada slide */
+  .carousel__slide {
+    padding: 0 8px;
+  }
+
+  /* Grid mobile */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+
+    justify-items: center;
+    align-items: start;
+
+    width: 100%;
+  }
+
+  /* Centraliza os cards */
+  .cards-grid .card {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  /* Esconde setas padrão */
+  .home .buttonBack___1mlaL,
+  .home .buttonNext___2mOCa {
+    display: none;
+  }
+
+  /* Botão de próximo */
+  .mobile-carousel-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+
+  .mobile-carousel-next {
+    border: none;
+    cursor: pointer;
+
+    background: #0b2c3d;
+    color: #fff;
+
+    padding: 12px 20px;
+
+    border-radius: 999px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: .25s;
+  }
+
+  .mobile-carousel-next:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Indicador de slides */
+  .mobile-carousel-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 10px;
+
+    color: #6c757d;
+
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .mobile-carousel-hint svg {
+    animation: slideHint 1.2s infinite;
+  }
+
+  @keyframes slideHint {
+    0% {
+      transform: translateX(0);
+      opacity: .4;
+    }
+
+    50% {
+      transform: translateX(6px);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateX(0);
+      opacity: .4;
+    }
+  }
+
+  /* Bolinhas */
+  .mobile-carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .mobile-carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    background: #d6dce3;
+  }
+
+  .mobile-carousel-dot.active {
+    background: #0b2c3d;
+    width: 20px;
+    border-radius: 999px;
+  }
+
+  /* largura do slider */
+  .carousel__slider--horizontal {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden;
+  }
+
 }
+
 
 
 

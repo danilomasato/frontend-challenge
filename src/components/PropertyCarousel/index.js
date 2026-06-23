@@ -10,6 +10,20 @@ import PropertyCard from "../PropertyCard";
 
 const PropertyCarousel = ({ title, items }) => {
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const Root = styled('div')(({ theme }) => ({
     width: '100%',
     ...theme.typography.body2,
@@ -29,7 +43,12 @@ const PropertyCarousel = ({ title, items }) => {
     return chunks;
   };
 
-  const slides = chunkArray(items, 6);
+  const itemsPerSlide = isMobile ? 2 : 6;
+
+  const slides = chunkArray(
+    items,
+    itemsPerSlide
+  );
 
   if (!items.length) return null;
 
@@ -45,7 +64,7 @@ const PropertyCarousel = ({ title, items }) => {
         </Divider>
       </Root>
 
-      <Container className="home" style={{ height: items.length <= 3 ? '360px' : '720px' }}>
+      <Container className="home carousel-wrapper" style={{ height: items.length <= 3 ? '360px' : '720px' }}>
         <CarouselProvider
           naturalSlideWidth={400}
           naturalSlideHeight={342}
@@ -53,7 +72,7 @@ const PropertyCarousel = ({ title, items }) => {
           visibleSlides={1}
           step={1}
         >
-          <Slider style={{ height: items.length <= 3 ? '360px' : '720px' }}>
+          <Slider style={{ height: items.length <= 3 ? '355px' : '720px' }}>
             {slides.map((group, index) => (
               <Slide key={index} index={index}>
                 <div className="cards-grid">
@@ -69,10 +88,28 @@ const PropertyCarousel = ({ title, items }) => {
             ))}
           </Slider>
 
+          
+
           {slides.length > 1 && (
             <>
-              <ButtonBack>‹</ButtonBack>
-              <ButtonNext>›</ButtonNext>
+              {isMobile ? (
+              <>
+                <div className="mobile-carousel-hint">
+                  <span>Deslize para ver mais imóveis</span>
+                  <span>→</span>
+                </div>
+                <div className="mobile-carousel-actions">
+                  <ButtonNext className="mobile-carousel-next">
+                    Ver mais imóveis →
+                  </ButtonNext>
+                </div>
+                </>
+              ) : (
+                <>
+                  <ButtonBack>‹</ButtonBack>
+                  <ButtonNext>›</ButtonNext>
+                </>
+              )}
             </>
           )}
         </CarouselProvider>
