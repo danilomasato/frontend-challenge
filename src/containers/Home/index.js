@@ -439,38 +439,68 @@ const clearSearch = () => {
                     <Box className="wrap-input">
                       <NumericFormat
                         value={optionsValue.min}
-                        onChange={(e) =>
+                        onValueChange={(values) => {
                           setOptionsValue({
                             ...optionsValue,
-                            min: e.target.value
-                          })
-                        }
+                            min: values.value
+                          });
+                        }}
                         customInput={TextField}
-                        thousandSeparator
-                        valueIsNumericString
+                        thousandSeparator="."
+                        decimalSeparator=","
                         prefix="R$ "
-                        variant="outlined"
-                        label="Valor Mínimo"
                         fullWidth
+                        label="Valor Mínimo"
+                        variant="outlined"
+                        inputProps={{
+                          inputMode: "numeric",
+                          pattern: "[0-9]*",
+                          enterKeyHint: "done"
+                        }}
+                        onFocus={() => {
+                          if (optionsValue.min === 0) {
+                            setOptionsValue({ ...optionsValue, min: "" });
+                          }
+                        }}
+                        onBlur={() => {
+                          if (!optionsValue.min) {
+                            setOptionsValue({ ...optionsValue, min: 0 });
+                          }
+                        }}
                       />
                     </Box>
 
                     <Box className="wrap-input">
                       <NumericFormat
                         value={optionsValue.max}
-                        onChange={(e) =>
+                        onValueChange={(values) => {
                           setOptionsValue({
                             ...optionsValue,
-                            max: e.target.value
-                          })
-                        }
+                            max: values.value
+                          });
+                        }}
                         customInput={TextField}
-                        thousandSeparator
-                        valueIsNumericString
+                        thousandSeparator="."
+                        decimalSeparator=","
                         prefix="R$ "
-                        variant="outlined"
-                        label="Valor Máximo"
                         fullWidth
+                        label="Valor Máximo"
+                        variant="outlined"
+                        inputProps={{
+                          inputMode: "numeric",
+                          pattern: "[0-9]*",
+                          enterKeyHint: "done"
+                        }}
+                        onFocus={() => {
+                          if (optionsValue.max === 0) {
+                            setOptionsValue({ ...optionsValue, max: "" });
+                          }
+                        }}
+                        onBlur={() => {
+                          if (!optionsValue.max) {
+                            setOptionsValue({ ...optionsValue, max: 0 });
+                          }
+                        }}
                       />
                     </Box>
 
@@ -576,24 +606,38 @@ const clearSearch = () => {
 
                     <NumericFormat
                       value={optionsValue.min}
-                      onFocus={() =>
+                      onValueChange={(values) => {
                         setOptionsValue({
                           ...optionsValue,
-                          min: ""
-                        })
-                      }
-                      onChange={(e) =>
-                        setOptionsValue({
-                          ...optionsValue,
-                          min: e.target.value
-                        })
-                      }
+                          min: values.value
+                        });
+                      }}
                       customInput={TextField}
-                      thousandSeparator
-                      valueIsNumericString
-                      prefix="R$"
-                      variant="standard"
-                      label="Valor Min"
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      prefix="R$ "
+                      fullWidth
+                      label="Valor Mínimo"
+                      variant="outlined"
+                      inputProps={{
+                        inputMode: "numeric",
+                        pattern: "[0-9]*",
+                        enterKeyHint: "done"
+                      }}
+                      onFocus={() => {
+                        if (optionsValue.min === 0) {
+                          setOptionsValue({ ...optionsValue, min: "" });
+                        }
+                      }}
+                      onBlur={() => {
+                        if (!optionsValue.min) {
+                          setOptionsValue({ ...optionsValue, min: 0 });
+                        }
+                      }}
+                      isAllowed={(values) => {
+                        // evita NaN e quebra de layout
+                        return values.value === "" || Number(values.value) >= 0;
+                      }}
                     />
                   </Box>
 
@@ -602,25 +646,38 @@ const clearSearch = () => {
 
                     <NumericFormat
                       value={optionsValue.max}
-                      onFocus={() =>
+                      onValueChange={(values) => {
                         setOptionsValue({
                           ...optionsValue,
-                          max: ""
-                        })
-                      }
-                      onChange={(e) =>
-                        setOptionsValue({
-                          ...optionsValue,
-                          max: e.target.value
-                        })
-                      }
+                          max: values.value
+                        });
+                      }}
                       customInput={TextField}
-                      thousandSeparator
-                      valueIsNumericString
-                      prefix="R$"
-                      variant="standard"
-                      label="Valor Max"
-                      style={{ marginLeft: "15px" }}
+                      thousandSeparator="."
+                      decimalSeparator=","
+                      prefix="R$ "
+                      fullWidth
+                      label="Valor Máximo"
+                      variant="outlined"
+                      inputProps={{
+                        inputMode: "numeric",
+                        pattern: "[0-9]*",
+                        enterKeyHint: "done"
+                      }}
+                      onFocus={() => {
+                        if (optionsValue.max === 0) {
+                          setOptionsValue({ ...optionsValue, max: "" });
+                        }
+                      }}
+                      onBlur={() => {
+                        if (!optionsValue.max) {
+                          setOptionsValue({ ...optionsValue, max: 0 });
+                        }
+                      }}
+                      isAllowed={(values) => {
+                        // evita NaN e quebra de layout
+                        return values.value === "" || Number(values.value) >= 0;
+                      }}
                     />
                   </Box>
                 </Grid>

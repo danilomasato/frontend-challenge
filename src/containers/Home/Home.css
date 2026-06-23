@@ -57,7 +57,7 @@ div[role="alert"] {
 
 .minMax .selectType {
 	min-width: 100%;
-  margin-top: 16px;
+  margin-top: 4px;
 }
 
 .minMax .selectType div {
@@ -153,7 +153,7 @@ div[role="alert"] {
 
 .wrap-input .MonetizationOnIcon {
 	position: absolute;
-	top: 27px;
+	top: 12px;
 	right: 10px;
 }
 
@@ -177,16 +177,59 @@ div[role="alert"] {
 		width: 1230px;
 	}
 
-	 .wrap-search {
+	.wrap-search {
 		width: 1200px;
 		display: grid !important;
-		grid-template-columns: 320px 359px 210px 220px !important;
+		grid-template-columns: 302px 361px 210px 220px !important;
 		box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
 		padding: 15px;	 
 		border-radius: 10px;
 		grid-column-gap: 20px !important;
 		/* background-color: ghostwhite; */
 	}
+
+    .selectType  legend {
+        display: none;
+    }
+
+    .minMax {
+        margin-top: 10px;
+    }
+
+    /* focus SEM azul (principal) */
+    .MuiOutlinedInput-root.Mui-focused fieldset,
+    .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline,
+    .MuiOutlinedInput-root fieldset,
+    .MuiOutlinedInput-root:hover fieldset {
+    border-color: transparent !important;
+    }
+
+    /* 🔥 remove qualquer shadow azul */
+    .MuiOutlinedInput-root.Mui-focused {
+    box-shadow: none !important;
+    }
+
+    /* 🔥 remove foco do input nativo */
+    .MuiOutlinedInput-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    }
+
+    .selectType .MuiOutlinedInput-root fieldset,
+    .selectType .MuiOutlinedInput-root:hover fieldset,
+    .selectType .MuiOutlinedInput-root.Mui-focused fieldset,
+    .selectType .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+        border-color: #be9f6061 !important;
+    }
+
+    .css-113d811-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+        color: rgba(0, 0, 0, 0.6) !important;
+        margin-top: -5px;
+    }
+
+    .wrap-input:nth-child(2) {
+        margin-left: 20px;
+    }
 }
 
 /* Container principal */
