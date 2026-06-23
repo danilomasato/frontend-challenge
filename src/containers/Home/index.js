@@ -394,8 +394,6 @@ const clearSearch = () => {
                             label="Selecione o Bairro"
                           />
                         )}
-                        getOptionLabel={(option) => option.label}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
                       />
 
                       <LocationPinIcon className="LocationPinIcon mobile-location-icon" />
