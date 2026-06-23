@@ -671,7 +671,8 @@ div[role="alert"] {
 			position: absolute !important;
 
 			left: 12px;
-			top: 22px;
+			top: 50%;
+			transform: translateY(-50%);
 
 			color: #c29c5f;
 
@@ -684,7 +685,6 @@ div[role="alert"] {
 				position: absolute !important;
 
 				right: 42px;
-				top: 22px;
 
 				width: 18px !important;
 				height: 18px !important;
