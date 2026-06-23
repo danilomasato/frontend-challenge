@@ -11,6 +11,8 @@ const deviceWidth =
   window.innerWidth ||
   window.screen.width;
 
+const isMobile = deviceWidth <= 1024;
+
 const ThumbSLider = (props) => {
   const fotos = props.image;
   const home = props?.home;
@@ -37,6 +39,14 @@ const ThumbSLider = (props) => {
       detail === "true" && deviceWidth > 1024 ? 3 : 1,
     arrows: true,
     speed: 500,
+
+    // desabilita swipe no mobile
+    swipe: !isMobile,
+    draggable: !isMobile,
+    touchMove: !isMobile,
+    swipe: false,
+    touchMove: false,
+    draggable: false,
 
     beforeChange: (_, next) => {
       setCurrentSlideIndex(next + 1);
