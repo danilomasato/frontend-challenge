@@ -378,27 +378,51 @@ const clearSearch = () => {
                     {imoveis?.length > 0 && (
                       <Box className="wrap-input neighborhood-mobile">
                       <Autocomplete
-                        value={search.label || null}
-                        className="search-neighborhoods"
                         disablePortal
                         options={options}
+                        value={search?.label ? search : null}
                         onChange={(event, value) => {
                           if (!value) return;
-                          setSearch({...search, 
+
+                          setSearch({
                             label: value.label,
                             id: value.id
                           });
                         }}
+
                         renderInput={(params) => (
                           <TextField
                             {...params}
                             label="Selecione o Bairro"
+
                             inputProps={{
-                            ...params.inputProps,
-                              readOnly: isMobile, // 👈 chave da solução
+                              ...params.inputProps,
+                              readOnly: true, // base
+                            }}
+
+                            onFocus={(e) => {
+                              // mata o teclado caso algum browser insista
+                              if (isMobile) e.target.blur();
+                            }}
+
+                            onClick={(e) => {
+                              // impede foco inicial em alguns Androids
+                              if (isMobile) e.target.blur();
                             }}
                           />
                         )}
+
+                        slotProps={{
+                          textField: {
+                            onPointerDown: (e) => {
+                              // 🔥 ESSENCIAL: impede foco antes do teclado abrir
+                              if (isMobile) {
+                                e.preventDefault();
+                                e.target.blur();
+                              }
+                            }
+                          }
+                        }}
                       />
 
                       <LocationPinIcon className="LocationPinIcon mobile-location-icon" />
