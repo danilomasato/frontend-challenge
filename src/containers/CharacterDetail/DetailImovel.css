@@ -119,9 +119,7 @@
 
 .caracteristicas {
 	float: left;
-  min-height: 255px;
-  max-height: 340px;
-  overflow: hidden;
+    overflow: hidden;
     max-width: 60%;
 	margin-bottom: 10px;
 	transition: max-height 0.5s ease-in-out;
@@ -161,6 +159,85 @@
 	float: right !important;
 }
 
+.toggle-description {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    margin: 20px auto;
+    padding: 10px 18px;
+
+    background: #fff;
+    color: rgb(21 124 243);
+
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 1s ease;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+.toggle-description:hover {
+    background: rgb(21 124 243);
+    color: #fff;
+
+    border-color: rgb(21 124 243);
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 4px 12px rgba(21,124,243,.15);
+}
+
+.toggle-description svg {
+    transition: transform .25s ease;
+}
+
+.toggle-description:hover svg {
+    transform: scale(1.1);
+}
+
+.toggle-description {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+
+    outline: none;
+}
+
+.toggle-description:focus,
+.toggle-description:focus-visible,
+.toggle-description:active {
+    outline: none;
+    box-shadow: none;
+}
+
+.toggle-description {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+
+    outline: none;
+}
+
+.toggle-description {
+    -webkit-tap-highlight-color: transparent;
+}
+
 @media only screen and (min-width: 1280px) {
 
 /* .ThumbSLider-highligh .slick-track img {
@@ -177,9 +254,16 @@
 }
 
 @media only screen and (max-width: 1024px) {
+    .toggle-description {
+        width: 100%;
+        max-width: 220px;
+        margin: 15px auto;
+        padding: 12px 18px;
+    }
+
     .caracteristicas {
-    padding: 0 20px;
-    box-sizing: border-box;
+        padding: 0 20px;
+        box-sizing: border-box;
 	}
 
 	.propertyDetails button {

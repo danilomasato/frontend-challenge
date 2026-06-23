@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { withRouter, useHistory } from "react-router-dom";
 import { connect   } from "react-redux";
 import { Container } from "../../components";
@@ -44,6 +44,7 @@ function getParameterByName(name, url = window.location.href) {
 const CharacterDetail = ({ realestate }) => {
 
   const history = useHistory();
+  const contentRef = useRef(null);
   const [imoveis, setImoveis] = useState();
   
   let rows = []
@@ -121,12 +122,19 @@ const CharacterDetail = ({ realestate }) => {
       rows = rows.filter(item => item.info !== '');
     }
   }
-  const [openToggle, setOpenToggle] = React.useState(false);
+  const [openToggle, setOpenToggle] = useState(false);
+  const [showToggle, setShowToggle] = useState(false);
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setShowToggle(contentRef.current.scrollHeight > 110);
+    }
+  }, [imoveis]);
 
   return (
     <React.Fragment>
@@ -154,8 +162,18 @@ const CharacterDetail = ({ realestate }) => {
         <CardDetail data={imoveis} />
 
         <Box className="propertyDetails" sx={{ width: '100%' }}>
-          <Box sx={{ width: '100%' }} className={`caracteristicas ${(openToggle ? 'active' : '')}`} style={{maxHeight: (openToggle ? (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length + 'px'): ''), minHeight: (imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length > 250 ?  '': '110px' ) }}>
-						<h2>
+          <Box
+            ref={contentRef}
+            className="caracteristicas"
+            style={{
+              maxHeight: openToggle
+                ? `${contentRef.current?.scrollHeight || 9999}px`
+                : '160px',
+              overflow: 'hidden',
+              transition: 'max-height .4s ease'
+            }}
+          >
+            <h2>
 							Descrição
 						</h2>
 
@@ -192,19 +210,21 @@ const CharacterDetail = ({ realestate }) => {
 								</>
 							))}
         	</Box>
-          {imoveis?.descricao?.length > 0 && imoveis.descricao[0]?.children[0]?.text.length > 175 ? 
-          (<>
-            <button onClick={(e) => setOpenToggle(!openToggle) }>
-              Saiba mais
-              { openToggle ? 
-                (<><KeyboardArrowUpIcon style={{ float: "right" }}/></>)
-              :
-                (<><KeyboardArrowDownIcon style={{ float: "right" }}/></>)
-              }
+          {showToggle && (
+            <button
+              type="button"
+              onClick={() => setOpenToggle(prev => !prev)}
+              className="toggle-description"
+            >
+              {openToggle ? 'Mostrar menos' : 'Saiba mais'}
+
+              {openToggle ? (
+                <KeyboardArrowUpIcon />
+              ) : (
+                <KeyboardArrowDownIcon />
+              )}
             </button>
-          </>) 
-          
-          : '' }
+          )}
 					
         </Box>
         <br />
