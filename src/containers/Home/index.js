@@ -39,11 +39,12 @@ const Home = ({ realstate, pagination}) => {
   const [options, setOptions] = useState([]);
   const [category, setCategory] = useState('');
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [hasFilters, setHasFilters] = useState(false);
+  
   const [optionsValue, setOptionsValue] = useState({
     min: 0,
     max: 0
   });
-
 
   const configPreload = 6;
 
@@ -54,21 +55,47 @@ const Home = ({ realstate, pagination}) => {
   }
 
   useEffect(() => {
-    const payload = pagination?.length > 0 ? pagination : realstate
-    if(payload?.length > 0){
-      setRealEstate({character: { data: payload }})
-      setImoveis(payload)
-    }
- 
-    if(research?.length <= 0) {
-      closeLoad();
 
-      if (isMobile) {
-        setMobileSearchOpen(false);
+    const payload =
+    Array.isArray(pagination)
+      ? pagination
+      : realstate;
+
+    if (!payload?.length) {
+      if (hasFilters) {
+        setRealEstate({
+          character: {
+            data: []
+          }
+        });
       }
+
+      setLoading(false);
+
+      return;
     }
-  }, [realstate, pagination]);
-  
+
+    setImoveis(payload);
+
+    const filteredData =
+      hasFilters
+        ? applyFilters(payload)
+        : payload;
+
+    setRealEstate({
+      character: {
+        data: filteredData
+      }
+    });
+
+    closeLoad();
+
+    if (isMobile) {
+      setMobileSearchOpen(false);
+    }
+
+  }, [realstate, pagination, hasFilters]);
+
   let research= [];
 
   //useEffect for not loop, and many request's
@@ -96,18 +123,18 @@ const Home = ({ realstate, pagination}) => {
     } 
   }, [imoveis]);
   
-const clearSearch = (clear) => {
+  const clearSearch = (clear) => {
 
-  setLoading(true);
-
-  setRealEstate({
-    character: {
-      data: clear ? imoveis: [] //clear param retorna os valores de imoveis
-    }
-  });
-
-  closeLoad();
-};
+    setLoading(true);
+    setHasFilters(false);
+    setRealEstate({
+      character: {
+        data: clear ? imoveis: [] //clear param retorna os valores de imoveis
+      }
+    });
+  
+    closeLoad();
+  };
 
   useEffect(() => {
   //Disable click right mouse
@@ -125,10 +152,7 @@ const clearSearch = (clear) => {
 
   }, []);
 
-  const handleClick = () => {
-
-    // abre loading
-    setLoading(true);
+  const applyFilters = (data) => {
 
     const parseValue = (value) => {
       if (!value) return 0;
@@ -146,16 +170,12 @@ const clearSearch = (clear) => {
     const valueMin = parseValue(optionsValue?.min);
     const valueMax = parseValue(optionsValue?.max);
 
-    const results = imoveis.filter((item) => {
+    return data.filter((item) => {
 
       const hasBairro = !!search?.label;
       const hasCategory = !!category;
       const hasMin = valueMin > 0;
       const hasMax = valueMax > 0;
-
-      // ==========================
-      // BAIRRO
-      // ==========================
 
       const bairroMatch =
         !hasBairro ||
@@ -163,17 +183,9 @@ const clearSearch = (clear) => {
           ?.toLowerCase()
           ?.includes(search.label.toLowerCase());
 
-      // ==========================
-      // CATEGORIA
-      // ==========================
-
       const categoryMatch =
         !hasCategory ||
         item?.Tipo_de_Anuncio === category;
-
-      // ==========================
-      // VALOR
-      // ==========================
 
       let valorImovel = null;
 
@@ -182,8 +194,7 @@ const clearSearch = (clear) => {
         item?.Valor_Venda
       ) {
         valorImovel = Number(
-          item.Valor_Venda
-            .toString()
+          item.Valor_Venda.toString()
             .replace(/\./g, "")
             .replace(",", "")
         );
@@ -194,33 +205,35 @@ const clearSearch = (clear) => {
         item?.Valor_Aluguel
       ) {
         valorImovel = Number(
-          item.Valor_Aluguel
-            .toString()
+          item.Valor_Aluguel.toString()
             .replace(/\./g, "")
             .replace(",", "")
         );
       }
 
-      // Se estiver pesquisando por valor
-      // e o imóvel não possui valor cadastrado
-      // remove ele da busca
       if ((hasMin || hasMax) && (!valorImovel || valorImovel <= 0)) {
         return false;
       }
 
-      const valorMinMatch =
-        !hasMin || valorImovel >= valueMin;
-
-      const valorMaxMatch =
-        !hasMax || valorImovel <= valueMax;
-
       return (
         bairroMatch &&
         categoryMatch &&
-        valorMinMatch &&
-        valorMaxMatch
+        (!hasMin || valorImovel >= valueMin) &&
+        (!hasMax || valorImovel <= valueMax)
       );
     });
+  };
+
+  const handleClick = () => {
+
+    // abre loading
+    setLoading(true);
+
+    // informa que existe filtro ativo
+    setHasFilters(true);
+
+    // aplica filtros na página atual
+    const results = applyFilters(imoveis);
 
     // remove ids duplicados
     const uniqueResults = Array.from(
@@ -232,7 +245,7 @@ const clearSearch = (clear) => {
       ).values()
     );
 
-    // mantém compatibilidade com sua busca antiga
+    // salva bairro para manter compatibilidade
     if (search?.label) {
       localStorage.setItem(
         "neighborhood",
@@ -240,7 +253,6 @@ const clearSearch = (clear) => {
       );
     }
 
-    // simula busca e exibe loading
     setTimeout(() => {
 
       setRealEstate({
@@ -269,19 +281,6 @@ const clearSearch = (clear) => {
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-
-    //Disable click right mouse
-    const handleContextMenu = (e) => {
-      e.preventDefault(); // Prevent the default context menu
-    };
-
-    //Attach the event listener to the document body
-    document.body.addEventListener('contextmenu', handleContextMenu);
-
-    //Clean up the event listener when the component unmounts
-    return () => {
-      document.body.removeEventListener('contextmenu', handleContextMenu);
     };
   }, []);
 
@@ -313,8 +312,9 @@ const clearSearch = (clear) => {
   }, []);
 
   const resetFilters = () => {
-    setSearch({label: null});
-
+    setLoading(true);
+    setHasFilters(false);
+    setSearch({ label: null });
     setCategory('');
 
     setOptionsValue({
@@ -746,7 +746,9 @@ const clearSearch = (clear) => {
         )
       }
 
-      {!loading && realEstate?.character?.data?.length <= 0 &&
+      {!loading &&
+        hasFilters &&
+        realEstate?.character?.data?.length <= 0 &&
             <Container className="empty-state">
               <div class="empty-state__illustration">
                   <div class="empty-state__decor">
@@ -762,14 +764,18 @@ const clearSearch = (clear) => {
                   <div class="empty-state__tag">
                       Ops, nada por aqui
                   </div>
-                  <h2 class="empty-state__title">
-                      Nenhum resultado encontrado.
+                  <h2 className="empty-state__title">
+                    {hasFilters
+                      ? "Não encontramos mais resultados."
+                      : "Nenhum resultado encontrado."}
                   </h2>
-                  <p class="empty-state__description">
-                      Tente ajustar os filtros de busca ou explorar
-                      outras regiões e oportunidades incríveis.
+
+                  <p className="empty-state__description">
+                    {hasFilters
+                      ? "Não encontramos mais imóveis com os filtros aplicados. Tente ampliar sua busca ou remover alguns filtros para visualizar mais oportunidades."
+                      : "Tente ajustar os filtros de busca ou explorar outras regiões e oportunidades incríveis."}
                   </p>
-                  <button class="empty-state__button" onClick={() => { clearSearch() }}>
+                  <button class="empty-state__button" onClick={() => { resetFilters() }}>
                     🧹 Limpar filtros
                   </button>
               </div>
