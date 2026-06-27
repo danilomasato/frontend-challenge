@@ -48,18 +48,22 @@ const Home = ({ realstate, pagination}) => {
 
   const configPreload = 6;
 
-  const closeLoad = () => {
-    setTimeout(() => {
-    setLoading(false)
-    }, 3500);
-  }
-
   useEffect(() => {
 
     const payload =
     Array.isArray(pagination)
       ? pagination
       : realstate;
+
+    // Se payload vir vazio apartir do filtro aplicado, e tiver filtro aplicado, 
+    // quer dizer que não encontrou mais resultados apartir do filtros aplicados,
+    //então zera o realstate para exibir a tela "Não encontramos mais resultados."
+    if (payload === undefined || payload === null) {
+        // API ainda carregando
+        return;
+      } else {
+      setLoading(false);
+    }
 
     if (!payload?.length) {
       if (hasFilters) {
@@ -69,8 +73,6 @@ const Home = ({ realstate, pagination}) => {
           }
         });
       }
-
-      setLoading(false);
 
       return;
     }
@@ -87,8 +89,6 @@ const Home = ({ realstate, pagination}) => {
         data: filteredData
       }
     });
-
-    closeLoad();
 
     if (isMobile) {
       setMobileSearchOpen(false);
@@ -122,19 +122,6 @@ const Home = ({ realstate, pagination}) => {
       }))
     } 
   }, [imoveis]);
-  
-  const clearSearch = (clear) => {
-
-    setLoading(true);
-    setHasFilters(false);
-    setRealEstate({
-      character: {
-        data: clear ? imoveis: [] //clear param retorna os valores de imoveis
-      }
-    });
-  
-    closeLoad();
-  };
 
   useEffect(() => {
   //Disable click right mouse
@@ -312,8 +299,7 @@ const Home = ({ realstate, pagination}) => {
   }, []);
 
   const resetFilters = () => {
-    setLoading(true);
-    setHasFilters(false);
+
     setSearch({ label: null });
     setCategory('');
 
@@ -324,7 +310,11 @@ const Home = ({ realstate, pagination}) => {
 
     localStorage.removeItem("neighborhood");
 
-    clearSearch('clear');
+     setRealEstate({
+    character: {
+      data: imoveis
+    }
+  });
 
     if (window.innerWidth <= 1024) {
       setMobileSearchOpen(false);
@@ -716,35 +706,38 @@ const Home = ({ realstate, pagination}) => {
         </div>
       </div>
 
-      { realEstate?.character?.data?.length > 0 ?
-        <Card data={realEstate} /> 
-        :
-        (
-          <>
-          {loading && (
-            <>
-              <Root>
-                <Divider className="divider">
-                  <Chip className="divider-chip" label="Imóveis à Venda" size="small"/>
-                </Divider>
-              </Root> 
-              <Box id="preload" className="preload" style={{
-                  display: 'grid',
-                  gap: '30px',
-                  width: '1230px',
-                  marginInline: 'auto',
-                  marginTop: '40px',
-                  gridTemplateColumns: 'repeat(3, 1fr)'
-              }}>
-              {Array.from({ length: configPreload }).map((_, index) => (
-                <PreloadCard key={`preload-${index}`} />
-              ))}
-            </Box>
-            </>
-          )} 
-          </>
-        )
-      }
+      {loading ? (
+        <>
+          <Root>
+            <Divider className="divider">
+              <Chip
+                className="divider-chip"
+                label="Imóveis à Venda"
+                size="small"
+              />
+            </Divider>
+          </Root>
+
+          <Box
+            id="preload"
+            className="preload"
+            style={{
+              display: 'grid',
+              gap: '30px',
+              width: '1230px',
+              marginInline: 'auto',
+              marginTop: '40px',
+              gridTemplateColumns: 'repeat(3, 1fr)'
+            }}
+          >
+            {Array.from({ length: configPreload }).map((_, index) => (
+              <PreloadCard key={`preload-${index}`} />
+            ))}
+          </Box>
+        </>
+      ) : realEstate?.character?.data?.length > 0 ? (
+        <Card data={realEstate} />
+      ) : null}
 
       {!loading &&
         hasFilters &&
