@@ -775,7 +775,7 @@ const Home = ({ realstate, pagination}) => {
             </Container>
           }
 
-      { !loading ? <Loading /> : ""}
+      { loading ? <Loading /> : ""}
 
       <Pagination data={realEstate} />
 
