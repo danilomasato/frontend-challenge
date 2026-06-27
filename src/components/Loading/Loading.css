@@ -8,10 +8,11 @@
 }
         
 .overlay-img {
-    width: 80px;
-    height: 80px;
-    margin-top: 20% !important;
-    display: block;
-    margin: 0 auto;
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin: -30px 0 0 -30px;
 }
 
