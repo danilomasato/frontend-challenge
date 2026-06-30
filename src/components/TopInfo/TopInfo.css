@@ -63,11 +63,6 @@
         display: none;
     }
 
-    .row {
-        padding: 20px 0;
-        float: left;
-    }
-
     .top-info span {
         line-height: 18px;
         font-size: 0.7rem;

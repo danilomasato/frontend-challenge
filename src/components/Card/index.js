@@ -4,7 +4,6 @@ import "./Card.css";
 import PropertyCarousel from "../PropertyCarousel";
 
 export default function MultiActionAreaCard(props) {
-  const baseURL = process.env.REACT_APP_URL;
 
   //first load
   const articles = props.data?.character?.data || [];
@@ -34,25 +33,25 @@ export default function MultiActionAreaCard(props) {
 return (
     <> 
       {sales.length > 0 && (
-  <PropertyCarousel
-    title="Imóveis à Venda"
-    items={sales}
-  />
-)}
+        <PropertyCarousel
+          title="Imóveis à Venda"
+          items={sales}
+        />
+      )}
 
-{rents.length > 0 && (
-  <PropertyCarousel
-    title="Imóveis para Alugar"
-    items={rents}
-  />
-)}
+      {rents.length > 0 && (
+        <PropertyCarousel
+          title="Imóveis para Alugar"
+          items={rents}
+        />
+      )}
 
-{launches.length > 0 && (
-  <PropertyCarousel
-    title="Lançamentos"
-    items={launches}
-  />
-)}
+      {launches.length > 0 && (
+        <PropertyCarousel
+          title="Lançamentos"
+          items={launches}
+        />
+      )}
     </>
   )
 }

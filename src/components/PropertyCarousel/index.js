@@ -64,7 +64,7 @@ const PropertyCarousel = ({ title, items }) => {
         </Divider>
       </Root>
 
-      <Container className="home carousel-wrapper" style={{ height: items.length <= 3 ? '360px' : '720px' }}>
+      <Container className="home carousel-wrapper" style={{ height: !isMobile ? (items.length <= 3 ? '360px' : '720px') : '' }}>
         <CarouselProvider
           naturalSlideWidth={400}
           naturalSlideHeight={342}
@@ -72,7 +72,7 @@ const PropertyCarousel = ({ title, items }) => {
           visibleSlides={1}
           step={1}
         >
-          <Slider style={{ height: items.length <= 3 ? '355px' : '720px' }}>
+          <Slider style={{ height: items.length <= 3 ? '370px' : (!isMobile ?  '720px': '750px') }}>
             {slides.map((group, index) => (
               <Slide key={index} index={index}>
                 <div className="cards-grid">

@@ -320,9 +320,9 @@ button[disabled] {
 		padding-bottom: 20px;
 	}
 
-	.divider:nth-child(1) {
-		margin-top: 0px;
-	}
+  .card .wrap-see-more {
+    position: inherit;
+  }
 
   /* Container do carousel */
   .home.carousel-wrapper {

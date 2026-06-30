@@ -775,10 +775,17 @@ div[role="alert"] {
 	}
 
     div[role="separator"] {
-		width: 1265px;
+		width: 100%;
 		margin: 0 auto;
-		margin-top: 45px;
 	}
+
+    .mobile-carousel-actions {
+        margin-bottom: 20px;
+    }
+
+    .MuiPagination-ul {
+        justify-self: center;
+    }
 }
 
 
