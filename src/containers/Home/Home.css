@@ -230,6 +230,15 @@ div[role="alert"] {
     .wrap-input:nth-child(2) {
         margin-left: 20px;
     }
+
+    #preload {
+        display: grid;
+        gap: 30px;
+        width: 1230px;
+        margin-inline: auto;
+        margin-top: 40px;
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 /* Container principal */
@@ -786,6 +795,18 @@ div[role="alert"] {
     .MuiPagination-ul {
         justify-self: center;
     }
+
+    #preload {
+        margin-top: 20px;
+        padding: 0 15px;
+        width: stretch;
+    }
+
+    #preload svg {
+        width: 100%;
+        height: stretch;
+    }
+
 }
 
 

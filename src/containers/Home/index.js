@@ -712,18 +712,7 @@ const Home = ({ realstate, pagination}) => {
             </Divider>
           </Root>
 
-          <Box
-            id="preload"
-            className="preload"
-            style={{
-              display: 'grid',
-              gap: '30px',
-              width: '1230px',
-              marginInline: 'auto',
-              marginTop: '40px',
-              gridTemplateColumns: 'repeat(3, 1fr)'
-            }}
-          >
+          <Box id="preload" className="preload">
             {Array.from({ length: configPreload }).map((_, index) => (
               <PreloadCard key={`preload-${index}`} />
             ))}

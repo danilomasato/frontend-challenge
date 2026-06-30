@@ -324,6 +324,10 @@ button[disabled] {
     position: inherit;
   }
 
+  .CardContent {
+    width: stretch;
+  }
+
   /* Container do carousel */
   .home.carousel-wrapper {
     position: relative;
