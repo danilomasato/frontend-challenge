@@ -9,9 +9,9 @@ export const PreloadCard = data => {
         }}>
         <defs>
           <linearGradient id="shimmer">
-            <stop offset="0%" stop-color="#F2F3F5"/>
-            <stop offset="50%" stop-color="#E4E7EB"/>
-            <stop offset="100%" stop-color="#F2F3F5"/>
+            <stop offset="0%" stopColor="#F2F3F5"/>
+            <stop offset="50%" stopColor="#E4E7EB"/>
+            <stop offset="100%" stopColor="#F2F3F5"/>
             <animateTransform
               attributeName="gradientTransform"
               type="translate"

@@ -50,7 +50,7 @@ const PropertyCarousel = ({ title, items }) => {
     itemsPerSlide
   );
 
-  if (!items.length) return null;
+  // if (!items.length) return null;
 
   return (
     <>

@@ -48,12 +48,10 @@ export const Header = props => {
 
         <ul id="nav">
           {menu.map((item, index) => (
-            <>
-              <li key={index} className={item.action === page ? 'active' : ''}>
-                <NavLink to={item.action}>{item.title}</NavLink>
-              </li>
-          </>
-        ))}
+            <li key={index} className={item.action === page ? 'active' : ''}>
+              <NavLink to={item.action}>{item.title}</NavLink>
+            </li>
+          ))}
         </ul>
       </div>
     </header>

@@ -80,6 +80,7 @@ const ThumbSLider = (props) => {
                       alt={image.imgAlt || ""}
                       loading="lazy"
                       onLoad={() => handleImageLoad(index)}
+                      
                       className={`slider-image ${
                         loadedImages[index] ? "loaded" : ""
                       }`}

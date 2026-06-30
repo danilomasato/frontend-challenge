@@ -48,6 +48,21 @@ const Home = ({ realstate, pagination}) => {
 
   const configPreload = 6;
 
+  //dados
+  const data = realEstate?.character?.data || [];
+
+  const Root = styled('div')(({ theme }) => ({
+    width: '100%',
+    ...theme.typography.body2,
+    color: (theme.vars || theme).palette.text.secondary,
+    '& > :not(style) ~ :not(style)': {
+      marginTop: theme.spacing(2),
+    },
+  }));
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+
+
   useEffect(() => {
 
     const payload =
@@ -58,13 +73,6 @@ const Home = ({ realstate, pagination}) => {
     // Se payload vir vazio apartir do filtro aplicado, e tiver filtro aplicado, 
     // quer dizer que não encontrou mais resultados apartir do filtros aplicados,
     //então zera o realstate para exibir a tela "Não encontramos mais resultados."
-    if (payload === undefined || payload === null) {
-        // API ainda carregando
-        return;
-      } else {
-      setLoading(false);
-    }
-
     if (!payload?.length) {
       if (hasFilters) {
         setRealEstate({
@@ -94,6 +102,7 @@ const Home = ({ realstate, pagination}) => {
       setMobileSearchOpen(false);
     }
 
+    setLoading(false); // 🔥 aqui é o único lugar correto
   }, [realstate, pagination, hasFilters]);
 
   let research= [];
@@ -240,8 +249,6 @@ const Home = ({ realstate, pagination}) => {
       );
     }
 
-    setTimeout(() => {
-
       setRealEstate({
         character: {
           data: uniqueResults
@@ -253,8 +260,6 @@ const Home = ({ realstate, pagination}) => {
       if (window.innerWidth <= 1024) {
         setMobileSearchOpen(false);
       }
-
-    }, 1000);
   };
 
   // Limpa o localStorage quando o usuário fecha a aba ou o navegador
@@ -274,17 +279,6 @@ const Home = ({ realstate, pagination}) => {
   const handleChangeCategory = (evento) => {
     setCategory(evento.target.value);
   };
-
-  const Root = styled('div')(({ theme }) => ({
-    width: '100%',
-    ...theme.typography.body2,
-    color: (theme.vars || theme).palette.text.secondary,
-    '& > :not(style) ~ :not(style)': {
-      marginTop: theme.spacing(2),
-    },
-  }));
-
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
 
   useEffect(() => {
     const handleResize = () => {
@@ -385,7 +379,7 @@ const Home = ({ realstate, pagination}) => {
                             {...params}
                             label="Selecione o Bairro"
 
-                            inputProps={{
+                            slotProps={{
                               ...params.inputProps,
                               readOnly: true, // base
                             }}
@@ -442,7 +436,7 @@ const Home = ({ realstate, pagination}) => {
                         fullWidth
                         label="Valor Mínimo"
                         variant="outlined"
-                        inputProps={{
+                        slotProps={{
                           inputMode: "numeric",
                           pattern: "[0-9]*",
                           enterKeyHint: "done"
@@ -476,7 +470,7 @@ const Home = ({ realstate, pagination}) => {
                         fullWidth
                         label="Valor Máximo"
                         variant="outlined"
-                        inputProps={{
+                        slotProps={{
                           inputMode: "numeric",
                           pattern: "[0-9]*",
                           enterKeyHint: "done"
@@ -609,7 +603,7 @@ const Home = ({ realstate, pagination}) => {
                       fullWidth
                       label="Valor Mínimo"
                       variant="outlined"
-                      inputProps={{
+                      slotProps={{
                         inputMode: "numeric",
                         pattern: "[0-9]*",
                         enterKeyHint: "done"
@@ -649,7 +643,7 @@ const Home = ({ realstate, pagination}) => {
                       fullWidth
                       label="Valor Máximo"
                       variant="outlined"
-                      inputProps={{
+                      slotProps={{
                         inputMode: "numeric",
                         pattern: "[0-9]*",
                         enterKeyHint: "done"
@@ -735,13 +729,13 @@ const Home = ({ realstate, pagination}) => {
             ))}
           </Box>
         </>
-      ) : realEstate?.character?.data?.length > 0 ? (
+      ) : data.length > 0 ? (
         <Card data={realEstate} />
       ) : null}
 
       {!loading &&
         hasFilters &&
-        realEstate?.character?.data?.length <= 0 &&
+        data.length <= 0 &&
             <Container className="empty-state">
               <div class="empty-state__illustration">
                   <div class="empty-state__decor">

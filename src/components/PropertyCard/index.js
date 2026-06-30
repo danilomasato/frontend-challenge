@@ -12,16 +12,13 @@ import BedIcon from '@mui/icons-material/Bed';
 import ShowerIcon from '@mui/icons-material/Shower';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
-import SellIcon from '@mui/icons-material/Sell';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocationPinIcon from '@mui/icons-material/LocationOn';
 
-const PropertyCard = ({ key, card, count }) => {
+const PropertyCard = ({ card, count }) => {
 
   const history = useHistory();
   const dispatch = useDispatch();
   const handleClick = (card) => {
-    // console.log('click card', card)
     dispatch({
       type: types.RECEIVE_CHARACTER,
       payload: card
@@ -31,7 +28,7 @@ const PropertyCard = ({ key, card, count }) => {
 
   return (
     <>
-      <Card className="card" sx={{ maxWidth: 345 }}>
+      <Card className="card" sx={{ maxWidth: 345 }} style={{ height: '342.75px' }}>
         <ThumbSLider
           height="180"
           image={card.Fotos?.slice(1)}
@@ -44,7 +41,7 @@ const PropertyCard = ({ key, card, count }) => {
           <span className="badge-destaque">Destaque</span>
         ))}
 
-        <CardActionArea
+        <div className="card-action-area"
           sx={{
             '&:hover .MuiCardActionArea-focusHighlight': {
               opacity: 0,
@@ -125,7 +122,7 @@ const PropertyCard = ({ key, card, count }) => {
               </Button>
             </CardActions>
           </CardContent>
-        </CardActionArea>
+        </div>
       </Card>
     </>
   );
