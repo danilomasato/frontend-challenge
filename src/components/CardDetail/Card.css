@@ -29,7 +29,7 @@
 .ThumbSLider-author {
     position: absolute;
     width: 230px;
-    bottom: -120px;
+    bottom: -170px;
     right: 30px;
     padding-top: 30px;
     padding-bottom: 20px;
@@ -47,7 +47,7 @@
 	width: 230px;
     position: absolute;
     right: 30px;
-    top: 150px;
+    top: 190px;
     bottom: 0;
     background: #ffffff !important;
     border: none;
