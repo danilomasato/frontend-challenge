@@ -273,7 +273,8 @@
 	}
 
 	.back {
-        margin-top: 0px;
+        float: left;
+        margin-top: 10px;
 		margin-left: 20px;
 	}
 	div.row.center > div.ThumbSLider-highligh .card.imovel-info > button > div {
@@ -281,7 +282,8 @@
 	}
 
     .ThumbSLider-info {
-        padding: 10px 20px;
+        padding: 10px 15px;
+        margin: 0;
     }
 
     .ThumbSLider-info .imovel {
