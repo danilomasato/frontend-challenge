@@ -321,11 +321,12 @@ button[disabled] {
 	}
 
   .card .wrap-see-more {
-    position: inherit;
+    bottom: -10px;
   }
 
   .CardContent {
     width: stretch;
+    position: relative;
   }
 
   /* Container do carousel */

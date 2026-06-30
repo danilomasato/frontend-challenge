@@ -172,6 +172,12 @@ div[role="alert"] {
   stroke-width: none !important;
 }
 
+
+#preload {
+    display: grid;
+    gap: 30px;
+}
+
 @media only screen and (min-width: 1025px) {
 	.home.center {
 		width: 1230px;
@@ -232,8 +238,6 @@ div[role="alert"] {
     }
 
     #preload {
-        display: grid;
-        gap: 30px;
         width: 1230px;
         margin-inline: auto;
         margin-top: 40px;

@@ -28,7 +28,7 @@ const PropertyCard = ({ card, count }) => {
 
   return (
     <>
-      <Card className="card" sx={{ maxWidth: 345 }} style={{ height: '342.75px' }}>
+      <Card className="card" sx={{ maxWidth: 345 }}>
         <ThumbSLider
           height="180"
           image={card.Fotos?.slice(1)}
