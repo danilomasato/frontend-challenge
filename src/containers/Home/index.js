@@ -364,49 +364,28 @@ const Home = ({ realstate, pagination}) => {
                       <Autocomplete
                         disablePortal
                         options={options}
-                        value={search?.label ? search : null}
+                        value={
+                          options.find(option => option.id === search?.id) || null
+                        }
+                        getOptionLabel={(option) => option?.label || ""}
+                        isOptionEqualToValue={(option, value) =>
+                          option.id === value.id
+                        }
                         onChange={(event, value) => {
-                          if (!value) return;
-
-                          setSearch({
-                            label: value.label,
-                            id: value.id
-                          });
+                          setSearch(
+                            value || { label: "", id: "" }
+                          );
                         }}
-
                         renderInput={(params) => (
                           <TextField
                             {...params}
                             label="Selecione o Bairro"
-
-                            slotProps={{
+                            inputProps={{
                               ...params.inputProps,
-                              readOnly: true, // base
-                            }}
-
-                            onFocus={(e) => {
-                              // mata o teclado caso algum browser insista
-                              if (isMobile) e.target.blur();
-                            }}
-
-                            onClick={(e) => {
-                              // impede foco inicial em alguns Androids
-                              if (isMobile) e.target.blur();
+                              readOnly: isMobile
                             }}
                           />
                         )}
-
-                        slotProps={{
-                          textField: {
-                            onPointerDown: (e) => {
-                              // 🔥 ESSENCIAL: impede foco antes do teclado abrir
-                              if (isMobile) {
-                                e.preventDefault();
-                                e.target.blur();
-                              }
-                            }
-                          }
-                        }}
                       />
 
                       <LocationPinIcon className="LocationPinIcon mobile-location-icon" />
@@ -436,7 +415,7 @@ const Home = ({ realstate, pagination}) => {
                         fullWidth
                         label="Valor Mínimo"
                         variant="outlined"
-                        slotProps={{
+                        inputProps={{
                           inputMode: "numeric",
                           pattern: "[0-9]*",
                           enterKeyHint: "done"
@@ -470,7 +449,7 @@ const Home = ({ realstate, pagination}) => {
                         fullWidth
                         label="Valor Máximo"
                         variant="outlined"
-                        slotProps={{
+                        inputProps={{
                           inputMode: "numeric",
                           pattern: "[0-9]*",
                           enterKeyHint: "done"
@@ -603,7 +582,7 @@ const Home = ({ realstate, pagination}) => {
                       fullWidth
                       label="Valor Mínimo"
                       variant="outlined"
-                      slotProps={{
+                      inputProps={{
                         inputMode: "numeric",
                         pattern: "[0-9]*",
                         enterKeyHint: "done"
@@ -643,7 +622,7 @@ const Home = ({ realstate, pagination}) => {
                       fullWidth
                       label="Valor Máximo"
                       variant="outlined"
-                      slotProps={{
+                      inputProps={{
                         inputMode: "numeric",
                         pattern: "[0-9]*",
                         enterKeyHint: "done"
