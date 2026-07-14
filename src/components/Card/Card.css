@@ -198,8 +198,8 @@
   position: absolute;
 	-webkit-user-select: none;
   user-select: none;
-	width: 45px;
-	height: 45px;
+	width: 55px;
+	height: 55px;
 	cursor: pointer;
 	opacity: 0.95;
   background: rgba(255,255,255,.96);
@@ -230,12 +230,12 @@
 }
 
 .home  .buttonBack___1mlaL {
-	margin-left: -90px;
+	margin-left: -80px;
 }
 
 
 .home  .buttonNext___2mOCa {
-  right: -90px;
+  right: -110px;
 }
 
 .cards-grid {
