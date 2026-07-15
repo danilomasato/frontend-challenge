@@ -62,7 +62,6 @@ const Home = ({ realstate, pagination}) => {
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
 
-
   useEffect(() => {
 
     const payload =
@@ -87,22 +86,18 @@ const Home = ({ realstate, pagination}) => {
 
     setImoveis(payload);
 
-    const filteredData =
-      hasFilters
-        ? applyFilters(payload)
-        : payload;
-
-    setRealEstate({
-      character: {
-        data: filteredData
-      }
-    });
-
     if (isMobile) {
       setMobileSearchOpen(false);
     }
 
-    setLoading(false); // 🔥 aqui é o único lugar correto
+    if(!hasFilters) {
+      setRealEstate({
+        character: {
+          data: payload
+        }
+      });
+      setLoading(false); // close loading first data load
+    }
   }, [realstate, pagination, hasFilters]);
 
   let research= [];
@@ -149,7 +144,7 @@ const Home = ({ realstate, pagination}) => {
   }, []);
 
   const applyFilters = (data) => {
-
+    
     const parseValue = (value) => {
       if (!value) return 0;
 
@@ -220,28 +215,16 @@ const Home = ({ realstate, pagination}) => {
     });
   };
 
-  const handleClick = () => {
-
-    // abre loading
+  const handleClick = async () => {
     setLoading(true);
 
-    // informa que existe filtro ativo
-    setHasFilters(true);
+    // força a renderização do loading
+    await new Promise(resolve => requestAnimationFrame(resolve));
 
-    // aplica filtros na página atual
+    const start = Date.now();
+
     const results = applyFilters(imoveis);
 
-    // remove ids duplicados
-    const uniqueResults = Array.from(
-      new Map(
-        results.map(item => [
-          item.id || item.ID || item.Codigo || Math.random(),
-          item
-        ])
-      ).values()
-    );
-
-    // salva bairro para manter compatibilidade
     if (search?.label) {
       localStorage.setItem(
         "neighborhood",
@@ -249,17 +232,39 @@ const Home = ({ realstate, pagination}) => {
       );
     }
 
-      setRealEstate({
-        character: {
-          data: uniqueResults
-        }
-      });
-
-      setLoading(false);
-
-      if (window.innerWidth <= 1024) {
-        setMobileSearchOpen(false);
+    setRealEstate({
+      character: {
+        data: results
       }
+    });
+
+    //testa itens duplicados
+    // const ids = results.map(
+    //   item => item.id || item.ID || item.Codigo
+    // );
+
+    // console.log(
+    //   "Duplicados:",
+    //   ids.length !== new Set(ids).size
+    // );
+
+    setHasFilters(true);
+
+    // garante loading mínimo de 800ms
+    const elapsed = Date.now() - start;
+    const minimumLoadingTime = 800;
+
+    if (elapsed < minimumLoadingTime) {
+      await new Promise(resolve =>
+        setTimeout(resolve, minimumLoadingTime - elapsed)
+      );
+    }
+
+    setLoading(false);
+
+    if (window.innerWidth <= 1024) {
+      setMobileSearchOpen(false);
+    }
   };
 
   // Limpa o localStorage quando o usuário fecha a aba ou o navegador
@@ -512,49 +517,47 @@ const Home = ({ realstate, pagination}) => {
               <Grid className="wrap-search" container>
 
                 <Grid size={8}>
-                  {imoveis?.length > 0 && (
-                    <>
-                      <Box className="wrap-input">
-                        <label
-                          style={{
-                            fontFamily: "quicksand-regular",
-                            fontSize: "0.6rem",
-                            color: "rgba(0,0,0,.6)",
-                            margifn: "-3px 0 10px 0",
-                            display: "block"
-                          }}
-                        >
-                          Selecione o Bairro
-                        </label>
+                  <>
+                    <Box className="wrap-input">
+                      <label
+                        style={{
+                          fontFamily: "quicksand-regular",
+                          fontSize: "0.6rem",
+                          color: "rgba(0,0,0,.6)",
+                          margifn: "-3px 0 10px 0",
+                          display: "block"
+                        }}
+                      >
+                        Selecione o Bairro
+                      </label>
 
-                        <Autocomplete
-                          value={search.label || null}
-                          className="search-neighborhoods"
-                          disablePortal
-                          options={options}
-                          onChange={(event, value) => {
-                            setSearch({...search, 
-                              label: value.label,
-                              id: value.id
-                            });
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Selecione o Bairro"
-                            />
-                          )}
-                        />
+                      <Autocomplete
+                        value={search.label || null}
+                        className="search-neighborhoods"
+                        disablePortal
+                        options={options}
+                        onChange={(event, value) => {
+                          setSearch({...search, 
+                            label: value.label,
+                            id: value.id
+                          });
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Selecione o Bairro"
+                          />
+                        )}
+                      />
 
-                        <LocationPinIcon className="LocationPinIcon" />
+                      <LocationPinIcon className="LocationPinIcon" />
 
-                        <CloseIcon
-                          className="search-clear"
-                          onClick={resetFilters}
-                        />
-                      </Box>
-                    </>
-                  )}
+                      <CloseIcon
+                        className="search-clear"
+                        onClick={resetFilters}
+                      />
+                    </Box>
+                  </>
                 </Grid>
 
                 <Grid
