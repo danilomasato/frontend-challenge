@@ -39,7 +39,7 @@ import axios from 'axios';
 
 const CardDetail = ({ data }) => {
   const baseURL = process.env.REACT_APP_BASEURL;
-  const [urlShare, setUrlShare] = useState("https://tudosobreap.com.br/#/imovel/tsa/dcID="+ data?.documentId);
+  const [urlShare, setUrlShare] = useState();
   const idMount = window.location.hash.substring(0, 13).replace('#/imovel/', '')
   const [imovel, setImovel] = useState([]);
   const [card, setCard] = useState([]);
@@ -63,6 +63,8 @@ const CardDetail = ({ data }) => {
     setImovel(data)
     setVideo(imovel?.Fotos)
     setTipoAnuncio(imovel?.Tipo_de_Anuncio)
+		if(data?.documentId)
+		setUrlShare("https://tudosobreap.com.br/#/imovel/tsa/dcID="+ data?.documentId)
   }, [data]);
   
   const handleClickOpen = () => {
