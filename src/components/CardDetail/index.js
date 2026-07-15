@@ -39,7 +39,7 @@ import axios from 'axios';
 
 const CardDetail = ({ data }) => {
   const baseURL = process.env.REACT_APP_BASEURL;
-  const [urlShare, setUrlShare] = useState();
+  const [urlShare, setUrlShare] = useState("https://tudosobreap.com.br/#/imovel/tsa/dcID="+ data?.documentId);
   const idMount = window.location.hash.substring(0, 13).replace('#/imovel/', '')
   const [imovel, setImovel] = useState([]);
   const [card, setCard] = useState([]);
@@ -60,25 +60,9 @@ const CardDetail = ({ data }) => {
  
   useEffect(() => {
     const paramID  = getParameterByName('dcID')
-  
     setImovel(data)
     setVideo(imovel?.Fotos)
     setTipoAnuncio(imovel?.Tipo_de_Anuncio)
-  
-    if(data?.documentId) {
-      axios.post(`/url-shortener.php`,{
-        "destination":"https://tudosobreap.com.br/#/imovel/tsa/share/?dcID="+ data?.documentId,
-        "slug":""
-      })
-        .then(response => {
-          // Handle success.
-          setUrlShare(response.data.domain + '/' + response.data.slug )
-        })
-        .catch(error => {
-          // Handle error.
-          console.log('An error occurred:', error.response);
-        });
-    } 
   }, [data]);
   
   const handleClickOpen = () => {
@@ -137,7 +121,7 @@ const CardDetail = ({ data }) => {
 
   const handleClick = documentId => {
     setOpenShare(true)
-    copiarParaAreaDeTransferencia('https://' + urlShare);
+    copiarParaAreaDeTransferencia(urlShare);
     setTimeout(() => {
     // setOpenShare(false)
     }, 3500)
@@ -333,9 +317,9 @@ const total =
 
           <ButtonGroup className="ButtonGroup" variant="contained" aria-label="Basic button group">
             {video?.length > 0 && video.map((media, index) => {
-                if(media?.ext === ".mp4")
-                return <Button onClick={handleClickOpenVideo}><SlowMotionVideoIcon /> Vídeo </Button>
-          })}
+							if(media?.ext === ".mp4")
+							return <Button onClick={handleClickOpenVideo}><SlowMotionVideoIcon /> Vídeo </Button>
+          	})}
             <Button onClick={handleClickOpen}><AspectRatioIcon  className="expanded" /> Ampliar </Button>
             <Button onClick={(e) => {handleClick(imovel?.documentId) }}><ShareIcon /> Compartilhar </Button>
           </ButtonGroup>
@@ -355,7 +339,7 @@ const total =
 
             <Box className="contact"> 
               <Typography className="ThumbSLider-description" gutterBottom>
-                <a target={"_blank"} href={`https://wa.me/+5511961803698?text=Tenho interesse neste imóvel, pode me enviar mais informações? https://${urlShare}`}>
+                <a target={"_blank"} href={`https://wa.me/+5511961803698?text=Tenho interesse neste imóvel. Está disponível? ${encodeURIComponent(urlShare)}`}>
                   <Button size="small"><WhatsAppIcon /> Contato</Button>
                 </a>
                 {/* <b style={{ fontWeight: 600 }}>Contato:</b> {card.autor.contato}*/}
