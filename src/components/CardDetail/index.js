@@ -247,26 +247,6 @@ const total =
 
         <Box className="GroupBelowHighligh">
           <Box className="card imovel-info" key={imovel?.id}>
-            <Typography className="icon-card icon-sale" variant="h6" color="text.secondary">
-              {imovel?.Valor_Venda !== null ? (
-                <div>
-                  {parseFloat(imovel?.Valor_Venda?.replace('.',''))?.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                  })}
-                </div>
-              )
-                : 
-                  <div>
-                  {parseFloat(imovel?.Valor_Aluguel?.replace('.',''))?.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                  })}
-                </div>
-              }
-            </Typography>
-          </Box>
-          <Box className="card imovel-info" key={imovel?.id}>
             {imovel?.Area_Terreno !== null && (
               <Typography className="icon-card" variant="body2" color="text.secondary">
                 <FullscreenIcon />

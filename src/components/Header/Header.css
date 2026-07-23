@@ -167,14 +167,14 @@
   }
 
   #header.header-expanded {
-    height: 170px;
+    height: 218px;
   }
 
   #nav {
     display: grid;
     width: 100%;
     height: auto;
-    margin: 5px 0 0 0;
+    margin: 25px 0 0 0;
   }
 
   #nav li {

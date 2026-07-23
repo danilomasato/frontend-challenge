@@ -322,7 +322,10 @@ const Home = ({ realstate, pagination}) => {
 
   return (
     <React.Fragment>
-      <TopInfo />
+      {!isMobile && (
+        <TopInfo />
+      )}
+      
       <Header  />
 
       <div className="row center home">

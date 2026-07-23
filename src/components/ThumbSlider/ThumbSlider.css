@@ -291,6 +291,7 @@
 
   .slick-dots {
     margin-left: 1% !important;
+    display: none !important;
   }
 }
     

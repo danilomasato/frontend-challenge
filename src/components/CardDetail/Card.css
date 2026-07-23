@@ -2,8 +2,7 @@
     position: relative;
     float: left;
     width: 100%;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 20px 0;
 }
 
 .expanded {
@@ -168,28 +167,28 @@
     margin: 0;
 }
 
-.GroupBelowHighligh .imovel-info:nth-child(2) svg,
-.GroupBelowHighligh .imovel-info:nth-child(2) .icon-info {
+.GroupBelowHighligh .imovel-info svg,
+.GroupBelowHighligh .imovel-info .icon-info {
 	float: left;
 }
 
-.GroupBelowHighligh .imovel-info:nth-child(2) svg {
+.GroupBelowHighligh .imovel-info svg {
 	margin: 7px 10px 0 0;
 }
 
-.GroupBelowHighligh .imovel-info:nth-child(2) .icon-info {
+.GroupBelowHighligh .imovel-info .icon-info {
 	font-size: 0.9rem;
 	color: #494949;
 }
 
-.GroupBelowHighligh .imovel-info:nth-child(2) .icon-info span {
+.GroupBelowHighligh .imovel-info .icon-info span {
 	display: block;
 	font-size: 0.75rem;
 	line-height: 0.65rem;
 	letter-spacing: 0;
 }
 
-.GroupBelowHighligh .imovel-info:nth-child(2) {
+.GroupBelowHighligh .imovel-info {
     float: left;
     width: max-content;
     background: ghostwhite;
@@ -197,11 +196,11 @@
     padding: 10px
 }
 
-.GroupBelowHighligh .imovel-info:nth-child(2) p {
+.GroupBelowHighligh .imovel-info p {
     padding-right: 15px;
     border-right: 1px solid #cfcfe461;
 }
-.GroupBelowHighligh .imovel-info:nth-child(2) p:last-child {
+.GroupBelowHighligh .imovel-info p:last-child {
     border: none;
     padding: 0;
 		margin: 0;
@@ -234,7 +233,6 @@
 
 	.GroupBelowHighligh .ButtonGroup {
 		position: absolute;
-		top: 45px;
 		right: 30%;
 		box-shadow: none;
 	}
@@ -302,7 +300,7 @@
         margin: 0;
     }
 
-    .GroupBelowHighligh .imovel-info:nth-child(2) {
+    .GroupBelowHighligh .imovel-info {
         width: 100%;
         float: none;
         display: flex;
@@ -315,7 +313,7 @@
         box-sizing: border-box;
     }
 
-    .GroupBelowHighligh .imovel-info:nth-child(2) p {
+    .GroupBelowHighligh .imovel-info p {
         flex: 1;
         min-width: 90px;
         margin: 0;
@@ -324,19 +322,19 @@
         box-sizing: border-box;
     }
 
-    .GroupBelowHighligh .imovel-info:nth-child(2) p:last-child {
+    .GroupBelowHighligh .imovel-info p:last-child {
         border-right: none;
     }
 
-    .GroupBelowHighligh .imovel-info:nth-child(2) svg {
+    .GroupBelowHighligh .imovel-info svg {
         margin: 0 8px 0 0;
     }
 
-    .GroupBelowHighligh .imovel-info:nth-child(2) .icon-info {
+    .GroupBelowHighligh .imovel-info .icon-info {
         font-size: 0.85rem;
     }
 
-    .GroupBelowHighligh .imovel-info:nth-child(2) .icon-info span {
+    .GroupBelowHighligh .imovel-info .icon-info span {
         font-size: 0.7rem;
         line-height: 1rem;
     }

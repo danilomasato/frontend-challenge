@@ -63,14 +63,66 @@
 
 .ThumbSLider-info {
     float: left;
-    margin: 20px 0 0 0;
+    margin: 10px 0 0 0;
     color: #0b2c3d;
+    width: 100%;
 }
 
 .ThumbSLider-info .imovel {
     display: block;
     font-size: 22px;
     font-weight: bold;
+}
+
+.wrapper-property {
+    position: relative;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.property-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:12px;
+}
+
+.property-location {
+    display:flex;
+    gap:10px;
+    flex-shrink:0;
+}
+
+.location-chip {
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    padding:8px 14px;
+
+    background:#F4F8F7;
+    border:1px solid #E4ECE9;
+
+    border-radius:999px;
+
+    color:#4D5965;
+    font-size:15px;
+    font-weight:500;
+
+    white-space:nowrap;
+
+    transition:.2s;
+}
+
+.location-chip svg{
+    color:#247ac8;
+    font-size:19px;
+}
+
+.location-chip:hover{
+    background:#EDF7F2;
+    border-color:#CDE7D8;
 }
 
 #detail-imovel .MuiDialogContent-root {
@@ -107,21 +159,12 @@
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
-@media only screen and (max-width: 1024px) {
-	.TableInfo-imovel {
-			width: 100%  !important;
-	}
-
-  .ThumbSLider-highligh .slick-track img {
-    object-fit: cover;
-	}
-}
-
 .caracteristicas {
 	float: left;
-    overflow: hidden;
-    max-width: 60%;
+  overflow: hidden;
 	margin-bottom: 10px;
+  max-width: 60%;
+	margin-bottom: 10px 0;
 	transition: max-height 0.5s ease-in-out;
 }
 
@@ -239,7 +282,7 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-@media only screen and (min-width: 1280px) {
+@media only screen and (min-width: 1025px) {
 
 /* .ThumbSLider-highligh .slick-track img {
 	object-position: 0px -570px;
@@ -252,9 +295,32 @@
   .slick-next, .slick-next:hover, .slick-prev, .slick-prev:hover, .slick-slider>button {
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   }
+
+  .ThumbSLider-info .imovel {
+    width: 50%;
+    line-height: 1.7rem;
+  }
+
+  .property-header {
+    position: absolute;
+    top: 0;
+    right: 20%;
+  }
 }
 
 @media only screen and (max-width: 1024px) {
+  .TableInfo-imovel {
+			width: 100%  !important;
+	}
+
+  .ThumbSLider-highligh .slick-track img {
+    object-fit: cover;
+	}
+  
+    .property-header {
+      margin: 10px 0;
+    }
+
     .toggle-description {
         width: 100%;
         max-width: 220px;
@@ -289,7 +355,7 @@
 
     .ThumbSLider-info .imovel {
         font-size: 1.1rem;
-        line-height: 1.3rem;
+        line-height: 1.5rem;
     }
 
     .ThumbSLider-highligh .expanded {

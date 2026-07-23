@@ -30,6 +30,8 @@ import "./DetailImovel.css";
 import { getArticles } from "../../actions";
 import ThumbSLider from "../../components/ThumbSlider";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import LocationPinIcon from '@mui/icons-material/LocationOn';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
 import axios from 'axios';
 
 function getParameterByName(name, url = window.location.href) {
@@ -46,6 +48,7 @@ const CharacterDetail = ({ realestate }) => {
   const history = useHistory();
   const contentRef = useRef(null);
   const [imoveis, setImoveis] = useState();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
   
   let rows = []
 
@@ -138,7 +141,10 @@ const CharacterDetail = ({ realestate }) => {
 
   return (
     <React.Fragment>
-      <TopInfo />
+      {!isMobile && (
+        <TopInfo />
+      )}
+
       <Header />
 
         <div className="ThumbSLider-highligh slick-slider center slick-initialized">
@@ -156,7 +162,43 @@ const CharacterDetail = ({ realestate }) => {
         </Box>
 
         <div className="ThumbSLider-info">
+          <Box className="wrapper-property">
             <span className="imovel"> {imoveis?.titulo || ''} </span>
+            <div className="property-header">
+              <div className="property-location">
+                <span className="location-chip">
+                  <LocationPinIcon fontSize="small" />
+                  {imoveis?.Bairro || ''}
+                </span>
+
+                <span className="location-chip">
+                  <LocationCityIcon fontSize="small" />
+                  São Paulo - SP
+                </span>
+              </div>
+            </div>
+          </Box>
+
+          <Box className="card">
+            <Typography className="icon-card icon-sale" variant="h6" color="text.secondary">
+              {imoveis?.Valor_Venda !== null ? (
+                <div>
+                  {parseFloat(imoveis?.Valor_Venda?.replace('.',''))?.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  })}
+                </div>
+              )
+                : 
+                  <div>
+                  {parseFloat(imoveis?.Valor_Aluguel?.replace('.',''))?.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  })}
+                </div>
+              }
+            </Typography>
+          </Box>
         </div>
 
         <CardDetail data={imoveis} />
