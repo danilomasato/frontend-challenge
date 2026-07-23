@@ -203,11 +203,11 @@ div[role="alert"] {
     }
 
     /* focus SEM azul (principal) */
-    .MuiOutlinedInput-root.Mui-focused fieldset,
-    .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline,
-    .MuiOutlinedInput-root fieldset,
-    .MuiOutlinedInput-root:hover fieldset {
-    border-color: transparent !important;
+    .home .MuiOutlinedInput-root.Mui-focused fieldset,
+    .home .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline,
+    .home .MuiOutlinedInput-root fieldset,
+    .home .MuiOutlinedInput-root:hover fieldset {
+        border-color: transparent !important;
     }
 
     /* 🔥 remove qualquer shadow azul */

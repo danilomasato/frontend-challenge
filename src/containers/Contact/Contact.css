@@ -38,3 +38,18 @@ div[role="alert"] {
     margin-top: 1rem;
 }
 
+@media only screen and (max-width: 1024px) {
+
+    #contact iframe {
+	    display: none;
+    }
+
+    #contact .form {
+        width: 100%;
+        margin: 0;
+    } 
+
+    #contact .form div {
+        margin: 0 0 10px 0;
+    } 
+}
