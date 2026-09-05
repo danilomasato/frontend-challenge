@@ -61,12 +61,12 @@ const ThumbSLider = (props) => {
             {fotos.map((image, index) => {
               const imageSrc =
                 home === "true"
-                  ? image.formats?.small.url
+                  ? image.formats?.small?.url
                   : deviceWidth >= 1024 && detail === "true"
-                  ? image.formats?.medium.url
-                  : Object.hasOwn(image.formats, "large")
-                  ? image.formats.large?.url
-                  : image.formats.medium.url;
+                  ? image.formats?.medium?.url
+                  : image.formats?.large?.url ??
+                    image.formats?.medium?.url ??
+                    image.url;
 
               return (
                 <div key={index}>

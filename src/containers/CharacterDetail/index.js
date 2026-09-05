@@ -62,7 +62,7 @@ const CharacterDetail = ({ realestate }) => {
 
   useEffect(() => {
 
-    
+    console.log('=================>',getParameterByName('dcID'))
     //busca api por documentID
     if(paramID !== null){
 
@@ -175,6 +175,11 @@ const CharacterDetail = ({ realestate }) => {
                   <LocationCityIcon fontSize="small" />
                   São Paulo - SP
                 </span>
+                {imoveis?.codigo && (
+                  <span className="location-chip" style={{ display: 'block' }}>
+                    Cod. Imóvel <i>#</i>{imoveis.codigo}
+                  </span>
+                )}
               </div>
             </div>
           </Box>

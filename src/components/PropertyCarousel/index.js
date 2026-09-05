@@ -72,7 +72,7 @@ const PropertyCarousel = ({ title, items }) => {
           visibleSlides={1}
           step={1}
         >
-          <Slider style={{ height: items.length >= 2 ? '730px' : '370px' }}>
+          <Slider style={{ height: !isMobile ? (items.length <= 3 ? '360px' : '730px') : '' }}>
             {slides.map((group, index) => (
               <Slide key={index} index={index}>
                 <div className="cards-grid">

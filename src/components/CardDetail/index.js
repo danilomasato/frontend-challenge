@@ -64,7 +64,7 @@ const CardDetail = ({ data }) => {
     setVideo(imovel?.Fotos)
     setTipoAnuncio(imovel?.Tipo_de_Anuncio)
 		if(data?.documentId)
-		setUrlShare("https://tudosobreap.com.br/#/imovel/tsa/dcID="+ data?.documentId)
+		setUrlShare("https://tudosobreap.com.br/#/imovel/tsa/share?dcID="+ data?.documentId)
   }, [data]);
   
   const handleClickOpen = () => {

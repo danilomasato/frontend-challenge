@@ -41,6 +41,16 @@ const Register = ({ props }) => {
     creci: '' 
   });
 
+  const passwordValidation = {
+    minLength: formData.password.length >= 8,
+    uppercase: /[A-Z]/.test(formData.password),
+    lowercase: /[a-z]/.test(formData.password),
+    number: /\d/.test(formData.password),
+    special: /[!@#$%^&*(),.?":{}|<>_\-\\[\]/+=~`]/.test(formData.password),
+  };
+
+const isPasswordValid = Object.values(passwordValidation).every(Boolean);
+
   const handleChange = (e) => {
     const valor = e.target.value;
 
@@ -69,6 +79,14 @@ const Register = ({ props }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!isPasswordValid) {
+      alert(
+        "A senha deve conter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial."
+      );
+      return;
+    }
+
     if (!erro && email.length > 0) {
        axios.post('https://sublime-bat-ad2fca1255.strapiapp.com/admin/login', {
           "email": "danilomasato@hotmail.com",
@@ -233,27 +251,93 @@ const Register = ({ props }) => {
               value={formData.creci}
               name="creci"
                style={{float: 'left', width: '46%'}} />
+              
               <Box style={{ position: 'relative', float: 'left', width: '100%' }}>
-                <TextField
-                  style={{width: '100%'}} 
-                  label="Senha"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  type={showPassword ? 'text' : 'password'}
-                  variant="outlined" // or "filled", "standard"
-                  
-                />
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                  style={{ position: 'absolute', right: '1.2rem', top: '0.5rem'}}
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </Box>
+  <TextField
+    style={{ width: '100%' }}
+    label="Senha"
+    name="password"
+    value={formData.password}
+    onChange={handleChange}
+    type={showPassword ? 'text' : 'password'}
+    variant="outlined"
+  />
+
+<Box
+  sx={{
+    position: 'absolute',
+    top: 0,
+    left: '-320px',
+    width: '290px',
+    background: '#fff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '12px',
+    padding: '16px',
+    boxShadow: '0 10px 30px rgba(0,0,0,.08)',
+    zIndex: 10,
+
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: '22px',
+      right: '-10px',
+      width: '18px',
+      height: '18px',
+      background: '#fff',
+      borderTop: '1px solid #e5e7eb',
+      borderRight: '1px solid #e5e7eb',
+      transform: 'rotate(45deg)',
+    },
+  }}
+>
+    <Typography
+      variant="subtitle2"
+      sx={{
+        fontWeight: 600,
+        mb: 1.5
+      }}
+    >
+      Requisitos da senha
+    </Typography>
+
+    <div>
+      {passwordValidation.minLength ? "✅" : "❌"} Mínimo de 8 caracteres
+      {!passwordValidation.minLength &&
+        ` (${formData.password.length}/8)`}
+    </div>
+
+    <div>
+      {passwordValidation.uppercase ? "✅" : "❌"} Uma letra maiúscula
+    </div>
+
+    <div>
+      {passwordValidation.lowercase ? "✅" : "❌"} Uma letra minúscula
+    </div>
+
+    <div>
+      {passwordValidation.number ? "✅" : "❌"} Um número
+    </div>
+
+    <div>
+      {passwordValidation.special ? "✅" : "❌"} Um caractere especial
+    </div>
+  </Box>
+
+  <IconButton
+    aria-label="toggle password visibility"
+    onClick={handleClickShowPassword}
+    onMouseDown={handleMouseDownPassword}
+    edge="end"
+    style={{
+      position: 'absolute',
+      right: '1.2rem',
+      top: '0.5rem'
+    }}
+  >
+    {showPassword ? <VisibilityOff /> : <Visibility />}
+  </IconButton>
+</Box>
+
               <TextField
                 margin="normal"
                 required
@@ -273,7 +357,12 @@ const Register = ({ props }) => {
               <Typography className="ThumbSLider-description" gutterBottom>
                 <Checkbox {...label} defaultChecked style={{ paddingLeft: '0' }}/> Estando de acordo, você aceita nosso <a href="https://drive.google.com/file/d/14KrwuRBWVf1IT5m7Iu4FqS7D-bgyIYdE/view?usp=sharing" target="_blank">termos</a>
               </Typography>
-              <Button type="submit" variant="contained" endIcon={<SendIcon />}>
+              <Button
+                type="submit"
+                variant="contained"
+                endIcon={<SendIcon />}
+                disabled={!isPasswordValid}
+              >
                 Cadastrar
               </Button>
             </Box>

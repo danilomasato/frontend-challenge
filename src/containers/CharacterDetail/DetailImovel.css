@@ -109,6 +109,7 @@
     color:#4D5965;
     font-size:15px;
     font-weight:500;
+    line-height: 20px;
 
     white-space:nowrap;
 
@@ -120,9 +121,10 @@
     font-size:19px;
 }
 
-.location-chip:hover{
+.location-chip:nth-child(3):hover {
     background:#EDF7F2;
     border-color:#CDE7D8;
+    cursor: pointer;
 }
 
 #detail-imovel .MuiDialogContent-root {
@@ -304,7 +306,7 @@
   .property-header {
     position: absolute;
     top: 0;
-    right: 20%;
+    right: 0%;
   }
 }
 
@@ -360,6 +362,11 @@
 
     .ThumbSLider-highligh .expanded {
         display: none;
+    }
+
+    .location-chip {
+        font-size: 11px;
+        padding: 4px 8px;
     }
 }
 
