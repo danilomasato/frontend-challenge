@@ -52,13 +52,17 @@ const Register = ({ props }) => {
 const isPasswordValid = Object.values(passwordValidation).every(Boolean);
 
   const handleChange = (e) => {
-    const valor = e.target.value;
+    const { name, value } = e.target;
 
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setEmail(valor);
-    
-    // Atualiza o estado de erro baseado na validação
-    setErro(!validarEmail(valor));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (name === 'email') {
+      setEmail(value);
+      setErro(!validarEmail(value));
+    }
   };
   
   let JWTToken
@@ -253,90 +257,107 @@ const isPasswordValid = Object.values(passwordValidation).every(Boolean);
                style={{float: 'left', width: '46%'}} />
               
               <Box style={{ position: 'relative', float: 'left', width: '100%' }}>
-  <TextField
-    style={{ width: '100%' }}
-    label="Senha"
-    name="password"
-    value={formData.password}
-    onChange={handleChange}
-    type={showPassword ? 'text' : 'password'}
-    variant="outlined"
-  />
+                <TextField
+                  style={{ width: '100%' }}
+                  label="Senha"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  type={showPassword ? 'text' : 'password'}
+                  variant="outlined"
+                />
 
-<Box
-  sx={{
-    position: 'absolute',
-    top: 0,
-    left: '-320px',
-    width: '290px',
-    background: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: '12px',
-    padding: '16px',
-    boxShadow: '0 10px 30px rgba(0,0,0,.08)',
-    zIndex: 10,
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '-320px',
+                    width: '290px',
+                    background: '#fff',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    boxShadow: '0 10px 30px rgba(0,0,0,.08)',
+                    zIndex: 10,
 
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      top: '22px',
-      right: '-10px',
-      width: '18px',
-      height: '18px',
-      background: '#fff',
-      borderTop: '1px solid #e5e7eb',
-      borderRight: '1px solid #e5e7eb',
-      transform: 'rotate(45deg)',
-    },
-  }}
->
-    <Typography
-      variant="subtitle2"
-      sx={{
-        fontWeight: 600,
-        mb: 1.5
-      }}
-    >
-      Requisitos da senha
-    </Typography>
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: '22px',
+                      right: '-10px',
+                      width: '18px',
+                      height: '18px',
+                      background: '#fff',
+                      borderTop: '1px solid #e5e7eb',
+                      borderRight: '1px solid #e5e7eb',
+                      transform: 'rotate(45deg)',
+                    },
 
-    <div>
-      {passwordValidation.minLength ? "✅" : "❌"} Mínimo de 8 caracteres
-      {!passwordValidation.minLength &&
-        ` (${formData.password.length}/8)`}
-    </div>
+                    // 📱 MOBILE
+                    '@media (max-width: 768px)': {
+                      position: 'relative',
+                      top: 'auto',
+                      left: 'auto',
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      marginTop: '12px',
+                      marginBottom: '8px',
+                      padding: '14px',
 
-    <div>
-      {passwordValidation.uppercase ? "✅" : "❌"} Uma letra maiúscula
-    </div>
+                      // Remove a setinha do pop-up
+                      '&::before': {
+                        display: 'none',
+                      },
+                    },
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 1.5,
+                    }}
+                  >
+                    Requisitos da senha
+                  </Typography>
 
-    <div>
-      {passwordValidation.lowercase ? "✅" : "❌"} Uma letra minúscula
-    </div>
+                  <div>
+                    {passwordValidation.minLength ? "✅" : "❌"} Mínimo de 8 caracteres
+                    {!passwordValidation.minLength &&
+                      ` (${formData.password.length}/8)`}
+                  </div>
 
-    <div>
-      {passwordValidation.number ? "✅" : "❌"} Um número
-    </div>
+                  <div>
+                    {passwordValidation.uppercase ? "✅" : "❌"} Uma letra maiúscula
+                  </div>
 
-    <div>
-      {passwordValidation.special ? "✅" : "❌"} Um caractere especial
-    </div>
-  </Box>
+                  <div>
+                    {passwordValidation.lowercase ? "✅" : "❌"} Uma letra minúscula
+                  </div>
 
-  <IconButton
-    aria-label="toggle password visibility"
-    onClick={handleClickShowPassword}
-    onMouseDown={handleMouseDownPassword}
-    edge="end"
-    style={{
-      position: 'absolute',
-      right: '1.2rem',
-      top: '0.5rem'
-    }}
-  >
-    {showPassword ? <VisibilityOff /> : <Visibility />}
-  </IconButton>
-</Box>
+                  <div>
+                    {passwordValidation.number ? "✅" : "❌"} Um número
+                  </div>
+
+                  <div>
+                    {passwordValidation.special ? "✅" : "❌"} Um caractere especial
+                  </div>
+                </Box>
+
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                  style={{
+                    position: 'absolute',
+                    right: '1.2rem',
+                    top: '0.5rem'
+                  }}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </Box>
 
               <TextField
                 margin="normal"
