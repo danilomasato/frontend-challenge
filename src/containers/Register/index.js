@@ -20,6 +20,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import CloseIcon from '@mui/icons-material/Close';
+import { Loading } from "../../components/Loading";
 
 const Register = ({ props }) => {
 
@@ -28,6 +29,7 @@ const Register = ({ props }) => {
   const label = { slotProps: { input: { 'aria-label': 'Checkbox demo' } } };
   const [showPassword, setShowPassword] = useState(false);
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -38,32 +40,61 @@ const Register = ({ props }) => {
     user: '',
     email: '', 
     password: '',
-    creci: '' 
+    creci: '',
+    termsAccepted: false
   });
 
-  const passwordValidation = {
-    minLength: formData.password.length >= 8,
-    uppercase: /[A-Z]/.test(formData.password),
-    lowercase: /[a-z]/.test(formData.password),
-    number: /\d/.test(formData.password),
-    special: /[!@#$%^&*(),.?":{}|<>_\-\\[\]/+=~`]/.test(formData.password),
-  };
+const passwordValidation = {
+  minLength: formData.password.length >= 8,
+  uppercase: /[A-Z]/.test(formData.password),
+  lowercase: /[a-z]/.test(formData.password),
+  number: /\d/.test(formData.password),
+  special: /[^A-Za-z0-9]/.test(formData.password),
+};
 
-const isPasswordValid = Object.values(passwordValidation).every(Boolean);
+const isPasswordValid =
+  Object.values(passwordValidation).every(Boolean);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+const isCreciValid = /^\d{3}\.\d{3}$/.test(formData.creci);
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+const isFormValid =
+  formData.name.trim() !== '' &&
+  formData.surname.trim() !== '' &&
+  formData.user.trim() !== '' &&
+  isCreciValid &&
+  formData.email.trim() !== '' &&
+  !erro &&
+  isPasswordValid &&
+  formData.termsAccepted;
 
-    if (name === 'email') {
-      setEmail(value);
-      setErro(!validarEmail(value));
-    }
-  };
+const handleChange = (e) => {
+  const { name, value, type, checked } = e.target;
+
+  let newValue = value;
+
+  if (type === 'checkbox') {
+    newValue = checked;
+  }
+
+  if (name === 'creci') {
+    const numbers = value.replace(/\D/g, '').slice(0, 6);
+
+    newValue =
+      numbers.length > 3
+        ? `${numbers.slice(0, 3)}.${numbers.slice(3)}`
+        : numbers;
+  }
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]: newValue,
+  }));
+
+  if (name === 'email') {
+    setEmail(value);
+    setErro(!validarEmail(value));
+  }
+};
   
   let JWTToken
 
@@ -73,8 +104,14 @@ const isPasswordValid = Object.values(passwordValidation).every(Boolean);
     return regex.test(valor);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const formatCreci = (value) => {
+    const numbers = value.replace(/\D/g, '').slice(0, 6);
+
+    if (numbers.length <= 3) {
+      return numbers;
+    }
+
+    return `${numbers.slice(0, 3)}.${numbers.slice(3)}`;
   };
 
   const handleClose = () => {
@@ -91,85 +128,88 @@ const isPasswordValid = Object.values(passwordValidation).every(Boolean);
       return;
     }
 
-    if (!erro && email.length > 0) {
-       axios.post('https://sublime-bat-ad2fca1255.strapiapp.com/admin/login', {
-          "email": "danilomasato@hotmail.com",
-          "password": "Admin@123"
-        })
-          .then(response => {
-            // Handle success.
-            console.log('usuario criado!');
-            JWTToken = response.data.data.accessToken
-            console.log('User profile', response.data.data.accessToken);
-            axios.post('https://sublime-bat-ad2fca1255.strapiapp.com/admin/users', {
+    setLoading(true);
+
+    if (isFormValid) {
+      setOpen(true);
+
+      axios.post('https://sublime-bat-ad2fca1255.strapiapp.com/admin/login', {
+        "email": "danilomasato@hotmail.com",
+        "password": "Admin@123"
+      })
+        .then(response => {
+          // Handle success.
+          JWTToken = response.data.data.accessToken
+          console.log('User profile', response.data.data.accessToken);
+          axios.post('https://sublime-bat-ad2fca1255.strapiapp.com/admin/users', {
+              "firstname":formData.name,
+              "lastname": formData.surname,
+              "email": formData.email,
+              "roles":["2"]
+            }, {
+            headers: {
+              'Authorization': `Bearer ${JWTToken}`
+            }})
+            .then(response => {
+              console.log('usuario criado!');
+              
+              const id = response.data.data.id.toString()
+
+              axios.put(`https://sublime-bat-ad2fca1255.strapiapp.com/admin/users/${id}`, {
                 "firstname":formData.name,
                 "lastname": formData.surname,
-                "email": formData.email,
-                "roles":["2"]
-              }, {
+                "password": formData.password,
+                "roles":["2"],  
+                "isActive": true
+                }, {
               headers: {
                 'Authorization': `Bearer ${JWTToken}`
               }})
               .then(response => {
-               
-                const id = response.data.data.id.toString()
+                // Handle success.
+                console.log('usuario ativado!');                 
+              })
+              .catch(error => {
+                // Handle error.
+                console.log('An error occurred:', error.response);
+              });
 
-                axios.put(`https://sublime-bat-ad2fca1255.strapiapp.com/admin/users/${id}`, {
-                  "firstname":formData.name,
-                  "lastname": formData.surname,
-                  "password": formData.password,
-                  "roles":["2"],  
-                  "isActive": true
-                  }, {
-                headers: {
-                  'Authorization': `Bearer ${JWTToken}`
-                }})
-                .then(response => {
-                  // Handle success.
-                  console.log('usuario ativado!');
-                  setOpen(true);
-
-                  setTimeout(()=> {
-                    //abre modal
-                    setOpen(false);
-                    window.location.href = 'https://sublime-bat-ad2fca1255.strapiapp.com/admin'
-                  }, 6000)
-                })
-                .catch(error => {
-                  // Handle error.
-                  console.log('An error occurred:', error.response);
-                });
-
-                //api corretores para registrar o CRECI
-                axios.post(`https://sublime-bat-ad2fca1255.strapiapp.com/api/brokers`, {
-                    "data": {
-                      "nome":formData.name,
-                      "sobrenome": formData.surname,
-                      "creci": formData.creci,
-                      "email": formData.email
-                    }}, {
-                    headers: {
-                      'Authorization': `Bearer bb71d99fd4e9cc6af847e1f75af8eb8eb895c8cdc50b835d210efbf504e1bdb69005dd946f1c001a554d6eb8f867941f76e7dd8183213298576dd0cf0081c92a89117e759cdd270cc1fc3a46bd7bdf0a19489ee45c2bebf79828e2e775dfaaf2aad1feec705c8b4ebd14d470c9fa46fbca5734e8f98f20cb932193d3db19a050`
-                    }})
-                    .then(response => {
-                      // Handle success.
-                      console.log('brokers', response);
-  
-                    })
-                    .catch(error => {
-                      // Handle error.
-                      console.log('An error occurred:', error.response);
-                    });
-                })
-                .catch(error => {
-                  // Handle error.
-                  console.log('An error occurred:', error.response);
-                })
-          })
-          .catch(error => {
-            // Handle error.
-            console.log('An error occurred:', error.response);
-          });
+              //api corretores para registrar o CRECI
+              axios.post(`https://sublime-bat-ad2fca1255.strapiapp.com/api/brokers`, {
+                  "data": {
+                    "nome":formData.name,
+                    "sobrenome": formData.surname,
+                    "creci": formData.creci.replace(/\./g, ""),
+                    "email": formData.email
+                  }}, {
+                  headers: {
+                    //token FullAcess fixo para registrar Coleção API Corretores
+                    'Authorization': `Bearer bb71d99fd4e9cc6af847e1f75af8eb8eb895c8cdc50b835d210efbf504e1bdb69005dd946f1c001a554d6eb8f867941f76e7dd8183213298576dd0cf0081c92a89117e759cdd270cc1fc3a46bd7bdf0a19489ee45c2bebf79828e2e775dfaaf2aad1feec705c8b4ebd14d470c9fa46fbca5734e8f98f20cb932193d3db19a050`
+                  }})
+                  .then(response => {
+                    // Handle success.
+                    console.log('brokers', response);
+                    setLoading(false);
+                    setTimeout(()=> {
+                      //fecha modal
+                      setOpen(false);
+                      window.location.href = 'https://sublime-bat-ad2fca1255.strapiapp.com/admin'
+                    }, 6000)
+                  })
+                  .catch(error => {
+                    // Handle error.
+                    console.log('An error occurred:', error.response);
+                  });
+              })
+              .catch(error => {
+                // Handle error.
+                console.log('An error occurred:', error.response);
+              })
+        })
+        .catch(error => {
+          // Handle error.
+          console.log('An error occurred:', error.response);
+        });
     } else {
       setErro(true);
     }
@@ -190,13 +230,29 @@ const isPasswordValid = Object.values(passwordValidation).every(Boolean);
       >
         <DialogContent className="success">
             <div className="row center">
-            <div className="content" style={{ minHeight: "auto",  display: "block", width: "500px" }}>
-              <img src="https://tudosobreap.com.br/assets/images/loading.gif" width="100"/>
-              <Typography variant="h2" className="description">
-                Você foi registrado com Sucesso ! <br />
-                Vamos Redirecionar você para página de Administração de imóveis da TSA
-              </Typography> 
-                
+            <div className="content" style={{ minHeight: "50px",  display: "block", width: "500px" }}>
+
+              {loading ?
+                <>
+                  <img style={{ left: 'inherit' }} src="https://cdn.pixabay.com/animation/2023/05/02/04/29/04-29-06-428_512.gif" className="overlay-img" />
+                  <Typography variant="h5" className="title" style={{ 
+                    float: 'left',
+                    border: '0'
+                    }}
+                    >
+                    Registrando
+                  </Typography>
+                </>
+
+              : 
+              <>
+                <img src="https://tudosobreap.com.br/assets/images/loading.gif" width="100"/>
+                <Typography variant="h2" className="description">
+                  Você foi registrado com Sucesso ! <br />
+                  Vamos Redirecionar você para página de Administração de imóveis da TSA
+                </Typography> 
+              </>
+              } 
             </div>
           </div>
         </DialogContent>
@@ -375,16 +431,32 @@ const isPasswordValid = Object.values(passwordValidation).every(Boolean);
                 helperText={erro ? "Por favor, digite um e-mail válido." : ""}
               />
 
-              <Typography className="ThumbSLider-description" gutterBottom>
-                <Checkbox {...label} defaultChecked style={{ paddingLeft: '0' }}/> Estando de acordo, você aceita nosso <a href="https://drive.google.com/file/d/14KrwuRBWVf1IT5m7Iu4FqS7D-bgyIYdE/view?usp=sharing" target="_blank">termos</a>
-              </Typography>
+             <Typography className="ThumbSLider-description" gutterBottom>
+              <Checkbox
+                {...label}
+                name="termsAccepted"
+                checked={formData.termsAccepted}
+                onChange={handleChange}
+                style={{ paddingLeft: '0' }}
+              />
+
+              Estando de acordo, você aceita nosso{' '}
+
+              <a
+                href="https://drive.google.com/file/d/14KrwuRBWVf1IT5m7Iu4FqS7D-bgyIYdE/view?usp=sharing"
+                target="_blank"
+                rel="noreferrer"
+              >
+                termos
+              </a>
+            </Typography>
               <Button
                 type="submit"
                 variant="contained"
                 endIcon={<SendIcon />}
-                disabled={!isPasswordValid}
+                disabled={!isFormValid || loading}
               >
-                Cadastrar
+                {loading ? "Cadastrando..." : "Cadastrar"}
               </Button>
             </Box>
           </div>
