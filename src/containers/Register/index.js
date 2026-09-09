@@ -26,7 +26,6 @@ const Register = ({ props }) => {
 
   const [email, setEmail] = useState('');
   const [erro, setErro] = useState(false);
-  const label = { slotProps: { input: { 'aria-label': 'Checkbox demo' } } };
   const [showPassword, setShowPassword] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(false);
@@ -433,10 +432,10 @@ const handleChange = (e) => {
 
              <Typography className="ThumbSLider-description" gutterBottom>
               <Checkbox
-                {...label}
                 name="termsAccepted"
-                checked={formData.termsAccepted}
+                checked={Boolean(formData.termsAccepted)}
                 onChange={handleChange}
+                inputProps={{ 'aria-label': 'Aceitar termos de uso' }}
                 style={{ paddingLeft: '0' }}
               />
 
