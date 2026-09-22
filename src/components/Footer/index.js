@@ -12,8 +12,8 @@ export const Footer = data => {
                   <div className="footer-col">
                       <h4>Empresa</h4>
                       <ul>
-                          <li><a href="#/sobre-nos"> Quem somos </a></li>
-                          <li><a href="#/contato"> Fale Conosco </a></li>
+                          <li><a href="/sobre-nos"> Quem somos </a></li>
+                          <li><a href="/contato"> Fale Conosco </a></li>
                       </ul>
                   </div>
                  
@@ -39,7 +39,7 @@ export const Footer = data => {
                       <h4>Afiliados</h4>
                       <ul>
                           <li><a href="https://sublime-bat-ad2fca1255.strapiapp.com/admin/auth/login"> Acesso para Corretores </a></li>
-                          <li><a href="#/register">Venha ser parceiro TSA </a></li>
+                          <li><a href="/register">Venha ser parceiro TSA </a></li>
                       </ul>
                   </div>
                   

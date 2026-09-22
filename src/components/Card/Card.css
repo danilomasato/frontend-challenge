@@ -6,8 +6,9 @@
 .card .see-more {
 	background: #247ac8;
 	box-shadow: none;
-	font-size: 14px;
+	font-size: 13px;
 	text-transform: initial;
+  font-family: quicksand-regular, helvetica, arial !important;
 }
 
 .card .title-imovel {
@@ -15,7 +16,6 @@
 	max-height: 25px;
 	margin-bottom: 0;
 	font-size: 1.05rem;
-	letter-spacing: -0.6px;
 	font-weight: bold;
 	font-family: 'quicksand-regular', helvetica, arial;
 }

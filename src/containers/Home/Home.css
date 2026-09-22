@@ -77,7 +77,7 @@ div[role="alert"] {
 
 .minMax label,
 .minMax label:hover {
-    margin: -5px 0 0 0 !important;
+    margin: -8px 0 0 -13px !important;
     font-family: 'quicksand-regular', helvetica, arial !important;
     font-size: 0.8rem !important;
 }
@@ -176,6 +176,38 @@ div[role="alert"] {
 #preload {
     display: grid;
     gap: 30px;
+}
+
+.found-properties {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  position: absolute;
+  margin: 17px 0 0 1020px;
+}
+
+.found-properties span {
+  font-size: 1rem;
+  color: #666;
+}
+
+.found-properties strong {
+  font-size: 1rem;
+  color: #222;
+}
+
+.breadcrumb {
+	float: left;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1rem;
+  color: #777;
+  margin-top: 17px;
+}
+
+.breadcrumb-separator {
+  color: #aaa;
 }
 
 @media only screen and (min-width: 1025px) {

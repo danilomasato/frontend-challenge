@@ -306,6 +306,8 @@ const Home = ({ realstate, pagination}) => {
       min: 0,
       max: 0
     });
+  
+    setHasFilters(false);
 
     localStorage.removeItem("neighborhood");
 
@@ -527,7 +529,7 @@ const Home = ({ realstate, pagination}) => {
                           fontFamily: "quicksand-regular",
                           fontSize: "0.6rem",
                           color: "rgba(0,0,0,.6)",
-                          margifn: "-3px 0 10px 0",
+                          margin: "-5px 0 6px 0",
                           display: "block"
                         }}
                       >
@@ -704,7 +706,45 @@ const Home = ({ realstate, pagination}) => {
           </Box>
         </>
       ) : data.length > 0 ? (
+        <>
+         <div className="row" style={{ margin: '0'}}>
+          <div className="center">
+
+            <span className="breadcrumb">
+              <span>Imóveis</span>
+
+              <span className="breadcrumb-separator">›</span>
+
+              {hasFilters && category && category !== "todos" && (
+                <>
+                  <span>
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </span>
+
+                  <span className="breadcrumb-separator">›</span>
+                </>
+              )}
+
+              <span>
+                {!search?.label ? <strong>São Paulo</strong> : "São Paulo"}
+              </span>
+
+              {hasFilters && search?.label && (
+                <>
+                  <span className="breadcrumb-separator">›</span>
+                  <strong>{search.label}</strong>
+                </>
+              )}
+            </span>
+
+            <div className="found-properties">
+              <span>Imóveis encontrados: </span>
+              <strong>{data.length}</strong>
+            </div>
+          </div>
+         </div>
         <Card data={realEstate} />
+        </>
       ) : null}
 
       {!loading &&

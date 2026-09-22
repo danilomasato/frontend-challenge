@@ -213,8 +213,8 @@
   float: left;
   width: 15px;
   fill: #fff;
-  margin-top: -5px;
   padding-right: 8px;
+  height: auto;
 }
 
 @keyframes l3 {to{transform: rotate(1turn)}}

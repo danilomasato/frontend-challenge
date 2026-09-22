@@ -64,7 +64,7 @@ const CardDetail = ({ data }) => {
     setVideo(imovel?.Fotos)
     setTipoAnuncio(imovel?.Tipo_de_Anuncio)
 		if(data?.documentId)
-		setUrlShare("https://tudosobreap.com.br/#/imovel/tsa/share?dcID="+ data?.documentId)
+		setUrlShare("https://tudosobreap.com.br/imovel/tsa/share?dcID="+ data?.documentId)
   }, [data]);
   
   const handleClickOpen = () => {
@@ -161,7 +161,7 @@ const total =
         <Dialog
           open={open}
           onClose={handleClose}
-          fullWidth="lg"
+          fullWidth={true}
           maxWidth="lg"
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
@@ -181,7 +181,7 @@ const total =
         <Dialog
           open={openVideo}
           onClose={handleClose}
-          fullWidth="lg"
+          fullWidth={true}
           maxWidth="lg"
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
@@ -201,7 +201,7 @@ const total =
         <Dialog
           open={openShare}
           onClose={handleClose}
-          fullWidth="lg"
+          fullWidth={true}
           maxWidth="lg"
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
@@ -248,52 +248,52 @@ const total =
         <Box className="GroupBelowHighligh">
           <Box className="card imovel-info" key={imovel?.id}>
             {imovel?.Area_Terreno !== null && (
-              <Typography className="icon-card" variant="body2" color="text.secondary">
+              <Box className="icon-card" variant="body2" color="text.secondary">
                 <FullscreenIcon />
-                <Box className="icon-info">
+                <Typography className="icon-info">
                   <strong>{imovel?.Area_Terreno} m<span className="mcubico" style={{ display: 'inline-block'}}>2</span></strong> 
                   <span>Área terreno</span>
-                </Box>
-              </Typography>
+                </Typography>
+              </Box>
             )}
             {imovel?.Quartos ? (
-              <Typography className="icon-card" variant="body2" color="text.secondary">
+              <Box className="icon-card" variant="body2" color="text.secondary">
                 <BedIcon /> 
-                <Box className="icon-info">
+                <Typography className="icon-info">
                   <strong>{imovel?.Quartos + ' '}{imovel?.Quartos > 1 ? 'Quartos' : 'Quarto'} </strong> 
                   <span>Privativo</span>
-                </Box>
-              </Typography>
+                </Typography>
+              </Box>
             ) : ''}
 
             {imovel?.Suites ? (
-              <Typography className="icon-card" variant="body2" color="text.secondary">
+              <Box className="icon-card" variant="body2" color="text.secondary">
                 <BedIcon /> 
-                <Box className="icon-info">
+                <Typography className="icon-info">
                   <strong>{imovel?.Suites + ' '}{imovel?.Suites > 1 ? 'Suites' : 'Suite'} </strong> 
                   <span>Privativo</span>
-                </Box>
-              </Typography>
+                </Typography>
+              </Box>
             ) : ''}
             
             {imovel?.Banheiros ? (
-              <Typography className="icon-card" variant="body2" color="text.secondary">
+              <Box className="icon-card" variant="body2" color="text.secondary">
                 <ShowerIcon /> 
-                <Box className="icon-info">
+                <Typography className="icon-info">
                   <strong>{imovel?.Banheiros + ' '}{imovel?.Banheiros > 1 ? 'Banheiros' : 'Banheiro'} </strong> 
                   <span>Privativo</span>
-                </Box>
-              </Typography>
+                </Typography>
+              </Box>
             ) : ''}
 
             {imovel?.Vagas ? (
-              <Typography className="icon-card" variant="body2" color="text.secondary">
+              <Box className="icon-card" variant="body2" color="text.secondary">
                 <DirectionsCarIcon /> 
-                <Box className="icon-info">
+                <Typography className="icon-info">
                   <strong>{imovel?.Vagas + ' '}{imovel?.Vagas > 1 ? 'Vagas' : 'Vaga'} </strong> 
                   <span>Garagem Exclusiva</span>
-                </Box>
-              </Typography>
+                </Typography>
+              </Box>
             ) : ''}
           </Box>
 

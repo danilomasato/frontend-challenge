@@ -23,7 +23,12 @@ const PropertyCard = ({ card, count }) => {
       type: types.RECEIVE_CHARACTER,
       payload: card
     })
-    history.push(`/imovel/${card.id}/${card.titulo.replace(/[\s,]/g,"-").replace("/","-")}`)
+    history.push(
+      `/imovel/${card.id}/${card.titulo.replace(/[\s,]/g,"-").replace("/","-")}`,
+      { fromCard: true }
+    )
+
+    sessionStorage.clear();
   };
 
   return (
