@@ -1022,9 +1022,7 @@ const Home = ({
                       fullWidth
                       label="Tipo de Anúncio"
                       value={category}
-                      onChange={
-                        handleChangeCategory
-                      }
+                      onChange={handleChangeCategory}
                       SelectProps={{
                         MenuProps: {
                           disableScrollLock: true
@@ -1381,9 +1379,7 @@ const Home = ({
                     select
                     label="Tipo de Anúncio"
                     value={category}
-                    onChange={
-                      handleChangeCategory
-                    }
+                    onChange={handleChangeCategory}
                     style={{
                       minWidth: "100%"
                     }}
@@ -1747,7 +1743,14 @@ const Home = ({
           )}
 
 
-          <Card data={realEstate} />
+          {/* =====================================================
+              CARDS
+          ===================================================== */}
+
+          <Card
+            data={realEstate}
+            hasFilters={hasFilters}
+          />
 
         </>
 

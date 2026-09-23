@@ -17,102 +17,236 @@ export const getCharacterData = (id) =>
 
 /*
  * =====================================================
- * IMÓVEIS PAGINADOS
+ * CONSTRUÇÃO DOS FILTROS
  * =====================================================
- *
- * Esta função continua sendo usada pelos Cards.
- *
- * IMPORTANTE:
- * A paginação continua com 25 imóveis por página.
- *
- * Não alteramos essa lógica para não interferir
- * no funcionamento atual da paginação.
  */
 
-export const getArticles = (
-  page = 1,
+const buildFilterParams = (
+  params,
   filters = {}
 ) => {
 
-  const params = new URLSearchParams();
-
-
-  params.set(
-    "pagination[page]",
-    page
-  );
-
-
-  params.set(
-    "pagination[pageSize]",
-    25
-  );
-
-
-  params.set(
-    "populate",
-    "*"
-  );
-
-
-  params.set(
-    "sort",
-    "sortOrder:asc"
-  );
-
-
   /*
-   * ===================================================
+   * ---------------------------------------------------
    * BAIRRO
-   * ===================================================
+   * ---------------------------------------------------
    */
 
-  if (filters?.bairro) {
+  const bairro =
+    typeof filters?.bairro === "string"
+      ? filters.bairro.trim()
+      : "";
+
+
+  if (bairro) {
 
     params.set(
       "filters[Bairro][$containsi]",
-      filters.bairro
+      bairro
     );
 
   }
 
 
   /*
-   * ===================================================
+   * ---------------------------------------------------
    * CATEGORIA
-   * ===================================================
+   * ---------------------------------------------------
    */
 
+  const categoria =
+    typeof filters?.categoria === "string"
+      ? filters.categoria.trim()
+      : "";
+
+
   if (
-    filters?.categoria &&
-    filters.categoria !== "todos"
+    categoria &&
+    categoria.toLowerCase() !== "todos"
   ) {
 
     params.set(
       "filters[Tipo_de_Anuncio][$eq]",
-      filters.categoria
+      categoria
     );
 
   }
 
 
   /*
-   * ===================================================
+   * ---------------------------------------------------
    * VALOR MÍNIMO
-   * ===================================================
+   * ---------------------------------------------------
    */
 
-  if (filters?.min > 0) {
+  const min =
+    Number(filters?.min) || 0;
+
+
+  if (min > 0) {
 
     params.set(
       "filters[$or][0][Valor_Venda][$gte]",
-      filters.min
+      min
     );
 
 
     params.set(
       "filters[$or][1][Valor_Aluguel][$gte]",
-      filters.min
+      min
+    );
+
+  }
+
+
+  /*
+   * ---------------------------------------------------
+   * VALOR MÁXIMO
+   * ---------------------------------------------------
+   */
+
+  const max =
+    Number(filters?.max) || 0;
+
+
+  if (max > 0) {
+
+    params.set(
+      "filters[$or][0][Valor_Venda][$lte]",
+      max
+    );
+
+
+    params.set(
+      "filters[$or][1][Valor_Aluguel][$lte]",
+      max
+    );
+
+  }
+
+};
+
+
+/*
+ * =====================================================
+ * VERIFICA SE EXISTE ALGUM FILTRO
+ * =====================================================
+ */
+
+const hasActiveFilters = (
+  filters = {}
+) => {
+
+  const bairro =
+    typeof filters?.bairro === "string"
+      ? filters.bairro.trim()
+      : "";
+
+
+  const categoria =
+    typeof filters?.categoria === "string"
+      ? filters.categoria.trim()
+      : "";
+
+
+  const min =
+    Number(filters?.min) || 0;
+
+
+  const max =
+    Number(filters?.max) || 0;
+
+
+  return Boolean(
+    bairro ||
+    (
+      categoria &&
+      categoria.toLowerCase() !== "todos"
+    ) ||
+    min > 0 ||
+    max > 0
+  );
+
+};
+
+
+/*
+ * =====================================================
+ * IMÓVEIS PAGINADOS / BUSCA
+ * =====================================================
+ *
+ * SEM FILTROS:
+ *
+ * Mantém o comportamento atual:
+ *
+ * - 25 imóveis por página
+ * - paginação normal
+ *
+ *
+ * COM FILTROS:
+ *
+ * A consulta passa a buscar TODOS os imóveis
+ * correspondentes aos filtros.
+ *
+ * Os resultados são reunidos antes de serem
+ * devolvidos ao Home.
+ *
+ * Isso evita o problema de procurar, por exemplo,
+ * "Sabará" somente dentro dos 25 imóveis da página.
+ */
+
+export const getArticles = async (
+  page = 1,
+  filters = {}
+) => {
+
+  /*
+   * ===================================================
+   * BUSCA NORMAL
+   * ===================================================
+   *
+   * Nenhum filtro:
+   * continua usando a paginação normal.
+   */
+
+  if (!hasActiveFilters(filters)) {
+
+    const params =
+      new URLSearchParams();
+
+
+    const currentPage =
+      Number(page) > 0
+        ? Number(page)
+        : 1;
+
+
+    params.set(
+      "pagination[page]",
+      currentPage
+    );
+
+
+    params.set(
+      "pagination[pageSize]",
+      25
+    );
+
+
+    params.set(
+      "populate",
+      "*"
+    );
+
+
+    params.set(
+      "sort",
+      "sortOrder:asc"
+    );
+
+
+    return utils.GetAPI(
+      `Anuncios/?${params.toString()}`
     );
 
   }
@@ -120,29 +254,218 @@ export const getArticles = (
 
   /*
    * ===================================================
-   * VALOR MÁXIMO
+   * BUSCA COM FILTROS
+   * ===================================================
+   *
+   * Aqui NÃO usamos a paginação de 25 imóveis.
+   *
+   * Primeiro buscamos a quantidade total de páginas
+   * disponíveis para os filtros.
+   *
+   * Depois buscamos todas elas em paralelo e juntamos
+   * os resultados.
+   */
+
+
+  const firstParams =
+    new URLSearchParams();
+
+
+  /*
+   * Usamos um tamanho alto apenas para descobrir
+   * rapidamente a quantidade de resultados.
+   *
+   * A função continua buscando todas as páginas caso
+   * existam mais resultados.
+   */
+
+  const searchPageSize = 100;
+
+
+  firstParams.set(
+    "pagination[page]",
+    1
+  );
+
+
+  firstParams.set(
+    "pagination[pageSize]",
+    searchPageSize
+  );
+
+
+  firstParams.set(
+    "populate",
+    "*"
+  );
+
+
+  firstParams.set(
+    "sort",
+    "sortOrder:asc"
+  );
+
+
+  buildFilterParams(
+    firstParams,
+    filters
+  );
+
+
+  const firstResponse =
+    await utils.GetAPI(
+      `Anuncios/?${firstParams.toString()}`
+    );
+
+
+  const firstData =
+    Array.isArray(firstResponse?.data)
+      ? firstResponse.data
+      : [];
+
+
+  const firstPagination =
+    firstResponse?.meta?.pagination || {};
+
+
+  const pageCount =
+    Number(
+      firstPagination?.pageCount
+    ) || 1;
+
+
+  /*
+   * Se já couberam todos os resultados na primeira
+   * consulta, não precisamos fazer outras requisições.
+   */
+
+  let allData = [
+    ...firstData
+  ];
+
+
+  /*
+   * ===================================================
+   * BUSCA DAS DEMAIS PÁGINAS
    * ===================================================
    */
 
-  if (filters?.max > 0) {
+  if (pageCount > 1) {
 
-    params.set(
-      "filters[$or][0][Valor_Venda][$lte]",
-      filters.max
-    );
+    const requests = [];
 
 
-    params.set(
-      "filters[$or][1][Valor_Aluguel][$lte]",
-      filters.max
-    );
+    for (
+      let currentPage = 2;
+      currentPage <= pageCount;
+      currentPage++
+    ) {
+
+      const params =
+        new URLSearchParams();
+
+
+      params.set(
+        "pagination[page]",
+        currentPage
+      );
+
+
+      params.set(
+        "pagination[pageSize]",
+        searchPageSize
+      );
+
+
+      params.set(
+        "populate",
+        "*"
+      );
+
+
+      params.set(
+        "sort",
+        "sortOrder:asc"
+      );
+
+
+      buildFilterParams(
+        params,
+        filters
+      );
+
+
+      requests.push(
+        utils.GetAPI(
+          `Anuncios/?${params.toString()}`
+        )
+      );
+
+    }
+
+
+    const responses =
+      await Promise.all(
+        requests
+      );
+
+
+    for (
+      const response of responses
+    ) {
+
+      if (
+        Array.isArray(
+          response?.data
+        )
+      ) {
+
+        allData.push(
+          ...response.data
+        );
+
+      }
+
+    }
 
   }
 
 
-  return utils.GetAPI(
-    `Anuncios/?${params.toString()}`
-  );
+  /*
+   * ===================================================
+   * RESULTADO FINAL DA BUSCA
+   * ===================================================
+   *
+   * Agora todos os imóveis encontrados pertencem a
+   * uma única lista.
+   *
+   * O Home recebe pageCount = 1 porque os resultados
+   * filtrados serão exibidos juntos.
+   */
+
+  return {
+
+    data: allData,
+
+    meta: {
+
+      pagination: {
+
+        page: 1,
+
+        pageSize:
+          allData.length,
+
+        pageCount: 1,
+
+        total:
+          allData.length
+
+      }
+
+    }
+
+  };
 
 };
 
@@ -152,19 +475,10 @@ export const getArticles = (
  * TODOS OS BAIRROS
  * =====================================================
  *
- * Esta função é independente da paginação dos Cards.
+ * Esta função é independente da busca dos Cards.
  *
  * Ela percorre TODAS as páginas da API e coleta somente
  * o campo Bairro.
- *
- * Dessa forma:
- *
- * Página 1 -> bairros
- * Página 2 -> bairros
- * Página 3 -> bairros
- * Página N -> bairros
- *
- * Tudo é reunido em uma única lista.
  */
 
 export const getAllBairros = async () => {
@@ -176,12 +490,10 @@ export const getAllBairros = async () => {
    * ---------------------------------------------------
    * PRIMEIRA PÁGINA
    * ---------------------------------------------------
-   *
-   * Buscamos somente o campo Bairro para evitar
-   * carregar imagens e demais campos dos imóveis.
    */
 
-  const firstParams = new URLSearchParams();
+  const firstParams =
+    new URLSearchParams();
 
 
   firstParams.set(
@@ -208,18 +520,10 @@ export const getAllBairros = async () => {
     );
 
 
-  /*
-   * Guarda os dados encontrados na primeira página.
-   */
-
   const allData = [
     ...(firstResponse?.data || [])
   ];
 
-
-  /*
-   * Quantidade total de páginas.
-   */
 
   const pageCount =
     Number(
@@ -337,15 +641,6 @@ export const getAllBairros = async () => {
       continue;
     }
 
-
-    /*
-     * A chave em lowercase evita duplicados
-     * como:
-     *
-     * "Centro"
-     * "centro"
-     * "CENTRO"
-     */
 
     const key =
       normalized.toLowerCase();

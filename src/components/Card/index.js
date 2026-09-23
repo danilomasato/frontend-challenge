@@ -1,37 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./Card.css";
 
 import PropertyCarousel from "../PropertyCarousel";
 
 export default function MultiActionAreaCard(props) {
-
-  //first load
   const articles = props.data?.character?.data || [];
 
-  let sales = articles.filter(
-    item => item.Tipo_de_Anuncio === "venda"
-  );
-
-  let rents = articles.filter(
-    item => item.Tipo_de_Anuncio?.includes("aluguel")
-  );
-
-  let launches = articles.filter(
-    item => item.Tipo_de_Anuncio?.includes("Lançamentos")
-  );
-
-  const chunkArray = (array, size = 6) => {
-    const chunks = [];
-
-    for (let i = 0; i < array.length; i += size) {
-      chunks.push(array.slice(i, i + size));
-    }
-
-    return chunks;
+  const normalizeType = (value) => {
+    return String(value || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
   };
 
-return (
-    <> 
+  /*
+   * ---------------------------------------------------
+   * SEPARA OS IMÓVEIS POR TIPO
+   * ---------------------------------------------------
+   *
+   * A separação acontece tanto na Home normal quanto
+   * quando existem filtros ativos.
+   *
+   * Os filtros já foram aplicados pela API.
+   * Aqui apenas organizamos os resultados em seus
+   * respectivos carrosséis.
+   */
+
+  const sales = articles.filter((item) => {
+    const type = normalizeType(
+      item?.Tipo_de_Anuncio
+    );
+
+    return type.includes("venda");
+  });
+
+  const rents = articles.filter((item) => {
+    const type = normalizeType(
+      item?.Tipo_de_Anuncio
+    );
+
+    return type.includes("aluguel");
+  });
+
+  const launches = articles.filter((item) => {
+    const type = normalizeType(
+      item?.Tipo_de_Anuncio
+    );
+
+    return type.includes("lancamento");
+  });
+
+  return (
+    <>
       {sales.length > 0 && (
         <PropertyCarousel
           title="Imóveis à Venda"
@@ -53,5 +74,5 @@ return (
         />
       )}
     </>
-  )
+  );
 }
