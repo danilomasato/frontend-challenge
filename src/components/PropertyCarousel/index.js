@@ -201,13 +201,8 @@ const CarouselContent = ({
   }, [carouselContext]);
 
   /*
-   * Identifica quando o conteúdo dos slides mudou.
-   *
-   * Isso acontece quando a paginação troca, por exemplo:
-   * página 2 -> página 1.
-   *
-   * Usamos os IDs dos imóveis para detectar a mudança,
-   * mesmo que a quantidade de slides continue igual.
+   * Identifica quando os imóveis mudaram por causa
+   * da troca de página da paginação.
    */
   const slidesKey = slides
     .map((group) =>
@@ -218,11 +213,8 @@ const CarouselContent = ({
     .join('|');
 
   /*
-   * Quando os imóveis mudarem por causa da paginação,
-   * volta para o primeiro slide.
-   *
-   * O reset acontece somente quando o conteúdo realmente
-   * muda. A lógica da altura continua independente.
+   * Quando a página muda, volta o carrossel para
+   * o primeiro slide.
    */
   useEffect(() => {
     if (carouselContext.state.currentSlide !== 0) {
@@ -232,28 +224,29 @@ const CarouselContent = ({
     }
   }, [slidesKey, carouselContext]);
 
-  /*
-   * Último slide do carrossel.
-   */
   const isLastSlide =
     currentSlide === slides.length - 1;
 
   /*
-   * No desktop, quando o último slide possui menos
-   * de 4 imóveis, ele ocupa somente uma linha.
+   * Regra de altura:
    *
-   * Nesse caso reduzimos a altura de 730px para 362px.
+   * DESKTOP:
+   * último slide com menos de 4 itens = 362px
+   *
+   * MOBILE:
+   * último slide com menos de 2 itens = 362px
+   *
+   * Nos demais casos mantém a altura original.
    */
-  const isLastSlideWithLessThanFourCards =
-    !isMobile &&
+  const isLastSlideWithReducedHeight =
     isLastSlide &&
-    slides[currentSlide]?.length < 4;
+    (
+      (!isMobile && slides[currentSlide]?.length < 4) ||
+      (isMobile && slides[currentSlide]?.length < 2)
+    );
 
-  /*
-   * Altura animada do carrossel.
-   */
   const animatedHeight =
-    isLastSlideWithLessThanFourCards
+    isLastSlideWithReducedHeight
       ? '362px'
       : carouselHeight;
 
