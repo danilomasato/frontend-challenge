@@ -200,6 +200,34 @@ const CarouselContent = ({
     };
   }, [carouselContext]);
 
+  /*
+   * Cria uma assinatura do conteúdo atual do carrossel.
+   *
+   * Quando a paginação muda, os IDs dos imóveis mudam.
+   * Isso permite detectar a troca de página mesmo quando
+   * o número de slides continua exatamente igual.
+   */
+  const slidesKey = slides
+    .map((group) =>
+      group
+        .map((card) => card.id ?? card.documentId ?? '')
+        .join(',')
+    )
+    .join('|');
+
+  /*
+   * Sempre que o conteúdo do carrossel mudar
+   * (por exemplo: página 2 -> página 1),
+   * volta para o primeiro slide.
+   */
+  useEffect(() => {
+    if (carouselContext.state.currentSlide !== 0) {
+      carouselContext.setStoreState({
+        currentSlide: 0
+      });
+    }
+  }, [slidesKey, carouselContext]);
+
   const isLastSlide = currentSlide === slides.length - 1;
 
   const isLastSlideWithOneCard =
@@ -245,11 +273,6 @@ const CarouselContent = ({
         ))}
       </Slider>
 
-      {/* 
-        Desktop:
-        Os botões ficam novamente FORA dos cards,
-        abaixo do Slider, como na versão original.
-      */}
       {!isMobile && slides.length > 1 && (
         <CarouselControls
           isMobile={isMobile}
