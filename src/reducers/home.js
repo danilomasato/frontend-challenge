@@ -3,17 +3,35 @@ import {
   RECEIVE_PAGINATION
 } from "../constants/ActionTypes";
 
-const home = (state = {
+const home = (
+  state = {
     realestate: [],
     pagination: []
-    }, action) => {
+  },
+  action
+) => {
 
-    switch (action.type) {
-        case RECEIVE_HOME:
-            return {...state, realestate: action.payload};          
+  switch (action.type) {
+
+    case RECEIVE_HOME:
+
+      return {
+        ...state,
+        realestate: action.payload
+      };
+
+    case RECEIVE_PAGINATION:
+
+      return {
+        ...state,
+        pagination: action.payload
+      };
+
     default:
-        return state;
+
+      return state;
   }
-}
+
+};
 
 export default home;

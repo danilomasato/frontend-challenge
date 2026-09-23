@@ -97,7 +97,7 @@ div[role="alert"] {
   min-width: 220px !important;
   padding: 0 28px !important;
   border-radius: 14px !important;
-  margin-top: 15px !important;
+  margin-top: 10px !important;
 
   background: linear-gradient(
     90deg,
@@ -183,7 +183,8 @@ div[role="alert"] {
   align-items: baseline;
   gap: 8px;
   position: absolute;
-  margin: 17px 0 0 1020px;
+	right: 0;
+  margin: 17px -30px 0 0;
 }
 
 .found-properties span {
@@ -812,8 +813,7 @@ div[role="alert"] {
 	.clear-filters-button:hover {
 			background: #f7f7f7 !important;
 	}
-}
-@media only screen and (max-width: 1024px) {
+
 	.home .content > div > div {
 		grid-template-columns: none !important;
         grid-template-rows: 4fr;
@@ -845,6 +845,109 @@ div[role="alert"] {
 
 }
 
+/* =========================================================
+   RESULTADOS — MOBILE
+   ========================================================= */
+
+@media (max-width: 1024px) {
+
+  .results-summary {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 15px !important;
+  }
+
+  .results-summary > .center {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    display: block !important;
+
+    position: relative !important;
+  }
+
+
+  /* =======================================================
+     BREADCRUMB
+     ======================================================= */
+
+  .results-summary .breadcrumb {
+    display: block !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    font-size: 12px !important;
+    line-height: 20px !important;
+
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+
+    color: rgba(0, 0, 0, 0.55) !important;
+  }
+
+
+  .results-summary .breadcrumb > span {
+    display: inline !important;
+  }
+
+
+  .results-summary .breadcrumb .breadcrumb-separator {
+    display: inline !important;
+
+    margin: 0 6px !important;
+
+    color: rgba(36, 122, 200, 0.5) !important;
+  }
+
+
+  .results-summary .breadcrumb strong {
+    color: #247ac8 !important;
+    font-weight: 600 !important;
+  }
+
+
+  /* =======================================================
+     IMÓVEIS ENCONTRADOS
+     ======================================================= */
+
+  .results-summary .found-properties {
+    display: flex !important;
+
+    width: 100% !important;
+
+    margin: 4px 0 8px !important;
+    padding: 0 !important;
+
+    align-items: baseline !important;
+
+    font-size: 12px !important;
+    line-height: 20px !important;
+
+    color: rgba(0, 0, 0, 0.52) !important;
+  }
+
+
+  .results-summary .found-properties span {
+    display: inline !important;
+
+    margin: 0 5px 0 0 !important;
+  }
+
+
+  .results-summary .found-properties strong {
+    display: inline !important;
+
+    font-size: 15px !important;
+    font-weight: 700 !important;
+
+    color: #247ac8 !important;
+  }
+
+}
 
 
   

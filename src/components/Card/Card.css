@@ -277,17 +277,128 @@ button[disabled] {
 	bottom: inherit;
 }
 
+.divider {
+  display: flex !important;
+  align-items: center !important;
+  width: 100%;
+  border: 0 !important;
+  position: relative;
+}
+
+/* Linhas laterais */
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  border: 0 !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(36, 122, 200, 0.14) 10%,
+    rgba(36, 122, 200, 0.42) 38%,
+    rgba(118, 86, 199, 0.42) 62%,
+    rgba(118, 86, 199, 0.14) 90%,
+    transparent 100%
+  ) !important;
+}
+
+/* Título */
 .divider-chip {
-	background: rgb(11, 44, 61) !important;
-	color: #fff !important; 
-	font-size: 1.1rem !important;
-	padding: 1rem !important;
-	box-shadow: 1px 20px 50px 70px rgb(255 255 255 / 35%);
+  position: relative;
+
+  background: #fff !important;
+
+  color: transparent !important;
+
+  font-size: 1.375rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.015em;
+
+  padding: 0.55rem 1.4rem 0.7rem !important;
+
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Texto */
+.divider-chip .MuiChip-label {
+  position: relative;
+
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-bottom: 7px !important;
+
+  background: linear-gradient(
+    110deg,
+    #1769aa 0%,
+    #2588c7 30%,
+    #4d83c3 58%,
+    #7164bd 82%,
+    #7b5fba 100%
+  );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Sublinhado */
+.divider-chip .MuiChip-label::after {
+  content: "";
+  position: absolute;
+
+  left: 5%;
+  right: 5%;
+  bottom: 0;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(36, 122, 200, 0.35) 15%,
+    #247ac8 35%,
+    #527fc4 55%,
+    #7656c7 75%,
+    rgba(118, 86, 199, 0.35) 90%,
+    transparent 100%
+  );
+}
+
+/* Pequenos losangos laterais */
+.divider-chip::before,
+.divider-chip::after {
+  content: "";
+  position: absolute;
+
+  top: 50%;
+
+  width: 6px;
+  height: 6px;
+
+  background: linear-gradient(
+    135deg,
+    #247ac8 0%,
+    #7656c7 100%
+  );
+
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.divider-chip::before {
+  left: -9px;
+}
+
+.divider-chip::after {
+  right: -9px;
 }
 
 .divider-chip span {
-	cursor: default;
-	user-select: none;
+  cursor: default;
+  user-select: none;
 }
 
 @media only screen and (min-width: 1025px) {

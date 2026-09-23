@@ -1,810 +1,1864 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo
+} from "react";
+
 import { withRouter } from "react-router-dom";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { getArticles, getImoveisCache, getCharacterData } from "../../actions";
+
+import {
+  connect,
+  useDispatch
+} from "react-redux";
+
+import { getArticles } from "../../actions";
+
+import * as api from "../../api";
+import * as types from "../../constants/ActionTypes";
+
 import "./Home.css";
+
 import Card from "../../components/Card";
 import Pagination from "../../components/Pagination";
-import { TextField, MenuItem } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import { Button } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+
+import {
+  TextField,
+  MenuItem
+} from "@mui/material";
+
+import Autocomplete from "@mui/material/Autocomplete";
+
+import { Button } from "@mui/material";
+
+import SearchIcon from "@mui/icons-material/Search";
+
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+
 import { Header } from "../../components/Header";
 import { Loading } from "../../components/Loading";
 import { TopInfo } from "../../components/TopInfo";
 import { Footer } from "../../components/Footer";
-import { GetAPI } from "../../utils";
-// import { CustomerTestimonials } from "../../components/CustomerTestimonials";
-import CloseIcon from '@mui/icons-material/Close';
-import { NumericFormat } from 'react-number-format';
-import Typography from '@mui/material/Typography';
+
+import CloseIcon from "@mui/icons-material/Close";
+
+import { NumericFormat } from "react-number-format";
+
 import { Container } from "../../components";
-import LocationPinIcon from '@mui/icons-material/LocationOn';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+
+import LocationPinIcon from "@mui/icons-material/LocationOn";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+
 import PreloadCard from "../../components/PreloadCard";
-import Divider from '@mui/material/Divider';
-import Chip from '@mui/material/Chip';
-import { styled } from '@mui/material/styles';
 
-const Home = ({ realstate, pagination}) => {
+import Divider from "@mui/material/Divider";
+import Chip from "@mui/material/Chip";
 
-  const [realEstate, setRealEstate] = useState([]);
-  const [search, setSearch] = useState({label: '', id: ''});
-  const [loading, setLoading] = useState(true);
-  const [imoveis, setImoveis] = useState([]);
-  const [error, setError] = useState(null);
-  const [options, setOptions] = useState([]);
-  const [category, setCategory] = useState('');
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const [hasFilters, setHasFilters] = useState(false);
-  
-  const [optionsValue, setOptionsValue] = useState({
-    min: 0,
-    max: 0
+import { styled } from "@mui/material/styles";
+
+
+const Root = styled("div")(({ theme }) => ({
+  width: "100%",
+  ...theme.typography.body2,
+  color: (theme.vars || theme).palette.text.secondary,
+
+  "& > :not(style) ~ :not(style)": {
+    marginTop: theme.spacing(2),
+  },
+}));
+
+
+const Home = ({
+  realstate,
+  pagination
+}) => {
+
+  const dispatch = useDispatch();
+
+
+  /*
+   * =====================================================
+   * ESTADOS
+   * =====================================================
+   */
+
+  const [search, setSearch] = useState({
+    label: "",
+    id: ""
   });
+
+
+  const [loading, setLoading] =
+    useState(true);
+
+
+  const [imoveis, setImoveis] =
+    useState([]);
+
+
+  const [category, setCategory] =
+    useState("");
+
+
+  const [mobileSearchOpen, setMobileSearchOpen] =
+    useState(false);
+
+
+  const [hasFilters, setHasFilters] =
+    useState(false);
+
+
+  const [optionsValue, setOptionsValue] =
+    useState({
+      min: 0,
+      max: 0
+    });
+
+
+  const [isMobile, setIsMobile] =
+    useState(
+      window.innerWidth <= 1024
+    );
+
 
   const configPreload = 6;
 
-  //dados
-  const data = realEstate?.character?.data || [];
 
-  const Root = styled('div')(({ theme }) => ({
-    width: '100%',
-    ...theme.typography.body2,
-    color: (theme.vars || theme).palette.text.secondary,
-    '& > :not(style) ~ :not(style)': {
-      marginTop: theme.spacing(2),
-    },
-  }));
+  /*
+   * =====================================================
+   * DADOS DOS CARDS
+   * =====================================================
+   */
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+  const data = useMemo(
+    () =>
+      Array.isArray(realstate)
+        ? realstate
+        : [],
+    [realstate]
+  );
+
+
+  const realEstate = useMemo(
+    () => ({
+      character: {
+        data
+      }
+    }),
+    [data]
+  );
+
+
+  /*
+   * =====================================================
+   * CARREGAMENTO INICIAL
+   * =====================================================
+   */
 
   useEffect(() => {
 
-    const payload =
-    Array.isArray(pagination)
-      ? pagination
-      : realstate;
+    let mounted = true;
 
-    // Se payload vir vazio apartir do filtro aplicado, e tiver filtro aplicado, 
-    // quer dizer que não encontrou mais resultados apartir do filtros aplicados,
-    //então zera o realstate para exibir a tela "Não encontramos mais resultados."
-    if (!payload?.length) {
-      if (hasFilters) {
-        setRealEstate({
-          character: {
-            data: []
-          }
-        });
+
+    const loadInitialData = async () => {
+
+      setLoading(true);
+
+
+      const articlesPromise =
+        dispatch(
+          getArticles()
+        );
+
+
+      const bairrosPromise =
+        api.getAllBairros();
+
+
+      try {
+
+        await articlesPromise;
+
+      } catch (error) {
+
+        console.error(
+          "Erro ao carregar imóveis:",
+          error
+        );
+
+      } finally {
+
+        if (mounted) {
+
+          setLoading(false);
+
+        }
+
       }
 
+
+      try {
+
+        const bairros =
+          await bairrosPromise;
+
+
+        if (
+          mounted &&
+          Array.isArray(bairros)
+        ) {
+
+          setImoveis(
+            bairros.map(
+              (bairro) => ({
+                Bairro: bairro
+              })
+            )
+          );
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Erro ao carregar todos os bairros:",
+          error
+        );
+
+      }
+
+    };
+
+
+    loadInitialData();
+
+
+    return () => {
+
+      mounted = false;
+
+    };
+
+  }, [dispatch]);
+
+
+  /*
+   * =====================================================
+   * SINCRONIZA DADOS DOS CARDS
+   * =====================================================
+   */
+
+  useEffect(() => {
+
+    if (!Array.isArray(realstate)) {
       return;
     }
 
-    setImoveis(payload);
 
-    if (isMobile) {
+    if (
+      isMobile &&
+      realstate.length > 0
+    ) {
+
       setMobileSearchOpen(false);
+
     }
 
-    if(!hasFilters) {
-      setRealEstate({
-        character: {
-          data: payload
-        }
-      });
-      setLoading(false); // close loading first data load
+  }, [
+    realstate,
+    isMobile
+  ]);
+
+
+  /*
+   * =====================================================
+   * BAIRROS
+   * =====================================================
+   */
+
+  const options = useMemo(() => {
+
+    if (!imoveis?.length) {
+      return [];
     }
-  }, [realstate, pagination, hasFilters]);
 
-  let research= [];
 
-  //useEffect for not loop, and many request's
-  useEffect(() => {
-    //data for card
-    if(imoveis?.length > 0 ){
+    const bairros = new Map();
 
-      const mapa = new Map();
-      imoveis.forEach((obj, index) => {
-        if(obj.Bairro !== null)
-          mapa.set(obj.Bairro?.toLowerCase(), obj); // Define o ID como chave e o objeto como valor
-      });
 
-      let objetosUnicosPorId = Array.from(mapa.values());
+    for (
+      const item of imoveis
+    ) {
 
-      //monta array options bairros e ordena por ordem alfabetica
-      setOptions(objetosUnicosPorId.map((item) => ({
-          label: item.Bairro,
-          id: item.id || item.Codigo || `${item.Bairro}-${Math.random()}`
-        })).sort(function(a,b) {
-          if(a.label < b.label) return -1;
-          if(a.label > b.label) return 1;
-          return 0;
-      }))
-    } 
+      if (
+        typeof item?.Bairro !== "string"
+      ) {
+
+        continue;
+
+      }
+
+
+      const bairro =
+        item.Bairro.trim();
+
+
+      if (!bairro) {
+        continue;
+      }
+
+
+      bairros.set(
+        bairro.toLowerCase(),
+        bairro
+      );
+
+    }
+
+
+    return [
+      ...bairros.values()
+    ]
+      .sort(
+        (a, b) =>
+          a.localeCompare(
+            b,
+            "pt-BR",
+            {
+              sensitivity: "base"
+            }
+          )
+      )
+      .map(
+        (bairro) => ({
+          label: bairro,
+          id: bairro
+        })
+      );
+
   }, [imoveis]);
 
+
+  /*
+   * =====================================================
+   * DESABILITA BOTÃO DIREITO
+   * =====================================================
+   */
+
   useEffect(() => {
-  //Disable click right mouse
+
     const handleContextMenu = (e) => {
-      e.preventDefault(); // Prevent the default context menu
+
+      e.preventDefault();
+
     };
 
-    //Attach the event listener to the document body
-    document.body.addEventListener('contextmenu', handleContextMenu);
 
-    //Clean up the event listener when the component unmounts
+    document.body.addEventListener(
+      "contextmenu",
+      handleContextMenu
+    );
+
+
     return () => {
-      document.body.removeEventListener('contextmenu', handleContextMenu);
+
+      document.body.removeEventListener(
+        "contextmenu",
+        handleContextMenu
+      );
+
     };
 
   }, []);
 
-  const applyFilters = (data) => {
-    
-    const parseValue = (value) => {
-      if (!value) return 0;
 
-      return Number(
-        value
-          .toString()
-          .replace("R$", "")
-          .replace(/\./g, "")
-          .replace(",", "")
-          .trim()
-      );
-    };
+  /*
+   * =====================================================
+   * FILTROS ATUAIS
+   * =====================================================
+   */
 
-    const valueMin = parseValue(optionsValue?.min);
-    const valueMax = parseValue(optionsValue?.max);
+  const currentFilters = useMemo(() => ({
 
-    return data.filter((item) => {
+    bairro:
+      search?.label || "",
 
-      const hasBairro = !!search?.label;
-      const hasCategory = !!category;
-      const hasMin = valueMin > 0;
-      const hasMax = valueMax > 0;
+    categoria:
+      category || "",
 
-      const bairroMatch =
-        !hasBairro ||
-        item?.Bairro
-          ?.toLowerCase()
-          ?.includes(search.label.toLowerCase());
+    min:
+      Number(optionsValue?.min) || 0,
 
-      const categoryMatch =
-        !hasCategory ||
-        item?.Tipo_de_Anuncio === category;
+    max:
+      Number(optionsValue?.max) || 0
 
-      let valorImovel = null;
+  }), [
+    search,
+    category,
+    optionsValue
+  ]);
 
-      if (
-        item?.Tipo_de_Anuncio?.toLowerCase() === "venda" &&
-        item?.Valor_Venda
-      ) {
-        valorImovel = Number(
-          item.Valor_Venda.toString()
-            .replace(/\./g, "")
-            .replace(",", "")
-        );
-      }
 
-      if (
-        item?.Tipo_de_Anuncio?.toLowerCase() === "aluguel" &&
-        item?.Valor_Aluguel
-      ) {
-        valorImovel = Number(
-          item.Valor_Aluguel.toString()
-            .replace(/\./g, "")
-            .replace(",", "")
-        );
-      }
-
-      if ((hasMin || hasMax) && (!valorImovel || valorImovel <= 0)) {
-        return false;
-      }
-
-      return (
-        bairroMatch &&
-        categoryMatch &&
-        (!hasMin || valorImovel >= valueMin) &&
-        (!hasMax || valorImovel <= valueMax)
-      );
-    });
-  };
+  /*
+   * =====================================================
+   * APLICA FILTROS
+   * =====================================================
+   */
 
   const handleClick = async () => {
+
     setLoading(true);
 
-    // força a renderização do loading
-    await new Promise(resolve => requestAnimationFrame(resolve));
 
-    const start = Date.now();
+    setTimeout(async () => {
 
-    const results = applyFilters(imoveis);
+      try {
 
-    if (search?.label) {
-      localStorage.setItem(
-        "neighborhood",
-        search.label
-      );
-    }
+        const response =
+          await api.getArticles(
+            1,
+            currentFilters
+          );
 
-    setRealEstate({
-      character: {
-        data: results
+
+        dispatch({
+          type: types.RECEIVE_HOME,
+          payload: response
+        });
+
+
+        if (
+          response?.meta?.pagination
+        ) {
+
+          dispatch({
+            type: types.RECEIVE_PAGINATION,
+            payload:
+              response.meta.pagination
+          });
+
+        }
+
+
+        setHasFilters(true);
+
+
+        if (
+          currentFilters.bairro
+        ) {
+
+          localStorage.setItem(
+            "neighborhood",
+            currentFilters.bairro
+          );
+
+        } else {
+
+          localStorage.removeItem(
+            "neighborhood"
+          );
+
+        }
+
+
+        if (
+          window.innerWidth <= 1024
+        ) {
+
+          setMobileSearchOpen(false);
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Erro ao aplicar filtros:",
+          error
+        );
+
+
+        dispatch({
+          type: types.RECEIVE_HOME,
+          payload: {
+            data: [],
+            meta: {
+              pagination: {
+                page: 1,
+                pageSize: 25,
+                pageCount: 0,
+                total: 0
+              }
+            }
+          }
+        });
+
+
+        dispatch({
+          type: types.RECEIVE_PAGINATION,
+          payload: {
+            page: 1,
+            pageSize: 25,
+            pageCount: 0,
+            total: 0
+          }
+        });
+
+
+        setHasFilters(true);
+
+      } finally {
+
+        setLoading(false);
+
       }
+
+    }, 1);
+
+  };
+
+
+  /*
+   * =====================================================
+   * LIMPA LOCAL STORAGE AO FECHAR
+   * =====================================================
+   */
+
+  useEffect(() => {
+
+    const handleBeforeUnload = () => {
+
+      localStorage.clear();
+
+    };
+
+
+    window.addEventListener(
+      "beforeunload",
+      handleBeforeUnload
+    );
+
+
+    return () => {
+
+      window.removeEventListener(
+        "beforeunload",
+        handleBeforeUnload
+      );
+
+    };
+
+  }, []);
+
+
+  /*
+   * =====================================================
+   * CATEGORIA
+   * =====================================================
+   */
+
+  const handleChangeCategory = (
+    evento
+  ) => {
+
+    setCategory(
+      evento.target.value
+    );
+
+  };
+
+
+  /*
+   * =====================================================
+   * RESPONSIVIDADE
+   * =====================================================
+   */
+
+  useEffect(() => {
+
+    const handleResize = () => {
+
+      setIsMobile(
+        window.innerWidth <= 1024
+      );
+
+    };
+
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+
+    return () => {
+
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+
+    };
+
+  }, []);
+
+
+  /*
+   * =====================================================
+   * LIMPA TODOS OS FILTROS
+   * =====================================================
+   */
+
+  const resetFilters = async () => {
+
+    setSearch({
+      label: "",
+      id: ""
     });
 
-    //testa itens duplicados
-    // const ids = results.map(
-    //   item => item.id || item.ID || item.Codigo
-    // );
 
-    // console.log(
-    //   "Duplicados:",
-    //   ids.length !== new Set(ids).size
-    // );
+    setCategory("");
 
-    setHasFilters(true);
-
-    // garante loading mínimo de 800ms
-    const elapsed = Date.now() - start;
-    const minimumLoadingTime = 800;
-
-    if (elapsed < minimumLoadingTime) {
-      await new Promise(resolve =>
-        setTimeout(resolve, minimumLoadingTime - elapsed)
-      );
-    }
-
-    setLoading(false);
-
-    if (window.innerWidth <= 1024) {
-      setMobileSearchOpen(false);
-    }
-  };
-
-  // Limpa o localStorage quando o usuário fecha a aba ou o navegador
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      localStorage.clear(); // Clears all items
-      // Or use localStorage.removeItem('your_key_name'); for specific keys
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
-
-  const handleChangeCategory = (evento) => {
-    setCategory(evento.target.value);
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 1024);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  const resetFilters = () => {
-
-    setSearch({ label: null });
-    setCategory('');
 
     setOptionsValue({
       min: 0,
       max: 0
     });
-  
-    setHasFilters(false);
 
-    localStorage.removeItem("neighborhood");
 
-     setRealEstate({
-    character: {
-      data: imoveis
-    }
-  });
+    setLoading(true);
 
-    if (window.innerWidth <= 1024) {
-      setMobileSearchOpen(false);
-    }
+
+    localStorage.removeItem(
+      "neighborhood"
+    );
+
+
+    setTimeout(async () => {
+
+      try {
+
+        const response =
+          await api.getArticles(
+            1,
+            {}
+          );
+
+
+        dispatch({
+          type: types.RECEIVE_HOME,
+          payload: response
+        });
+
+
+        if (
+          response?.meta?.pagination
+        ) {
+
+          dispatch({
+            type: types.RECEIVE_PAGINATION,
+            payload:
+              response.meta.pagination
+          });
+
+        }
+
+
+        setHasFilters(false);
+
+
+        if (
+          window.innerWidth <= 1024
+        ) {
+
+          setMobileSearchOpen(false);
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Erro ao limpar filtros:",
+          error
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    }, 1);
+
   };
+
+
+  /*
+   * =====================================================
+   * RENDER
+   * =====================================================
+   */
 
   return (
     <React.Fragment>
+
       {!isMobile && (
         <TopInfo />
       )}
-      
-      <Header  />
 
-      <div className="row center home">
-        <div className="content" style={{ minHeight: "auto",  display: "block" }}>
+      <Header />
+
+
+      <div
+        className="row center home"
+        style={{
+          paddingTop: "10px",
+          paddingBottom: "0"
+        }}
+      >
+
+        <div
+          className="content"
+          style={{
+            minHeight: "auto",
+            display: "block"
+          }}
+        >
+
           <Box sx={{ flexGrow: 1 }}>
+
+
+            {/* =====================================================
+                MOBILE SEARCH
+            ===================================================== */}
+
             {isMobile && (
               <>
+
                 {mobileSearchOpen && (
+
                   <div
                     className="mobile-search-overlay"
-                    onClick={() => setMobileSearchOpen(false)}
+                    onClick={() =>
+                      setMobileSearchOpen(false)
+                    }
                   />
+
                 )}
 
+
                 <div className="mobile-search-trigger">
+
                   <Button
                     fullWidth
                     className="mobile-search-button"
-                    onClick={() => setMobileSearchOpen(true)}
+                    onClick={() =>
+                      setMobileSearchOpen(true)
+                    }
                   >
+
                     <SearchIcon />
+
                     Buscar Imóveis
+
                   </Button>
+
                 </div>
+
 
                 <div
                   className={`mobile-search-panel ${
-                    mobileSearchOpen ? "mobile-open" : ""
+                    mobileSearchOpen
+                      ? "mobile-open"
+                      : ""
                   }`}
                 >
+
                   <div className="mobile-search-header">
-                    <h2>Buscar Imóveis</h2>
+
+                    <h2>
+                      Buscar Imóveis
+                    </h2>
 
                     <CloseIcon
                       className="mobile-search-close-icon"
-                      onClick={() => setMobileSearchOpen(false)}
+                      onClick={() =>
+                        setMobileSearchOpen(false)
+                      }
                     />
+
                   </div>
+
 
                   <div className="mobile-search-content">
 
+
+                    {/* BAIRRO */}
+
                     {imoveis?.length > 0 && (
-                      <Box className="wrap-input neighborhood-mobile">
-                      <Autocomplete
-                        disablePortal
-                        options={options}
-                        value={
-                          options.find(option => option.id === search?.id) || null
-                        }
-                        getOptionLabel={(option) => option?.label || ""}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
-                        onChange={(event, value) => {
-                          setSearch(
-                            value || { label: "", id: "" }
-                          );
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Selecione o Bairro"
-                            inputProps={{
-                              ...params.inputProps,
-                              readOnly: isMobile
-                            }}
-                          />
-                        )}
-                      />
 
-                      <LocationPinIcon className="LocationPinIcon mobile-location-icon" />
+                      <Box
+                        className="wrap-input neighborhood-mobile"
+                      >
 
-                      {search && (
+                        <Autocomplete
+
+                          disablePortal
+
+                          options={options}
+
+                          value={
+                            options.find(
+                              option =>
+                                option.id ===
+                                search?.id
+                            ) || null
+                          }
+
+                          getOptionLabel={(option) =>
+                            option?.label || ""
+                          }
+
+                          isOptionEqualToValue={(
+                            option,
+                            value
+                          ) =>
+                            option.id ===
+                            value.id
+                          }
+
+                          onChange={(
+                            event,
+                            value
+                          ) => {
+
+                            setSearch(
+                              value || {
+                                label: "",
+                                id: ""
+                              }
+                            );
+
+                          }}
+
+                          renderInput={(params) => (
+
+                            <TextField
+                              {...params}
+                              label="Selecione o Bairro"
+                              inputProps={{
+                                ...params.inputProps,
+                                readOnly: isMobile
+                              }}
+                            />
+
+                          )}
+
+                        />
+
+
+                        <LocationPinIcon
+                          className="LocationPinIcon mobile-location-icon"
+                        />
+
+
                         <CloseIcon
-                        className="search-clear mobile-search-clear"
-                        onClick={resetFilters}
-                      />
-                      )}
-                    </Box>
+                          className="search-clear mobile-search-clear"
+                          onClick={resetFilters}
+                        />
+
+                      </Box>
+
                     )}
 
+
+                    {/* VALOR MÍNIMO */}
+
                     <Box className="wrap-input">
+
                       <NumericFormat
+
                         value={optionsValue.min}
+
                         onValueChange={(values) => {
+
                           setOptionsValue({
                             ...optionsValue,
                             min: values.value
                           });
+
                         }}
+
                         customInput={TextField}
+
                         thousandSeparator="."
+
                         decimalSeparator=","
+
                         prefix="R$ "
+
                         fullWidth
+
                         label="Valor Mínimo"
+
                         variant="outlined"
+
                         inputProps={{
                           inputMode: "numeric",
                           pattern: "[0-9]*",
                           enterKeyHint: "done"
                         }}
+
                         onFocus={() => {
-                          if (optionsValue.min === 0) {
-                            setOptionsValue({ ...optionsValue, min: "" });
+
+                          if (
+                            optionsValue.min === 0
+                          ) {
+
+                            setOptionsValue({
+                              ...optionsValue,
+                              min: ""
+                            });
+
                           }
+
                         }}
+
                         onBlur={() => {
-                          if (!optionsValue.min) {
-                            setOptionsValue({ ...optionsValue, min: 0 });
+
+                          if (
+                            !optionsValue.min
+                          ) {
+
+                            setOptionsValue({
+                              ...optionsValue,
+                              min: 0
+                            });
+
                           }
+
                         }}
+
                       />
+
                     </Box>
 
+
+                    {/* VALOR MÁXIMO */}
+
                     <Box className="wrap-input">
+
                       <NumericFormat
+
                         value={optionsValue.max}
+
                         onValueChange={(values) => {
+
                           setOptionsValue({
                             ...optionsValue,
                             max: values.value
                           });
+
                         }}
+
                         customInput={TextField}
+
                         thousandSeparator="."
+
                         decimalSeparator=","
+
                         prefix="R$ "
+
                         fullWidth
+
                         label="Valor Máximo"
+
                         variant="outlined"
+
                         inputProps={{
                           inputMode: "numeric",
                           pattern: "[0-9]*",
                           enterKeyHint: "done"
                         }}
+
                         onFocus={() => {
-                          if (optionsValue.max === 0) {
-                            setOptionsValue({ ...optionsValue, max: "" });
+
+                          if (
+                            optionsValue.max === 0
+                          ) {
+
+                            setOptionsValue({
+                              ...optionsValue,
+                              max: ""
+                            });
+
                           }
+
                         }}
+
                         onBlur={() => {
-                          if (!optionsValue.max) {
-                            setOptionsValue({ ...optionsValue, max: 0 });
+
+                          if (
+                            !optionsValue.max
+                          ) {
+
+                            setOptionsValue({
+                              ...optionsValue,
+                              max: 0
+                            });
+
                           }
+
                         }}
+
                       />
+
                     </Box>
+
+
+                    {/* CATEGORIA */}
 
                     <TextField
                       select
                       fullWidth
                       label="Tipo de Anúncio"
                       value={category}
-                      onChange={handleChangeCategory}
+                      onChange={
+                        handleChangeCategory
+                      }
                       SelectProps={{
                         MenuProps: {
                           disableScrollLock: true
                         }
                       }}
                     >
-                      <MenuItem value="todos">Todos</MenuItem>
-                      <MenuItem value="venda">Venda</MenuItem>
-                      <MenuItem value="aluguel">Aluguel</MenuItem>
+
+                      <MenuItem value="">
+                        Todos
+                      </MenuItem>
+
+                      <MenuItem value="venda">
+                        Venda
+                      </MenuItem>
+
+                      <MenuItem value="aluguel">
+                        Aluguel
+                      </MenuItem>
+
                       <MenuItem value="Lançamentos">
                         Lançamentos
                       </MenuItem>
+
                     </TextField>
+
 
                     <Button
                       className="search-button"
                       variant="contained"
                       onClick={handleClick}
                     >
+
                       Buscar Imóveis
+
                       <SearchIcon />
+
                     </Button>
+
+
                     <Button
-                    className="clear-filters-button"
-                    variant="outlined"
-                    onClick={resetFilters}
-                  >
-                    Limpar filtros
-                  </Button>
+                      className="clear-filters-button"
+                      variant="outlined"
+                      onClick={resetFilters}
+                    >
+
+                      Limpar filtros
+
+                    </Button>
 
                   </div>
+
                 </div>
+
               </>
             )}
 
+
+            {/* =====================================================
+                DESKTOP SEARCH
+            ===================================================== */}
+
             {!isMobile && (
-              <Grid className="wrap-search" container>
+
+              <Grid
+                className="wrap-search"
+                container
+              >
+
+                {/* BAIRRO */}
 
                 <Grid size={8}>
-                  <>
-                    <Box className="wrap-input">
-                      <label
-                        style={{
-                          fontFamily: "quicksand-regular",
-                          fontSize: "0.6rem",
-                          color: "rgba(0,0,0,.6)",
-                          margin: "-5px 0 6px 0",
-                          display: "block"
-                        }}
-                      >
-                        Selecione o Bairro
-                      </label>
 
-                      <Autocomplete
-                        value={search.label || null}
-                        className="search-neighborhoods"
-                        disablePortal
-                        options={options}
-                        onChange={(event, value) => {
-                          setSearch({...search, 
-                            label: value.label,
-                            id: value.id
-                          });
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Selecione o Bairro"
-                          />
-                        )}
-                      />
+                  <Box className="wrap-input">
 
-                      <LocationPinIcon className="LocationPinIcon" />
+                    <label
+                      style={{
+                        fontFamily:
+                          "quicksand-regular",
+                        fontSize: "0.6rem",
+                        color:
+                          "rgba(0,0,0,.6)",
+                        margin:
+                          "-5px 0 6px 0",
+                        display: "block"
+                      }}
+                    >
+                      Selecione o Bairro
+                    </label>
 
-                      <CloseIcon
-                        className="search-clear"
-                        onClick={resetFilters}
-                      />
-                    </Box>
-                  </>
+
+                    <Autocomplete
+
+                      value={
+                        search?.label || null
+                      }
+
+                      className="search-neighborhoods"
+
+                      disablePortal
+
+                      options={options}
+
+                      getOptionLabel={(option) =>
+                        typeof option === "string"
+                          ? option
+                          : option?.label || ""
+                      }
+
+                      isOptionEqualToValue={(
+                        option,
+                        value
+                      ) => {
+
+                        const optionId =
+                          typeof option === "string"
+                            ? option
+                            : option?.id;
+
+                        const valueId =
+                          typeof value === "string"
+                            ? value
+                            : value?.id;
+
+                        return (
+                          optionId ===
+                          valueId
+                        );
+
+                      }}
+
+                      onChange={(
+                        event,
+                        value
+                      ) => {
+
+                        setSearch(
+                          value || {
+                            label: "",
+                            id: ""
+                          }
+                        );
+
+                      }}
+
+                      renderInput={(params) => (
+
+                        <TextField
+                          {...params}
+                          label="Selecione o Bairro"
+                        />
+
+                      )}
+
+                    />
+
+
+                    <LocationPinIcon
+                      className="LocationPinIcon"
+                    />
+
+
+                    <CloseIcon
+                      className="search-clear"
+                      onClick={resetFilters}
+                    />
+
+                  </Box>
+
                 </Grid>
+
+
+                {/* VALORES */}
 
                 <Grid
                   component="form"
-                  sx={{ "& > :not(style)": { width: "15ch" } }}
+                  sx={{
+                    "& > :not(style)": {
+                      width: "15ch"
+                    }
+                  }}
                   noValidate
                   autoComplete="off"
                   className="minMax"
                 >
+
                   <Box className="wrap-input">
-                    <MonetizationOnIcon className="MonetizationOnIcon" />
+
+                    <MonetizationOnIcon
+                      className="MonetizationOnIcon"
+                    />
 
                     <NumericFormat
+
                       value={optionsValue.min}
+
                       onValueChange={(values) => {
+
                         setOptionsValue({
                           ...optionsValue,
                           min: values.value
                         });
+
                       }}
+
                       customInput={TextField}
+
                       thousandSeparator="."
+
                       decimalSeparator=","
+
                       prefix="R$ "
+
                       fullWidth
+
                       label="Valor Mínimo"
+
                       variant="outlined"
+
                       inputProps={{
                         inputMode: "numeric",
                         pattern: "[0-9]*",
                         enterKeyHint: "done"
                       }}
+
                       onFocus={() => {
-                        if (optionsValue.min === 0) {
-                          setOptionsValue({ ...optionsValue, min: "" });
+
+                        if (
+                          optionsValue.min === 0
+                        ) {
+
+                          setOptionsValue({
+                            ...optionsValue,
+                            min: ""
+                          });
+
                         }
+
                       }}
+
                       onBlur={() => {
-                        if (!optionsValue.min) {
-                          setOptionsValue({ ...optionsValue, min: 0 });
+
+                        if (
+                          !optionsValue.min
+                        ) {
+
+                          setOptionsValue({
+                            ...optionsValue,
+                            min: 0
+                          });
+
                         }
+
                       }}
-                      isAllowed={(values) => {
-                        // evita NaN e quebra de layout
-                        return values.value === "" || Number(values.value) >= 0;
-                      }}
+
+                      isAllowed={(values) =>
+                        values.value === "" ||
+                        Number(values.value) >= 0
+                      }
+
                     />
+
                   </Box>
 
+
                   <Box className="wrap-input">
-                    <MonetizationOnIcon className="MonetizationOnIcon" />
+
+                    <MonetizationOnIcon
+                      className="MonetizationOnIcon"
+                    />
 
                     <NumericFormat
+
                       value={optionsValue.max}
+
                       onValueChange={(values) => {
+
                         setOptionsValue({
                           ...optionsValue,
                           max: values.value
                         });
+
                       }}
+
                       customInput={TextField}
+
                       thousandSeparator="."
+
                       decimalSeparator=","
+
                       prefix="R$ "
+
                       fullWidth
+
                       label="Valor Máximo"
+
                       variant="outlined"
+
                       inputProps={{
                         inputMode: "numeric",
                         pattern: "[0-9]*",
                         enterKeyHint: "done"
                       }}
+
                       onFocus={() => {
-                        if (optionsValue.max === 0) {
-                          setOptionsValue({ ...optionsValue, max: "" });
+
+                        if (
+                          optionsValue.max === 0
+                        ) {
+
+                          setOptionsValue({
+                            ...optionsValue,
+                            max: ""
+                          });
+
                         }
+
                       }}
+
                       onBlur={() => {
-                        if (!optionsValue.max) {
-                          setOptionsValue({ ...optionsValue, max: 0 });
+
+                        if (
+                          !optionsValue.max
+                        ) {
+
+                          setOptionsValue({
+                            ...optionsValue,
+                            max: 0
+                          });
+
                         }
+
                       }}
-                      isAllowed={(values) => {
-                        // evita NaN e quebra de layout
-                        return values.value === "" || Number(values.value) >= 0;
-                      }}
+
+                      isAllowed={(values) =>
+                        values.value === "" ||
+                        Number(values.value) >= 0
+                      }
+
                     />
+
                   </Box>
+
                 </Grid>
 
-                <Grid size={12} className="minMax">
+
+                {/* CATEGORIA */}
+
+                <Grid
+                  size={12}
+                  className="minMax"
+                >
+
                   <TextField
                     select
                     label="Tipo de Anúncio"
                     value={category}
-                    onChange={handleChangeCategory}
-                    style={{ minWidth: '100%' }}
+                    onChange={
+                      handleChangeCategory
+                    }
+                    style={{
+                      minWidth: "100%"
+                    }}
                     className="selectType"
                   >
-                    <MenuItem value="">Todos</MenuItem>
-                    <MenuItem value="venda">Venda</MenuItem>
-                    <MenuItem value="aluguel">Aluguel</MenuItem>
-                    <MenuItem value="Lançamentos">Lançamentos</MenuItem>
+
+                    <MenuItem value="">
+                      Todos
+                    </MenuItem>
+
+                    <MenuItem value="venda">
+                      Venda
+                    </MenuItem>
+
+                    <MenuItem value="aluguel">
+                      Aluguel
+                    </MenuItem>
+
+                    <MenuItem value="Lançamentos">
+                      Lançamentos
+                    </MenuItem>
+
                   </TextField>
+
                 </Grid>
 
+
+                {/* BOTÃO */}
+
                 <Grid size={4}>
+
                   <Button
                     className="search-button"
                     variant="contained"
-                    style={{ width: "100%" }}
+                    style={{
+                      width: "100%"
+                    }}
                     onClick={handleClick}
                   >
+
                     Buscar Imóveis
+
                     <SearchIcon />
+
                   </Button>
+
                 </Grid>
+
               </Grid>
+
             )}
 
           </Box>
+
         </div>
+
       </div>
 
+
+      {/* =====================================================
+          RESULTADOS
+      ===================================================== */}
+
       {loading ? (
+
         <>
+
           <Root>
+
             <Divider className="divider">
+
               <Chip
                 className="divider-chip"
                 label="Imóveis à Venda"
                 size="small"
               />
+
             </Divider>
+
           </Root>
 
-          <Box id="preload" className="preload">
-            {Array.from({ length: configPreload }).map((_, index) => (
-              <PreloadCard key={`preload-${index}`} />
+
+          <Box
+            id="preload"
+            className="preload"
+          >
+
+            {Array.from({
+              length: configPreload
+            }).map((_, index) => (
+
+              <PreloadCard
+                key={`preload-${index}`}
+              />
+
             ))}
+
           </Box>
+
         </>
+
       ) : data.length > 0 ? (
+
         <>
-         <div className="row" style={{ margin: '0'}}>
-          <div className="center">
 
-            <span className="breadcrumb">
-              <span>Imóveis</span>
+          {!isMobile && (
 
-              <span className="breadcrumb-separator">›</span>
+            <div
+              className="row"
+              style={{
+                margin: "0"
+              }}
+            >
 
-              {hasFilters && category && category !== "todos" && (
-                <>
+              <div
+                className="center"
+                style={{
+                  position: "relative"
+                }}
+              >
+
+                <span className="breadcrumb">
+
                   <span>
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                    Imóveis
                   </span>
 
-                  <span className="breadcrumb-separator">›</span>
-                </>
-              )}
+                  <span className="breadcrumb-separator">
+                    ›
+                  </span>
 
-              <span>
-                {!search?.label ? <strong>São Paulo</strong> : "São Paulo"}
-              </span>
 
-              {hasFilters && search?.label && (
-                <>
-                  <span className="breadcrumb-separator">›</span>
-                  <strong>{search.label}</strong>
-                </>
-              )}
-            </span>
+                  {hasFilters &&
+                    category &&
+                    category !== "todos" && (
 
-            <div className="found-properties">
-              <span>Imóveis encontrados: </span>
-              <strong>{data.length}</strong>
+                      <>
+
+                        <span>
+
+                          {category
+                            .charAt(0)
+                            .toUpperCase() +
+                            category.slice(1)}
+
+                        </span>
+
+                        <span className="breadcrumb-separator">
+                          ›
+                        </span>
+
+                      </>
+
+                    )}
+
+
+                  <span>
+
+                    {!search?.label ? (
+                      <strong>
+                        São Paulo
+                      </strong>
+                    ) : (
+                      "São Paulo"
+                    )}
+
+                  </span>
+
+
+                  {hasFilters &&
+                    search?.label && (
+
+                      <>
+
+                        <span className="breadcrumb-separator">
+                          ›
+                        </span>
+
+                        <strong>
+                          {search.label}
+                        </strong>
+
+                      </>
+
+                    )}
+
+                </span>
+
+
+                <div className="found-properties">
+
+                  <span>
+                    Imóveis encontrados:{" "}
+                  </span>
+
+                  <strong>
+                    {
+                      pagination?.total ??
+                      data.length
+                    }
+                  </strong>
+
+                </div>
+
+              </div>
+
             </div>
-          </div>
-         </div>
-        <Card data={realEstate} />
+
+          )}
+
+
+          {isMobile && (
+
+            <div
+              className="mobile-results-summary"
+              style={{
+                width: "100%",
+                boxSizing: "border-box",
+                padding: "10px 16px 12px",
+                margin: "0",
+                display: "block"
+              }}
+            >
+
+              <div
+                className="mobile-results-breadcrumb"
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  display: "block",
+                  margin: "0",
+                  padding: "0",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  fontSize: "13px",
+                  lineHeight: "20px",
+                  color: "rgba(0,0,0,.52)"
+                }}
+              >
+
+                <span>
+                  Imóveis
+                </span>
+
+
+                <span
+                  style={{
+                    margin: "0 6px",
+                    color: "rgba(36,122,200,.55)"
+                  }}
+                >
+                  ›
+                </span>
+
+
+                {hasFilters &&
+                  category &&
+                  category !== "todos" && (
+
+                    <>
+
+                      <span>
+                        {category
+                          .charAt(0)
+                          .toUpperCase() +
+                          category.slice(1)}
+                      </span>
+
+                      <span
+                        style={{
+                          margin: "0 6px",
+                          color: "rgba(36,122,200,.55)"
+                        }}
+                      >
+                        ›
+                      </span>
+
+                    </>
+
+                  )}
+
+
+                <span
+                  style={{
+                    color: "#247ac8",
+                    fontWeight: 600
+                  }}
+                >
+                  São Paulo
+                </span>
+
+
+                {hasFilters &&
+                  search?.label && (
+
+                    <>
+
+                      <span
+                        style={{
+                          margin: "0 6px",
+                          color: "rgba(36,122,200,.55)"
+                        }}
+                      >
+                        ›
+                      </span>
+
+                      <span
+                        style={{
+                          color: "#247ac8",
+                          fontWeight: 600
+                        }}
+                      >
+                        {search.label}
+                      </span>
+
+                    </>
+
+                  )}
+
+              </div>
+
+
+              <div
+                className="mobile-found-properties"
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  display: "flex",
+                  alignItems: "baseline",
+                  margin: "4px 0 10px",
+                  padding: "0",
+                  fontSize: "13px",
+                  lineHeight: "21px",
+                  color: "rgba(0,0,0,.52)"
+                }}
+              >
+
+                <span>
+                  Imóveis encontrados:
+                </span>
+
+                <strong
+                  style={{
+                    marginLeft: "5px",
+                    color: "#247ac8",
+                    fontSize: "16px",
+                    fontWeight: 700
+                  }}
+                >
+                  {
+                    pagination?.total ??
+                    data.length
+                  }
+                </strong>
+
+              </div>
+
+            </div>
+
+          )}
+
+
+          <Card data={realEstate} />
+
         </>
+
       ) : null}
+
 
       {!loading &&
         hasFilters &&
-        data.length <= 0 &&
-            <Container className="empty-state">
-              <div class="empty-state__illustration">
-                  <div class="empty-state__decor">
-                      <span>✦</span>
-                      <span>+</span>
-                      <span>✦</span>
-                  </div>
+        data.length <= 0 && (
 
-                  <div class="empty-state__icon"></div>
+          <Container className="empty-state">
+
+            <div className="empty-state__illustration">
+
+              <div className="empty-state__decor">
+
+                <span>✦</span>
+
+                <span>+</span>
+
+                <span>✦</span>
+
               </div>
 
-              <div class="empty-state__content">
-                  <div class="empty-state__tag">
-                      Ops, nada por aqui
-                  </div>
-                  <h2 className="empty-state__title">
-                    {hasFilters
-                      ? "Não encontramos mais resultados."
-                      : "Nenhum resultado encontrado."}
-                  </h2>
+              <div className="empty-state__icon"></div>
 
-                  <p className="empty-state__description">
-                    {hasFilters
-                      ? "Não encontramos mais imóveis com os filtros aplicados. Tente ampliar sua busca ou remover alguns filtros para visualizar mais oportunidades."
-                      : "Tente ajustar os filtros de busca ou explorar outras regiões e oportunidades incríveis."}
-                  </p>
-                  <button class="empty-state__button" onClick={() => { resetFilters() }}>
-                    🧹 Limpar filtros
-                  </button>
+            </div>
+
+
+            <div className="empty-state__content">
+
+              <div className="empty-state__tag">
+
+                Ops, nada por aqui
+
               </div>
-            </Container>
-          }
 
-      { loading ? <Loading /> : ""}
 
-      <Pagination data={realEstate} />
+              <h2 className="empty-state__title">
 
-      {/* <CustomerTestimonials /> */}
+                Não encontramos mais resultados.
+
+              </h2>
+
+
+              <p className="empty-state__description">
+
+                Não encontramos mais imóveis
+                com os filtros aplicados.
+                Tente ampliar sua busca ou
+                remover alguns filtros para
+                visualizar mais oportunidades.
+
+              </p>
+
+
+              <button
+                className="empty-state__button"
+                onClick={resetFilters}
+              >
+
+                🧹 Limpar filtros
+
+              </button>
+
+            </div>
+
+          </Container>
+
+        )}
+
+
+      {loading ? <Loading /> : ""}
+
+
+      {!loading && (
+
+        <Pagination
+          pagination={pagination}
+          filters={currentFilters}
+        />
+
+      )}
+
+
       <Footer />
+
     </React.Fragment>
   );
 };
 
-const mapStateToProps = state => ({
-  realstate: state.home.realestate.data,
-  pagination: state.home.pagination?.data
+
+/*
+ * =====================================================
+ * REDUX
+ * =====================================================
+ */
+
+const mapStateToProps = (state) => ({
+
+  realstate:
+    state.home.realestate?.data || [],
+
+  pagination:
+    state.home.pagination || {}
+
 });
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      realstate: dispatch(getArticles())
-      // pagination: dispatch(getCharacterData())
-    },
-    dispatch
-  );
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
+export default withRouter(
+  connect(
+    mapStateToProps
+  )(Home)
+);
