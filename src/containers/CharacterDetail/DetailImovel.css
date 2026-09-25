@@ -177,11 +177,9 @@
   width: stretch;
 }
 
-.caracteristicas h5, .caracteristicas .list {
+.caracteristicas {
 	float: left;
-	font-size: 0.9rem;
 	margin: 5px 0;
-	line-height: 1.1rem;
 	color: #786e6e;
 	overflow: hidden;
 }
