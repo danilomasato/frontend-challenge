@@ -1640,11 +1640,13 @@ const Home = ({
                         onValueChange={
                           (values) => {
 
-                            setOptionsValue({
-                              ...optionsValue,
-                              min:
-                                values.value
-                            });
+                            setOptionsValue(
+                              prev => ({
+                                ...prev,
+                                min:
+                                  values.value
+                              })
+                            );
 
                           }
                         }
@@ -1672,10 +1674,12 @@ const Home = ({
                             0
                           ) {
 
-                            setOptionsValue({
-                              ...optionsValue,
-                              min: ""
-                            });
+                            setOptionsValue(
+                              prev => ({
+                                ...prev,
+                                min: ""
+                              })
+                            );
 
                           }
 
@@ -1686,10 +1690,12 @@ const Home = ({
                             !optionsValue.min
                           ) {
 
-                            setOptionsValue({
-                              ...optionsValue,
-                              min: 0
-                            });
+                            setOptionsValue(
+                              prev => ({
+                                ...prev,
+                                min: 0
+                              })
+                            );
 
                           }
 
@@ -1710,11 +1716,13 @@ const Home = ({
                         onValueChange={
                           (values) => {
 
-                            setOptionsValue({
-                              ...optionsValue,
-                              max:
-                                values.value
-                            });
+                            setOptionsValue(
+                              prev => ({
+                                ...prev,
+                                max:
+                                  values.value
+                              })
+                            );
 
                           }
                         }
@@ -1742,10 +1750,12 @@ const Home = ({
                             0
                           ) {
 
-                            setOptionsValue({
-                              ...optionsValue,
-                              max: ""
-                            });
+                            setOptionsValue(
+                              prev => ({
+                                ...prev,
+                                max: ""
+                              })
+                            );
 
                           }
 
@@ -1756,10 +1766,12 @@ const Home = ({
                             !optionsValue.max
                           ) {
 
-                            setOptionsValue({
-                              ...optionsValue,
-                              max: 0
-                            });
+                            setOptionsValue(
+                              prev => ({
+                                ...prev,
+                                max: 0
+                              })
+                            );
 
                           }
 
@@ -1988,11 +2000,13 @@ const Home = ({
                       onValueChange={
                         (values) => {
 
-                          setOptionsValue({
-                            ...optionsValue,
-                            min:
-                              values.value
-                          });
+                          setOptionsValue(
+                            prev => ({
+                              ...prev,
+                              min:
+                                values.value
+                            })
+                          );
 
                         }
                       }
@@ -2020,10 +2034,12 @@ const Home = ({
                           0
                         ) {
 
-                          setOptionsValue({
-                            ...optionsValue,
-                            min: ""
-                          });
+                          setOptionsValue(
+                            prev => ({
+                              ...prev,
+                              min: ""
+                            })
+                          );
 
                         }
 
@@ -2034,10 +2050,12 @@ const Home = ({
                           !optionsValue.min
                         ) {
 
-                          setOptionsValue({
-                            ...optionsValue,
-                            min: 0
-                          });
+                          setOptionsValue(
+                            prev => ({
+                              ...prev,
+                              min: 0
+                            })
+                          );
 
                         }
 
@@ -2071,11 +2089,13 @@ const Home = ({
                       onValueChange={
                         (values) => {
 
-                          setOptionsValue({
-                            ...optionsValue,
-                            max:
-                              values.value
-                          });
+                          setOptionsValue(
+                            prev => ({
+                              ...prev,
+                              max:
+                                values.value
+                            })
+                          );
 
                         }
                       }
@@ -2103,10 +2123,12 @@ const Home = ({
                           0
                         ) {
 
-                          setOptionsValue({
-                            ...optionsValue,
-                            max: ""
-                          });
+                          setOptionsValue(
+                            prev => ({
+                              ...prev,
+                              max: ""
+                            })
+                          );
 
                         }
 
@@ -2117,10 +2139,12 @@ const Home = ({
                           !optionsValue.max
                         ) {
 
-                          setOptionsValue({
-                            ...optionsValue,
-                            max: 0
-                          });
+                          setOptionsValue(
+                            prev => ({
+                              ...prev,
+                              max: 0
+                            })
+                          );
 
                         }
 
