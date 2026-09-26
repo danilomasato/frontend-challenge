@@ -312,6 +312,22 @@ const Home = ({
     useState(false);
 
 
+  /*
+   * =====================================================
+   * VALORES DOS FILTROS DE PREÇO
+   * =====================================================
+   *
+   * Mantemos 0 como valor padrão.
+   *
+   * Dessa forma, quando o usuário apaga completamente
+   * o valor e sai do campo, o NumericFormat pode exibir:
+   *
+   *     R$ 0
+   *
+   * Quando o usuário começar a digitar sobre esse zero,
+   * handlePriceValueChange() substitui somente o zero
+   * existente pelo novo número.
+   */
   const [optionsValue, setOptionsValue] =
     useState({
       min: 0,
@@ -1198,6 +1214,162 @@ const Home = ({
 
   /*
    * =====================================================
+   * PREÇO
+   * =====================================================
+   *
+   * Comportamento:
+   *
+   *     R$ 0
+   *
+   * quando o campo está vazio e perde o foco.
+   *
+   * Se o usuário começar a digitar sobre esse zero:
+   *
+   *     R$ 0 + 2
+   *
+   * o resultado será:
+   *
+   *     R$ 2
+   *
+   * e não:
+   *
+   *     R$ 02
+   *
+   * A verificação do valor anterior é feita dentro
+   * do setOptionsValue(), usando "prev".
+   *
+   * Isso garante que seja utilizado o estado mais
+   * recente do campo.
+   */
+
+  const handlePriceValueChange =
+    (field) =>
+    (values) => {
+
+      const receivedValue =
+        values.value;
+
+
+      setOptionsValue(
+        prev => {
+
+          let nextValue =
+            receivedValue;
+
+
+          /*
+           * Se o valor anterior era exatamente 0,
+           * significa que o campo estava mostrando:
+           *
+           *     R$ 0
+           *
+           * Se o NumericFormat entregar algo como:
+           *
+           *     "02"
+           *
+           * isso significa que o usuário acabou de
+           * digitar "2" sobre o zero existente.
+           *
+           * Portanto removemos somente o zero inicial.
+           */
+          if (
+            Number(prev[field]) === 0 &&
+            typeof nextValue === "string" &&
+            nextValue.length > 1 &&
+            nextValue.charAt(0) === "0"
+          ) {
+
+            nextValue =
+              nextValue.slice(1);
+
+          }
+
+
+          return {
+            ...prev,
+            [field]:
+              nextValue
+          };
+
+        }
+      );
+
+    };
+
+
+  /*
+   * =====================================================
+   * ENTER NOS CAMPOS DE PREÇO
+   * =====================================================
+   *
+   * Pressionar Enter executa exatamente a mesma
+   * busca do botão "Buscar Imóveis".
+   */
+
+  const handlePriceKeyDown =
+    (event) => {
+
+      if (
+        event.key === "Enter"
+      ) {
+
+        event.preventDefault();
+
+        handleClick();
+
+      }
+
+    };
+
+
+  /*
+   * =====================================================
+   * BLUR DOS CAMPOS DE PREÇO
+   * =====================================================
+   *
+   * Se o usuário apagou tudo e saiu do campo,
+   * voltamos para 0.
+   *
+   * Assim o campo exibe:
+   *
+   *     R$ 0
+   */
+
+  const handlePriceBlur =
+    (field) => {
+
+      setOptionsValue(
+        prev => {
+
+          const value =
+            prev[field];
+
+
+          if (
+            value === "" ||
+            value === null ||
+            value === undefined ||
+            Number(value) === 0
+          ) {
+
+            return {
+              ...prev,
+              [field]: 0
+            };
+
+          }
+
+
+          return prev;
+
+        }
+      );
+
+    };
+
+
+  /*
+   * =====================================================
    * PAGINAÇÃO
    * =====================================================
    */
@@ -1638,17 +1810,18 @@ const Home = ({
                           optionsValue.min
                         }
                         onValueChange={
-                          (values) => {
-
-                            setOptionsValue(
-                              prev => ({
-                                ...prev,
-                                min:
-                                  values.value
-                              })
-                            );
-
-                          }
+                          handlePriceValueChange(
+                            "min"
+                          )
+                        }
+                        onKeyDown={
+                          handlePriceKeyDown
+                        }
+                        onBlur={
+                          () =>
+                            handlePriceBlur(
+                              "min"
+                            )
                         }
                         customInput={
                           TextField
@@ -1665,40 +1838,9 @@ const Home = ({
                           pattern:
                             "[0-9]*",
                           enterKeyHint:
-                            "done"
-                        }}
-                        onFocus={() => {
-
-                          if (
-                            optionsValue.min ===
-                            0
-                          ) {
-
-                            setOptionsValue(
-                              prev => ({
-                                ...prev,
-                                min: ""
-                              })
-                            );
-
-                          }
-
-                        }}
-                        onBlur={() => {
-
-                          if (
-                            !optionsValue.min
-                          ) {
-
-                            setOptionsValue(
-                              prev => ({
-                                ...prev,
-                                min: 0
-                              })
-                            );
-
-                          }
-
+                            "search",
+                          type:
+                            "tel"
                         }}
                       />
 
@@ -1714,17 +1856,18 @@ const Home = ({
                           optionsValue.max
                         }
                         onValueChange={
-                          (values) => {
-
-                            setOptionsValue(
-                              prev => ({
-                                ...prev,
-                                max:
-                                  values.value
-                              })
-                            );
-
-                          }
+                          handlePriceValueChange(
+                            "max"
+                          )
+                        }
+                        onKeyDown={
+                          handlePriceKeyDown
+                        }
+                        onBlur={
+                          () =>
+                            handlePriceBlur(
+                              "max"
+                            )
                         }
                         customInput={
                           TextField
@@ -1741,40 +1884,9 @@ const Home = ({
                           pattern:
                             "[0-9]*",
                           enterKeyHint:
-                            "done"
-                        }}
-                        onFocus={() => {
-
-                          if (
-                            optionsValue.max ===
-                            0
-                          ) {
-
-                            setOptionsValue(
-                              prev => ({
-                                ...prev,
-                                max: ""
-                              })
-                            );
-
-                          }
-
-                        }}
-                        onBlur={() => {
-
-                          if (
-                            !optionsValue.max
-                          ) {
-
-                            setOptionsValue(
-                              prev => ({
-                                ...prev,
-                                max: 0
-                              })
-                            );
-
-                          }
-
+                            "search",
+                          type:
+                            "tel"
                         }}
                       />
 
@@ -1998,17 +2110,18 @@ const Home = ({
                         optionsValue.min
                       }
                       onValueChange={
-                        (values) => {
-
-                          setOptionsValue(
-                            prev => ({
-                              ...prev,
-                              min:
-                                values.value
-                            })
-                          );
-
-                        }
+                        handlePriceValueChange(
+                          "min"
+                        )
+                      }
+                      onKeyDown={
+                        handlePriceKeyDown
+                      }
+                      onBlur={
+                        () =>
+                          handlePriceBlur(
+                            "min"
+                          )
                       }
                       customInput={
                         TextField
@@ -2025,40 +2138,7 @@ const Home = ({
                         pattern:
                           "[0-9]*",
                         enterKeyHint:
-                          "done"
-                      }}
-                      onFocus={() => {
-
-                        if (
-                          optionsValue.min ===
-                          0
-                        ) {
-
-                          setOptionsValue(
-                            prev => ({
-                              ...prev,
-                              min: ""
-                            })
-                          );
-
-                        }
-
-                      }}
-                      onBlur={() => {
-
-                        if (
-                          !optionsValue.min
-                        ) {
-
-                          setOptionsValue(
-                            prev => ({
-                              ...prev,
-                              min: 0
-                            })
-                          );
-
-                        }
-
+                          "search"
                       }}
                       isAllowed={
                         (values) =>
@@ -2087,17 +2167,18 @@ const Home = ({
                         optionsValue.max
                       }
                       onValueChange={
-                        (values) => {
-
-                          setOptionsValue(
-                            prev => ({
-                              ...prev,
-                              max:
-                                values.value
-                            })
-                          );
-
-                        }
+                        handlePriceValueChange(
+                          "max"
+                        )
+                      }
+                      onKeyDown={
+                        handlePriceKeyDown
+                      }
+                      onBlur={
+                        () =>
+                          handlePriceBlur(
+                            "max"
+                          )
                       }
                       customInput={
                         TextField
@@ -2114,40 +2195,7 @@ const Home = ({
                         pattern:
                           "[0-9]*",
                         enterKeyHint:
-                          "done"
-                      }}
-                      onFocus={() => {
-
-                        if (
-                          optionsValue.max ===
-                          0
-                        ) {
-
-                          setOptionsValue(
-                            prev => ({
-                              ...prev,
-                              max: ""
-                            })
-                          );
-
-                        }
-
-                      }}
-                      onBlur={() => {
-
-                        if (
-                          !optionsValue.max
-                        ) {
-
-                          setOptionsValue(
-                            prev => ({
-                              ...prev,
-                              max: 0
-                            })
-                          );
-
-                        }
-
+                          "search"
                       }}
                       isAllowed={
                         (values) =>
