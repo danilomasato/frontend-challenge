@@ -58,6 +58,79 @@ import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 
 
+/*
+ * =====================================================
+ * CACHE DA HOME
+ * =====================================================
+ *
+ * Fica fora do componente.
+ *
+ * Isso é importante porque useRef() é perdido quando
+ * a Home é desmontada.
+ *
+ * Ao entrar em CharacterDetail e voltar para a Home,
+ * estes valores continuam existindo enquanto a aplicação
+ * estiver aberta.
+ */
+let homeInitialDataLoaded = false;
+
+
+/*
+ * Resposta da última carga válida da Home.
+ */
+let homeInitialDataCache = null;
+
+
+/*
+ * =====================================================
+ * CACHE DOS BAIRROS
+ * =====================================================
+ *
+ * Este é o ponto principal da correção.
+ *
+ * O getAllBairros() também faz requests paginados
+ * no Strapi.
+ *
+ * Antes, ao voltar de CharacterDetail para Home,
+ * a Home era remontada e executava novamente:
+ *
+ *     api.getAllBairros()
+ *
+ * mesmo quando os bairros já tinham sido carregados.
+ *
+ * Agora os bairros ficam armazenados fora do componente,
+ * da mesma forma que os dados iniciais da Home.
+ *
+ * Portanto:
+ *
+ * HOME
+ *   ↓
+ * getAllBairros()
+ *   ↓
+ * bairros armazenados
+ *   ↓
+ * detalhe
+ *   ↓
+ * HOME novamente
+ *   ↓
+ * NÃO chama getAllBairros()
+ */
+let homeNeighborhoodCache = null;
+
+
+/*
+ * Indica se os bairros já foram carregados
+ * com sucesso pelo menos uma vez.
+ */
+let homeNeighborhoodsLoaded = false;
+
+
+/*
+ * =====================================================
+ * ESTILOS
+ * =====================================================
+ */
+
 const Root = styled("div")(({ theme }) => ({
   width: "100%",
   ...theme.typography.body2,
@@ -78,10 +151,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * ESTADOS
-  * =====================================================
-  */
+   * =====================================================
+   * ESTADOS
+   * =====================================================
+   */
 
   const [search, setSearch] = useState({
     label: "",
@@ -90,10 +163,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * FORÇA LOADING PELA URL
-  * =====================================================
-  */
+   * =====================================================
+   * FORÇA LOADING PELA URL
+   * =====================================================
+   */
 
   const forceLoading =
     new URLSearchParams(
@@ -102,14 +175,14 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * CONTROLE ATÔMICO DO LOADING
-  * =====================================================
-  *
-  * initial = 40%
-  * filter  = 40%
-  * page    = 72%
-  */
+   * =====================================================
+   * CONTROLE ATÔMICO DO LOADING
+   * =====================================================
+   *
+   * initial = 40%
+   * filter  = 40%
+   * page    = 72%
+   */
 
   const getInitialLoadingState = () => {
 
@@ -147,9 +220,9 @@ const Home = ({
 
 
   /*
-  * Mantém o modo atual em ref para que operações
-  * assíncronas não utilizem um valor antigo.
-  */
+   * Mantém o modo atual em ref para que operações
+   * assíncronas não utilizem um valor antigo.
+   */
 
   const loadingModeRef =
     useRef(
@@ -158,27 +231,33 @@ const Home = ({
 
 
   /*
-  * Evita que o carregamento inicial seja iniciado
-  * novamente quando o Redux mudar.
-  */
+   * =====================================================
+   * CONTROLE DO CARREGAMENTO INICIAL
+   * =====================================================
+   *
+   * Este ref controla apenas a montagem atual.
+   *
+   * O controle definitivo de "já carregou a Home"
+   * fica no cache externo.
+   */
 
   const initialLoadStartedRef =
     useRef(false);
 
 
   /*
-  * Indica operação de filtro em andamento.
-  */
+   * Indica operação de filtro em andamento.
+   */
 
   const filterLoadingRef =
     useRef(false);
 
 
   /*
-  * =====================================================
-  * FUNÇÕES CENTRAIS DO LOADING
-  * =====================================================
-  */
+   * =====================================================
+   * FUNÇÕES CENTRAIS DO LOADING
+   * =====================================================
+   */
 
   const startLoading = (mode) => {
 
@@ -212,10 +291,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * OUTROS ESTADOS
-  * =====================================================
-  */
+   * =====================================================
+   * OUTROS ESTADOS
+   * =====================================================
+   */
 
   const [imoveis, setImoveis] =
     useState([]);
@@ -250,10 +329,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * DADOS DOS CARDS
-  * =====================================================
-  */
+   * =====================================================
+   * DADOS DOS CARDS
+   * =====================================================
+   */
 
   const data = useMemo(
     () =>
@@ -275,10 +354,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * SCROLL AUTOMÁTICO DA PAGINAÇÃO
-  * =====================================================
-  */
+   * =====================================================
+   * SCROLL AUTOMÁTICO DA PAGINAÇÃO
+   * =====================================================
+   */
 
   useEffect(() => {
 
@@ -303,21 +382,36 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * CARREGAMENTO INICIAL
-  * =====================================================
-  *
-  * IMPORTANTE:
-  *
-  * Este efeito roda somente uma vez.
-  *
-  * Ele NÃO depende de realstate.
-  */
+   * =====================================================
+   * CARREGAMENTO INICIAL
+   * =====================================================
+   *
+   * Existem três situações:
+   *
+   * 1. Primeira entrada na Home:
+   *    - busca imóveis;
+   *    - busca bairros.
+   *
+   * 2. Home remontada com imóveis já no Redux:
+   *    - NÃO busca imóveis;
+   *    - NÃO busca bairros novamente;
+   *    - usa o cache dos bairros.
+   *
+   * 3. Home remontada momentaneamente sem imóveis:
+   *    - restaura os dados do cache;
+   *    - restaura os bairros do cache;
+   *    - NÃO faz novo request.
+   */
 
   useEffect(() => {
 
     let mounted = true;
 
+
+    /*
+     * Se esta montagem já iniciou o carregamento,
+     * não inicia novamente.
+     */
 
     if (
       initialLoadStartedRef.current
@@ -336,18 +430,84 @@ const Home = ({
       true;
 
 
-    const loadInitialData = async () => {
+    /*
+     * =================================================
+     * FUNÇÃO AUXILIAR PARA RESTAURAR BAIRROS
+     * =================================================
+     *
+     * Não faz request.
+     *
+     * Apenas coloca no estado local os bairros
+     * que já foram carregados anteriormente.
+     */
 
-      /*
-      * Se já existem imóveis no Redux,
-      * carregamos somente os bairros.
-      */
+    const restoreNeighborhoods = () => {
 
       if (
-        Array.isArray(realstate) &&
-        realstate.length > 0
+        !Array.isArray(
+          homeNeighborhoodCache
+        )
       ) {
 
+        return false;
+
+      }
+
+
+      if (!mounted) {
+
+        return false;
+
+      }
+
+
+      setImoveis(
+        homeNeighborhoodCache.map(
+          (bairro) => ({
+            Bairro: bairro
+          })
+        )
+      );
+
+
+      return true;
+
+    };
+
+
+    /*
+     * =================================================
+     * FUNÇÃO PARA BUSCAR BAIRROS
+     * =================================================
+     *
+     * Só executa getAllBairros() se ainda não existir
+     * um cache válido.
+     */
+
+    const loadNeighborhoods =
+      async () => {
+
+        /*
+         * Se já temos os bairros no cache,
+         * simplesmente restauramos.
+         */
+        if (
+          homeNeighborhoodsLoaded &&
+          Array.isArray(
+            homeNeighborhoodCache
+          )
+        ) {
+
+          restoreNeighborhoods();
+
+          return;
+
+        }
+
+
+        /*
+         * Primeira carga dos bairros.
+         */
         try {
 
           const bairros =
@@ -355,17 +515,36 @@ const Home = ({
 
 
           if (
-            mounted &&
             Array.isArray(bairros)
           ) {
 
-            setImoveis(
-              bairros.map(
-                (bairro) => ({
-                  Bairro: bairro
-                })
-              )
-            );
+            /*
+             * Guarda o resultado fora do componente.
+             *
+             * Isso impede novas chamadas de
+             * getAllBairros() quando a Home for
+             * desmontada e montada novamente.
+             */
+            homeNeighborhoodCache =
+              [
+                ...bairros
+              ];
+
+            homeNeighborhoodsLoaded =
+              true;
+
+
+            if (mounted) {
+
+              setImoveis(
+                bairros.map(
+                  (bairro) => ({
+                    Bairro: bairro
+                  })
+                )
+              );
+
+            }
 
           }
 
@@ -375,6 +554,85 @@ const Home = ({
             "Erro ao carregar bairros:",
             error
           );
+
+        }
+
+      };
+
+
+    const loadInitialData =
+      async () => {
+
+      /*
+       * =================================================
+       * CASO 1
+       * =================================================
+       *
+       * O Redux já possui os imóveis.
+       *
+       * Este é o cenário normal ao voltar do detalhe.
+       *
+       * NÃO fazemos getArticles().
+       */
+
+      if (
+        Array.isArray(realstate) &&
+        realstate.length > 0
+      ) {
+
+        /*
+         * Marca a Home como carregada.
+         */
+        homeInitialDataLoaded =
+          true;
+
+
+        /*
+         * Guarda os dados atuais caso ainda
+         * não exista cache.
+         */
+        if (
+          !homeInitialDataCache
+        ) {
+
+          homeInitialDataCache = {
+            data: [
+              ...realstate
+            ],
+
+            meta: {
+              pagination
+            }
+          };
+
+        }
+
+
+        /*
+         * =================================================
+         * IMPORTANTE
+         * =================================================
+         *
+         * Se os bairros já foram carregados anteriormente,
+         * apenas restaura o cache.
+         *
+         * NÃO chama getAllBairros().
+         */
+        if (
+          homeNeighborhoodsLoaded &&
+          Array.isArray(
+            homeNeighborhoodCache
+          )
+        ) {
+
+          restoreNeighborhoods();
+
+        } else {
+
+          /*
+           * Primeira carga dos bairros.
+           */
+          await loadNeighborhoods();
 
         }
 
@@ -395,8 +653,105 @@ const Home = ({
 
 
       /*
-      * Loading inicial.
-      */
+       * =================================================
+       * CASO 2
+       * =================================================
+       *
+       * A Home já foi carregada anteriormente,
+       * mas durante a remontagem o Redux ainda está
+       * momentaneamente sem os dados.
+       *
+       * NÃO fazemos novo request.
+       *
+       * Restauramos os dados e os bairros do cache.
+       */
+
+      if (
+        homeInitialDataLoaded &&
+        homeInitialDataCache
+      ) {
+
+        dispatch({
+          type:
+            types.RECEIVE_HOME,
+
+          payload:
+            homeInitialDataCache
+        });
+
+
+        if (
+          homeInitialDataCache
+            ?.meta
+            ?.pagination
+        ) {
+
+          dispatch({
+            type:
+              types.RECEIVE_PAGINATION,
+
+            payload:
+              homeInitialDataCache
+                .meta
+                .pagination
+          });
+
+        }
+
+
+        /*
+         * =================================================
+         * IMPORTANTE
+         * =================================================
+         *
+         * Não chamamos getAllBairros() aqui.
+         *
+         * Se já houver cache, restauramos diretamente.
+         */
+        if (
+          homeNeighborhoodsLoaded &&
+          Array.isArray(
+            homeNeighborhoodCache
+          )
+        ) {
+
+          restoreNeighborhoods();
+
+        } else {
+
+          /*
+           * Esta situação só ocorre se a primeira
+           * carga ainda não conseguiu carregar os bairros.
+           */
+          await loadNeighborhoods();
+
+        }
+
+
+        if (
+          mounted &&
+          loadingModeRef.current ===
+            "initial"
+        ) {
+
+          finishLoading();
+
+        }
+
+        return;
+
+      }
+
+
+      /*
+       * =================================================
+       * CASO 3
+       * =================================================
+       *
+       * Primeiro acesso real à Home.
+       *
+       * Aqui sim fazemos os requests iniciais.
+       */
 
       startLoading("initial");
 
@@ -407,13 +762,36 @@ const Home = ({
         );
 
 
+      /*
+       * A busca de bairros acontece somente
+       * na primeira carga.
+       */
       const bairrosPromise =
-        api.getAllBairros();
+        loadNeighborhoods();
 
 
       try {
 
-        await articlesPromise;
+        const response =
+          await articlesPromise;
+
+
+        /*
+         * Marca a Home como carregada somente
+         * depois que o request terminou com sucesso.
+         */
+        if (
+          response
+        ) {
+
+          homeInitialDataLoaded =
+            true;
+
+
+          homeInitialDataCache =
+            response;
+
+        }
 
       } catch (error) {
 
@@ -439,24 +817,7 @@ const Home = ({
 
       try {
 
-        const bairros =
-          await bairrosPromise;
-
-
-        if (
-          mounted &&
-          Array.isArray(bairros)
-        ) {
-
-          setImoveis(
-            bairros.map(
-              (bairro) => ({
-                Bairro: bairro
-              })
-            )
-          );
-
-        }
+        await bairrosPromise;
 
       } catch (error) {
 
@@ -480,15 +841,17 @@ const Home = ({
     };
 
   }, [
-    dispatch
+    dispatch,
+    realstate,
+    pagination
   ]);
 
 
   /*
-  * =====================================================
-  * SINCRONIZA DADOS DOS CARDS
-  * =====================================================
-  */
+   * =====================================================
+   * SINCRONIZA DADOS DOS CARDS
+   * =====================================================
+   */
 
   useEffect(() => {
 
@@ -517,10 +880,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * BAIRROS
-  * =====================================================
-  */
+   * =====================================================
+   * BAIRROS
+   * =====================================================
+   */
 
   const options = useMemo(() => {
 
@@ -599,10 +962,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * DESABILITA BOTÃO DIREITO
-  * =====================================================
-  */
+   * =====================================================
+   * DESABILITA BOTÃO DIREITO
+   * =====================================================
+   */
 
   useEffect(() => {
 
@@ -633,10 +996,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * FILTROS ATUAIS
-  * =====================================================
-  */
+   * =====================================================
+   * FILTROS ATUAIS
+   * =====================================================
+   */
 
   const currentFilters =
     useMemo(
@@ -668,10 +1031,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * APLICA FILTROS
-  * =====================================================
-  */
+   * =====================================================
+   * APLICA FILTROS
+   * =====================================================
+   */
 
   const handleClick = async () => {
 
@@ -679,17 +1042,8 @@ const Home = ({
       true;
 
 
-    /*
-    * Filtro sempre usa 40%.
-    */
-
     startLoading("filter");
 
-
-    /*
-    * Permite que o navegador pinte o overlay
-    * antes da requisição.
-    */
 
     await new Promise(
       (resolve) =>
@@ -730,6 +1084,19 @@ const Home = ({
         });
 
       }
+
+
+      /*
+       * Atualiza também o cache da Home.
+       *
+       * Isso permite retornar do detalhe sem
+       * perder o resultado filtrado.
+       */
+      homeInitialDataLoaded =
+        true;
+
+      homeInitialDataCache =
+        response;
 
 
       setHasFilters(
@@ -830,17 +1197,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * PAGINAÇÃO
-  * =====================================================
-  *
-  * O Pagination avisa o Home diretamente.
-  *
-  * Não esperamos mais pagination.page mudar para
-  * descobrir que uma paginação começou.
-  *
-  * Isso garante 72% desde o primeiro frame.
-  */
+   * =====================================================
+   * PAGINAÇÃO
+   * =====================================================
+   */
 
   const handlePageChangeStart = () => {
 
@@ -864,10 +1224,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * LIMPA LOCAL STORAGE AO FECHAR
-  * =====================================================
-  */
+   * =====================================================
+   * LIMPA LOCAL STORAGE AO FECHAR
+   * =====================================================
+   */
 
   useEffect(() => {
 
@@ -898,10 +1258,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * CATEGORIA
-  * =====================================================
-  */
+   * =====================================================
+   * CATEGORIA
+   * =====================================================
+   */
 
   const handleChangeCategory =
     (evento) => {
@@ -914,10 +1274,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * RESPONSIVIDADE
-  * =====================================================
-  */
+   * =====================================================
+   * RESPONSIVIDADE
+   * =====================================================
+   */
 
   useEffect(() => {
 
@@ -950,10 +1310,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * LIMPA TODOS OS FILTROS
-  * =====================================================
-  */
+   * =====================================================
+   * LIMPA TODOS OS FILTROS
+   * =====================================================
+   */
 
   const resetFilters =
     async () => {
@@ -1026,6 +1386,16 @@ const Home = ({
         }
 
 
+        /*
+         * Atualiza o cache com a Home sem filtros.
+         */
+        homeInitialDataLoaded =
+          true;
+
+        homeInitialDataCache =
+          response;
+
+
         setHasFilters(
           false
         );
@@ -1069,10 +1439,10 @@ const Home = ({
 
 
   /*
-  * =====================================================
-  * RENDER
-  * =====================================================
-  */
+   * =====================================================
+   * RENDER
+   * =====================================================
+   */
 
   return (
     <React.Fragment>
@@ -2364,10 +2734,10 @@ const Home = ({
 
 
 /*
-* =====================================================
-* REDUX
-* =====================================================
-*/
+ * =====================================================
+ * REDUX
+ * =====================================================
+ */
 
 const mapStateToProps =
   (state) => ({

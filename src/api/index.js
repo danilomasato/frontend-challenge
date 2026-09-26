@@ -174,25 +174,6 @@ const hasActiveFilters = (
  * =====================================================
  * IMÓVEIS PAGINADOS / BUSCA
  * =====================================================
- *
- * SEM FILTROS:
- *
- * Mantém o comportamento atual:
- *
- * - 25 imóveis por página
- * - paginação normal
- *
- *
- * COM FILTROS:
- *
- * A consulta passa a buscar TODOS os imóveis
- * correspondentes aos filtros.
- *
- * Os resultados são reunidos antes de serem
- * devolvidos ao Home.
- *
- * Isso evita o problema de procurar, por exemplo,
- * "Sabará" somente dentro dos 25 imóveis da página.
  */
 
 export const getArticles = async (
@@ -205,8 +186,17 @@ export const getArticles = async (
    * BUSCA NORMAL
    * ===================================================
    *
-   * Nenhum filtro:
-   * continua usando a paginação normal.
+   * Sem filtros:
+   *
+   * 1. Mantemos a consulta geral original, que traz
+   *    normalmente Venda, Aluguel e demais imóveis.
+   *
+   * 2. Fazemos uma consulta independente somente para
+   *    os 3 lançamentos mais recentes.
+   *
+   * Dessa forma, os lançamentos não dependem de estarem
+   * entre os 25 imóveis gerais retornados pela primeira
+   * consulta.
    */
 
   if (!hasActiveFilters(filters)) {
@@ -220,6 +210,19 @@ export const getArticles = async (
         ? Number(page)
         : 1;
 
+
+    /*
+     * ---------------------------------------------------
+     * CONSULTA GERAL
+     * ---------------------------------------------------
+     *
+     * IMPORTANTE:
+     *
+     * Não existe filtro por Tipo_de_Anuncio aqui.
+     *
+     * Esta é a consulta que já funcionava anteriormente
+     * e trazia os imóveis de Venda e Aluguel normalmente.
+     */
 
     params.set(
       "pagination[page]",
@@ -239,15 +242,251 @@ export const getArticles = async (
     );
 
 
+    /*
+     * ---------------------------------------------------
+     * ORDENAÇÃO
+     * ---------------------------------------------------
+     */
+
     params.set(
-      "sort",
-      "sortOrder:asc"
+      "sort[0]",
+      "publishedAt:desc"
     );
 
 
-    return utils.GetAPI(
-      `Anuncios/?${params.toString()}`
+    params.set(
+      "sort[1]",
+      "id:desc"
     );
+
+
+    /*
+     * ---------------------------------------------------
+     * REQUEST GERAL
+     * ---------------------------------------------------
+     */
+
+    const generalRequest =
+      utils.GetAPI(
+        `Anuncios/?${params.toString()}`
+      );
+
+
+    /*
+     * =================================================
+     * CONSULTA DOS LANÇAMENTOS
+     * =================================================
+     *
+     * Busca exclusivamente os 3 lançamentos mais
+     * recentes.
+     */
+
+    const launchParams =
+      new URLSearchParams();
+
+
+    launchParams.set(
+      "pagination[page]",
+      1
+    );
+
+
+    launchParams.set(
+      "pagination[pageSize]",
+      3
+    );
+
+
+    launchParams.set(
+      "populate",
+      "*"
+    );
+
+
+    launchParams.set(
+      "filters[Tipo_de_Anuncio][$eq]",
+      "Lançamentos"
+    );
+
+
+    launchParams.set(
+      "sort[0]",
+      "publishedAt:desc"
+    );
+
+
+    launchParams.set(
+      "sort[1]",
+      "id:desc"
+    );
+
+
+    const launchRequest =
+      utils.GetAPI(
+        `Anuncios/?${launchParams.toString()}`
+      );
+
+
+    /*
+     * ---------------------------------------------------
+     * EXECUTA AS DUAS CONSULTAS EM PARALELO
+     * ---------------------------------------------------
+     */
+
+    const [
+      generalResponse,
+      launchResponse
+    ] = await Promise.all([
+      generalRequest,
+      launchRequest
+    ]);
+
+
+    /*
+     * ---------------------------------------------------
+     * DADOS GERAIS
+     * ---------------------------------------------------
+     */
+
+    const generalData =
+      Array.isArray(
+        generalResponse?.data
+      )
+        ? generalResponse.data
+        : [];
+
+
+    /*
+     * ---------------------------------------------------
+     * DADOS DOS LANÇAMENTOS
+     * ---------------------------------------------------
+     */
+
+    const launchData =
+      Array.isArray(
+        launchResponse?.data
+      )
+        ? launchResponse.data
+        : [];
+
+
+    /*
+     * =================================================
+     * IDENTIFICA OS IMÓVEIS JÁ EXISTENTES
+     * =================================================
+     */
+
+    const existingIds =
+      new Set();
+
+
+    generalData.forEach(
+      (item) => {
+
+        const itemId =
+          item?.documentId ??
+          item?.id;
+
+
+        if (
+          itemId !== undefined &&
+          itemId !== null
+        ) {
+
+          existingIds.add(
+            itemId
+          );
+
+        }
+
+      }
+    );
+
+
+    /*
+     * =================================================
+     * ADICIONA SOMENTE LANÇAMENTOS NOVOS
+     * =================================================
+     */
+
+    const additionalLaunches =
+      launchData.filter(
+        (item) => {
+
+          const itemId =
+            item?.documentId ??
+            item?.id;
+
+
+          if (
+            itemId === undefined ||
+            itemId === null
+          ) {
+
+            return true;
+
+          }
+
+
+          return !existingIds.has(
+            itemId
+          );
+
+        }
+      );
+
+
+    /*
+     * =================================================
+     * RESULTADO FINAL
+     * =================================================
+     *
+     * Primeiro permanecem exatamente os imóveis da
+     * consulta geral.
+     *
+     * Depois acrescentamos os lançamentos que não
+     * estavam nessa primeira página.
+     */
+
+    const combinedData = [
+      ...generalData,
+      ...additionalLaunches
+    ];
+
+
+    /*
+     * ---------------------------------------------------
+     * RETORNO
+     * ---------------------------------------------------
+     */
+
+    return {
+
+      data:
+        combinedData,
+
+      meta:
+        generalResponse?.meta || {
+
+          pagination: {
+
+            page:
+              currentPage,
+
+            pageSize:
+              25,
+
+            pageCount:
+              1,
+
+            total:
+              combinedData.length
+
+          }
+
+        }
+
+    };
 
   }
 
@@ -257,27 +496,17 @@ export const getArticles = async (
    * BUSCA COM FILTROS
    * ===================================================
    *
-   * Aqui NÃO usamos a paginação de 25 imóveis.
+   * Quando existem filtros:
    *
-   * Primeiro buscamos a quantidade total de páginas
-   * disponíveis para os filtros.
-   *
-   * Depois buscamos todas elas em paralelo e juntamos
-   * os resultados.
+   * - Busca todos os resultados correspondentes.
+   * - Usa até 100 registros por página.
+   * - Percorre todas as páginas.
+   * - Junta tudo em uma única lista.
    */
-
 
   const firstParams =
     new URLSearchParams();
 
-
-  /*
-   * Usamos um tamanho alto apenas para descobrir
-   * rapidamente a quantidade de resultados.
-   *
-   * A função continua buscando todas as páginas caso
-   * existam mais resultados.
-   */
 
   const searchPageSize = 100;
 
@@ -302,7 +531,7 @@ export const getArticles = async (
 
   firstParams.set(
     "sort",
-    "sortOrder:asc"
+    "publishedAt:desc"
   );
 
 
@@ -333,11 +562,6 @@ export const getArticles = async (
       firstPagination?.pageCount
     ) || 1;
 
-
-  /*
-   * Se já couberam todos os resultados na primeira
-   * consulta, não precisamos fazer outras requisições.
-   */
 
   let allData = [
     ...firstData
@@ -385,7 +609,7 @@ export const getArticles = async (
 
       params.set(
         "sort",
-        "sortOrder:asc"
+        "publishedAt:desc"
       );
 
 
@@ -435,12 +659,6 @@ export const getArticles = async (
    * ===================================================
    * RESULTADO FINAL DA BUSCA
    * ===================================================
-   *
-   * Agora todos os imóveis encontrados pertencem a
-   * uma única lista.
-   *
-   * O Home recebe pageCount = 1 porque os resultados
-   * filtrados serão exibidos juntos.
    */
 
   return {
@@ -474,11 +692,6 @@ export const getArticles = async (
  * =====================================================
  * TODOS OS BAIRROS
  * =====================================================
- *
- * Esta função é independente da busca dos Cards.
- *
- * Ela percorre TODAS as páginas da API e coleta somente
- * o campo Bairro.
  */
 
 export const getAllBairros = async () => {

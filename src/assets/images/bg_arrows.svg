@@ -1,0 +1,44 @@
+<svg width="520" height="700" viewBox="0 0 520 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(455 350) rotate(90) scale(260 300)">
+      <stop offset="0" stop-color="#1687E8" stop-opacity="0.13"/>
+      <stop offset="0.45" stop-color="#1687E8" stop-opacity="0.055"/>
+      <stop offset="1" stop-color="#1687E8" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="curve" x1="100" y1="100" x2="500" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1687E8" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#1687E8" stop-opacity="0.11"/>
+      <stop offset="1" stop-color="#7656D9" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="470" cy="350" rx="230" ry="260" fill="url(#glow)" filter="url(#blur)"/>
+
+  <path
+    d="M520 105C410 125 335 195 350 290C365 385 465 405 520 350"
+    stroke="url(#curve)"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+
+  <path
+    d="M520 155C435 175 385 225 397 292C409 360 475 378 520 340"
+    stroke="#1687E8"
+    stroke-opacity="0.045"
+    stroke-width="1.5"
+    stroke-linecap="round"
+  />
+
+  <path
+    d="M520 540C425 515 370 455 382 390"
+    stroke="#7656D9"
+    stroke-opacity="0.035"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+</svg>
