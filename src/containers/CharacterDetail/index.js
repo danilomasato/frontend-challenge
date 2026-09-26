@@ -47,7 +47,15 @@ import CardMedia from "@mui/material/CardMedia";
 
 import Typography from "@mui/material/Typography";
 
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import {
+  Button,
+  CardActionArea,
+  CardActions,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
+} from "@mui/material";
 
 import SellIcon from "@mui/icons-material/Sell";
 
@@ -77,25 +85,17 @@ import PreloadImovelDetail from "../../components/PreloadImovelDetail";
 
 import PreloadImovelDetailMobile from "../../components/PreloadImovelDetail/Mobile";
 
-function getParameterByName(
-  name,
-  url = window.location.href
-) {
-  name = name.replace(
-    /[\[\]]/g,
-    "\\$&"
-  );
+function getParameterByName(name, url = window.location.href) {
+  name = name.replace(/[\[\]]/g, "\\$&");
 
   const regex = new RegExp(
-    "[?&]" +
-      name +
-      "(=([^&#]*)|&|#|$)"
+    "[?&]" + name + "(=([^&#]*)|&|#|$)"
   );
 
   const results = regex.exec(url);
 
   if (!results) {
-    return null;
+    return "";
   }
 
   if (!results[2]) {
@@ -107,9 +107,6 @@ function getParameterByName(
   );
 }
 
-/**
- * Extrai todo o texto dos children de um bloco do Strapi.
- */
 function getTextFromChildren(children = []) {
   if (!Array.isArray(children)) {
     return "";
@@ -124,10 +121,6 @@ function getTextFromChildren(children = []) {
     .join("");
 }
 
-/**
- * Verifica se o texto começa visualmente com um ícone,
- * emoji, marcador ou símbolo de lista.
- */
 function startsWithVisualIcon(text = "") {
   const value = String(text).trim();
 
@@ -136,25 +129,11 @@ function startsWithVisualIcon(text = "") {
   }
 
   const visualIconRegex =
-    /^(?:[\u{1F000}-\u{1FAFF}]|[\u{2600}-\u{27BF}]|[•●○◉◌▪▫■□◆◇★☆✓✔✕✖➜➤➝➞➟➠➡➢➣➥➦➧➨➩➪➫➬➭➮➯➱➲➳➵➸➺➻➼➽➾→←↑↓↔⇒⇐⇑⇓⟶⟵⟷]|[-*+])(?:\uFE0F|\u200D[\u{1F000}-\u{1FAFF}])?(?:\s|$)/u;
+    /^(?:[\u{1F000}-\u{1FAFF}]|[\u{2600}-\u{27BF}]|[•●○◉◌▪▫■□◆◇★☆✓✔✕✖➜➤➝➞➟➠➡➢➣➥➦➧➨➩➪➫➬➭➮➯➱➲➳➵➸➺➻➼➽➾→←↑↓↔⇒⇐⇑⇓⟶⟵⟷]|[+*-])(?:\uFE0F|\u200D[\u{1F000}-\u{1FAFF}])?(?:\s|$)/u;
 
   return visualIconRegex.test(value);
 }
 
-/**
- * Divide linhas que eventualmente foram colocadas
- * dentro do mesmo parágrafo.
- *
- * Exemplo:
- *
- * ⭐ Item 1 🏡 Item 2 📍 Item 3
- *
- * vira:
- *
- * ⭐ Item 1
- * 🏡 Item 2
- * 📍 Item 3
- */
 function splitVisualLines(text = "") {
   const normalized = String(text)
     .replace(/\r\n/g, "\n")
@@ -216,9 +195,6 @@ function getTextLines(text = "") {
   return splitVisualLines(text);
 }
 
-/**
- * Normaliza espaços sem destruir o conteúdo.
- */
 function normalizeVisualLine(line = "") {
   return String(line)
     .replace(/^[\t ]+/, "")
@@ -226,12 +202,6 @@ function normalizeVisualLine(line = "") {
     .trim();
 }
 
-/**
- * Remove uma bolinha/marcador que eventualmente já exista
- * no começo do texto.
- *
- * A bolinha será desenhada pelo componente da lista.
- */
 function removeExistingBullet(text = "") {
   return String(text)
     .replace(
@@ -241,37 +211,51 @@ function removeExistingBullet(text = "") {
     .trim();
 }
 
-/**
- * Detecta características de imóvel.
- */
+function isEmptyDescriptionParagraph(desc) {
+  if (
+    !desc ||
+    desc.type !== "paragraph"
+  ) {
+    return false;
+  }
+
+  const text =
+    getTextFromChildren(
+      desc.children
+    );
+
+  return !String(text).trim();
+}
+
+function normalizeHighlightTitle(text = "") {
+  return normalizeVisualLine(text)
+    .replace(
+      /^(?:[\u{1F000}-\u{1FAFF}]|[\u{2600}-\u{27BF}]|[•●○◉◌▪▫■□◆◇★☆✓✔✕✖➜➤➝➞➟➠➡➢➣➥➦➧➨➩➪➫➬➭➮➯➱➲➳➵➸➺➻➼➽➾→←↑↓↔⇒⇐⇑⇓⟶⟵⟷]|[+*-])(?:\uFE0F|\u200D[\u{1F000}-\u{1FAFF}])?\s*/u,
+      ""
+    )
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/[：:]\s*$/, "")
+    .trim();
+}
+
+function isExplicitPropertyHighlight(text = "") {
+  const title =
+    normalizeHighlightTitle(text);
+
+  return /^(?:destaques?|destaque|características?|caracteristicas?|característica|caracteristica)(?:\s+do\s+im[oó]vel)?$/i.test(
+    title
+  );
+}
+
 function looksLikeCharacteristic(text = "") {
   const value = normalizeVisualLine(
     removeExistingBullet(text)
   );
 
-  if (!value) {
-    return false;
-  }
-
-  if (startsWithVisualIcon(value)) {
-    return false;
-  }
-
-  /**
-   * Frases completas/descritivas não devem ser
-   * transformadas em item de característica.
-   *
-   * Isso evita casos como:
-   *
-   * "Uma ótima opção para quem procura um apartamento
-   * compacto de 2 dormitórios..."
-   *
-   * mesmo contendo palavras como "apartamento"
-   * ou "dormitórios".
-   */
   if (
-    /[.!?…]$/.test(value) ||
-    /\.\.\.$/.test(value)
+    !value ||
+    startsWithVisualIcon(value)
   ) {
     return false;
   }
@@ -283,23 +267,6 @@ function looksLikeCharacteristic(text = "") {
     characteristicRegex.test(value)
   ) {
     return true;
-  }
-
-  /**
-   * Evita que textos descritivos longos sejam
-   * confundidos com características apenas porque
-   * possuem números.
-   */
-  const wordCount = value
-    .split(/\s+/)
-    .filter(Boolean)
-    .length;
-
-  if (
-    wordCount > 8 &&
-    !characteristicRegex.test(value)
-  ) {
-    return false;
   }
 
   if (
@@ -319,23 +286,18 @@ function looksLikeCharacteristic(text = "") {
   const propertyFeatureRegex =
     /(?:m²|m2|metros|dormitórios|dormitorios|quartos|suítes|suites|banheiros|vagas|vaga|andar|condomínio|condominio|portaria|elevador|garagem|piscina|academia|churrasqueira|sacada|varanda|iptu|lavabo|armário|armarios|closet|terraço|terraco|quintal|jardim)/i;
 
-  /**
-   * Para palavras de característica encontradas no meio
-   * do texto, exige uma descrição curta. Isso impede que
-   * uma frase comercial/descritiva seja transformada em
-   * item com bolinha.
-   */
   if (
-    propertyFeatureRegex.test(value) &&
-    value.length <= 80
+    propertyFeatureRegex.test(
+      value
+    ) &&
+    value.length <= 160
   ) {
     return true;
   }
 
   if (
     value.length <= 80 &&
-    !/[.!?…]$/.test(value) &&
-    !/\.\.\.$/.test(value)
+    !/[.!?]$/.test(value)
   ) {
     return true;
   }
@@ -343,48 +305,46 @@ function looksLikeCharacteristic(text = "") {
   return false;
 }
 
-/**
- * Detecta se uma linha é um título de destaque/característica.
- *
- * Importante:
- * O emoji pode estar antes do texto.
- *
- * Exemplos aceitos:
- *
- * ✨ Destaques do imóvel
- * ⭐ Destaque do imóvel
- * 🏡 Característica do imóvel
- * 📌 Características
- * 🔑 Diferenciais
- * Imóvel
- * Característica
- */
-function isHighlightTitle(text = "") {
-  const value =
-    normalizeVisualLine(text);
+function looksLikeDescriptionListItem(
+  text = ""
+) {
+  const value = normalizeVisualLine(
+    removeExistingBullet(text)
+  );
 
   if (!value) {
     return false;
   }
 
-  const withoutIcon = value
-    .replace(
-      /^(?:[\u{1F000}-\u{1FAFF}]|[\u{2600}-\u{27BF}]|[•●○◉◌▪▫■□◆◇★☆✓✔✕✖➜➤➝➞➟➠➡➢➣➥➦➧➨➩➪➫➬➭➮➯➱➲➳➵➸➺➻➼➽➾→←↑↓↔⇒⇐⇑⇓⟶⟵⟷]|[-*+])(?:\uFE0F|\u200D[\u{1F000}-\u{1FAFF}])?\s*/u,
-      ""
-    )
-    .trim();
+  if (
+    startsWithVisualIcon(value)
+  ) {
+    return false;
+  }
 
-  const explicitHighlightRegex =
-    /^(?:destaques?|destaques do imóvel|destaques do imovel|destaque do imóvel|destaque do imovel|características?|caracteristicas?|características do imóvel|caracteristicas do imóvel|característica do imóvel|caracteristica do imóvel|principais características|principais caracteristicas|detalhes|detalhes do imóvel|detalhes do imovel|diferenciais|diferenciais do imóvel|diferenciais do imovel|informações|informacoes|informações do imóvel|informacoes do imovel|sobre o imóvel|sobre o imovel|imóvel|imovel|característica|caracteristica)\s*:?\s*$/i;
+  if (
+    looksLikeCharacteristic(value)
+  ) {
+    return true;
+  }
 
-  return explicitHighlightRegex.test(
-    withoutIcon
-  );
+  if (
+    value.length <= 100 &&
+    !/[.!?]$/.test(value)
+  ) {
+    return true;
+  }
+
+  if (
+    /[|;:]/.test(value) &&
+    value.length <= 180
+  ) {
+    return true;
+  }
+
+  return false;
 }
 
-/**
- * Mantido para compatibilidade com a lógica anterior.
- */
 function looksLikeHighlight(text = "") {
   const value =
     normalizeVisualLine(text);
@@ -393,7 +353,17 @@ function looksLikeHighlight(text = "") {
     return false;
   }
 
-  if (isHighlightTitle(value)) {
+  const withoutIcon =
+    normalizeHighlightTitle(value);
+
+  const highlightRegex =
+    /^(?:destaques?|destaque|destaques do imóvel|destaque do imóvel|características?|caracteristicas?|característica|caracteristica|características do imóvel|caracteristicas do imóvel|principais características|principais caracteristicas|detalhes|detalhes do imóvel|detalhes do imovel|diferenciais|diferenciais do imóvel|diferenciais do imovel|informações|informacoes|informações do imóvel|informacoes do imovel|sobre o imóvel|sobre o imovel)\s*:?\s*$/i;
+
+  if (
+    highlightRegex.test(
+      withoutIcon
+    )
+  ) {
     return true;
   }
 
@@ -407,8 +377,7 @@ function looksLikeHighlight(text = "") {
   if (
     value.length <= 70 &&
     !looksLikeCharacteristic(value) &&
-    !/[.!?…]$/.test(value) &&
-    !/\.\.\.$/.test(value)
+    !/[.!?]$/.test(value)
   ) {
     return true;
   }
@@ -416,11 +385,9 @@ function looksLikeHighlight(text = "") {
   return false;
 }
 
-/**
- * Verifica se uma linha pode ser usada como cabeçalho
- * de uma lista de destaque.
- */
-function isHighlightCandidate(text = "") {
+function isHighlightCandidate(
+  text = ""
+) {
   const value =
     normalizeVisualLine(text);
 
@@ -428,20 +395,37 @@ function isHighlightCandidate(text = "") {
     return false;
   }
 
-  if (isHighlightTitle(value)) {
+  if (
+    isExplicitPropertyHighlight(
+      value
+    )
+  ) {
     return true;
   }
 
-  if (startsWithVisualIcon(value)) {
+  const withoutIcon =
+    normalizeHighlightTitle(value);
+
+  const explicitHighlightRegex =
+    /^(?:destaques?|destaque|destaques do imóvel|destaque do imóvel|características?|caracteristicas?|característica|caracteristica|características do imóvel|caracteristicas do imóvel|principais características|principais caracteristicas|detalhes|detalhes do imóvel|detalhes do imovel|diferenciais|diferenciais do imóvel|diferenciais do imovel|informações|informacoes|informações do imóvel|informacoes do imovel|sobre o imóvel|sobre o imovel|imóvel|imovel|característica|caracteristica)\s*:?\s*$/i;
+
+  if (
+    explicitHighlightRegex.test(
+      withoutIcon
+    )
+  ) {
+    return true;
+  }
+
+  if (
+    startsWithVisualIcon(value)
+  ) {
     return false;
   }
 
   return looksLikeHighlight(value);
 }
 
-/**
- * Analisa um parágrafo do Rich Text do Strapi.
- */
 function analyzeParagraph(desc) {
   if (
     !desc ||
@@ -463,14 +447,14 @@ function analyzeParagraph(desc) {
   }
 
   const iconLines =
-    lines.filter((line) =>
-      startsWithVisualIcon(line)
+    lines.filter(
+      (line) =>
+        startsWithVisualIcon(line)
     );
 
   if (
-    lines.length >= 1 &&
     iconLines.length ===
-      lines.length
+    lines.length
   ) {
     return {
       type: "icon",
@@ -490,9 +474,7 @@ function analyzeParagraph(desc) {
         .filter((line) =>
           startsWithVisualIcon(line)
         )
-        .map(
-          normalizeVisualLine
-        )
+        .map(normalizeVisualLine)
     };
   }
 
@@ -502,20 +484,17 @@ function analyzeParagraph(desc) {
         lines[0]
       );
 
-    const remaining = lines
-      .slice(1)
-      .map(
-        normalizeVisualLine
-      )
-      .filter(Boolean);
+    const remaining =
+      lines
+        .slice(1)
+        .map(normalizeVisualLine)
+        .filter(Boolean);
 
     const listLike =
       remaining.filter(
         (item) =>
-          !startsWithVisualIcon(
-            item
-          ) &&
-          looksLikeCharacteristic(
+          !startsWithVisualIcon(item) &&
+          looksLikeDescriptionListItem(
             item
           )
       );
@@ -527,6 +506,9 @@ function analyzeParagraph(desc) {
         remaining.length &&
       (
         looksLikeHighlight(
+          firstLine
+        ) ||
+        isExplicitPropertyHighlight(
           firstLine
         ) ||
         remaining.length >= 2
@@ -546,9 +528,6 @@ function analyzeParagraph(desc) {
   };
 }
 
-/**
- * Extrai características de um parágrafo.
- */
 function getCharacteristicItemsFromParagraph(
   desc
 ) {
@@ -571,32 +550,22 @@ function getCharacteristicItemsFromParagraph(
     return [];
   }
 
-  /**
-   * Exemplo:
-   *
-   * Área: 64 m² | 2 dormitórios | 1 vaga
-   */
   if (
     lines.length === 1 &&
     lines[0].includes("|")
   ) {
-    const parts = lines[0]
-      .split("|")
-      .map((item) =>
-        normalizeVisualLine(
-          item
-        )
-      )
-      .filter(Boolean);
+    const parts =
+      lines[0]
+        .split("|")
+        .map(normalizeVisualLine)
+        .filter(Boolean);
 
     if (
       parts.length > 1 &&
       parts.every(
         (item) =>
-          !startsWithVisualIcon(
-            item
-          ) &&
-          looksLikeCharacteristic(
+          !startsWithVisualIcon(item) &&
+          looksLikeDescriptionListItem(
             item
           )
       )
@@ -605,22 +574,39 @@ function getCharacteristicItemsFromParagraph(
     }
   }
 
-  /**
-   * Várias linhas dentro do mesmo parágrafo.
-   */
+  if (
+    lines.length === 1 &&
+    lines[0].includes(";")
+  ) {
+    const parts =
+      lines[0]
+        .split(";")
+        .map(normalizeVisualLine)
+        .filter(Boolean);
+
+    if (
+      parts.length > 1 &&
+      parts.every(
+        (item) =>
+          !startsWithVisualIcon(item) &&
+          looksLikeDescriptionListItem(
+            item
+          )
+      )
+    ) {
+      return parts;
+    }
+  }
+
   if (lines.length > 1) {
     const normalized =
-      lines.map(
-        normalizeVisualLine
-      );
+      lines.map(normalizeVisualLine);
 
     if (
       normalized.every(
         (item) =>
-          !startsWithVisualIcon(
-            item
-          ) &&
-          looksLikeCharacteristic(
+          !startsWithVisualIcon(item) &&
+          looksLikeDescriptionListItem(
             item
           )
       )
@@ -631,15 +617,9 @@ function getCharacteristicItemsFromParagraph(
     return [];
   }
 
-  /**
-   * Uma única característica.
-   */
   if (
-    lines.length === 1 &&
-    !startsWithVisualIcon(
-      lines[0]
-    ) &&
-    looksLikeCharacteristic(
+    !startsWithVisualIcon(lines[0]) &&
+    looksLikeDescriptionListItem(
       lines[0]
     )
   ) {
@@ -653,44 +633,6 @@ function getCharacteristicItemsFromParagraph(
   return [];
 }
 
-/**
- * Verifica se o bloco está vazio.
- *
- * Isso é importante porque o Rich Text do Strapi
- * pode retornar:
- *
- * paragraph vazio
- * paragraph "Área: 64 m²"
- * paragraph vazio
- * paragraph "2 dormitórios"
- *
- * Os vazios não devem interromper a lista.
- */
-function isEmptyParagraph(desc) {
-  if (
-    !desc ||
-    desc.type !== "paragraph"
-  ) {
-    return false;
-  }
-
-  const text =
-    getTextFromChildren(
-      desc.children
-    );
-
-  return !String(text).trim();
-}
-
-/**
- * Constrói os blocos visuais da descrição.
- *
- * A ordem de detecção é importante:
- *
- * 1. Primeiro identifica títulos de destaque.
- * 2. Depois procura os itens seguintes.
- * 3. Só depois trata os demais parágrafos com ícones.
- */
 function buildDescriptionBlocks(
   description = []
 ) {
@@ -708,9 +650,6 @@ function buildDescriptionBlocks(
     const current =
       description[index];
 
-    /**
-     * Lista nativa do Strapi.
-     */
     if (
       current?.type === "list"
     ) {
@@ -720,15 +659,12 @@ function buildDescriptionBlocks(
       });
 
       index += 1;
+
       continue;
     }
 
-    /**
-     * Blocos que não são paragraph.
-     */
     if (
-      current?.type !==
-      "paragraph"
+      current?.type !== "paragraph"
     ) {
       blocks.push({
         type: "normal",
@@ -736,48 +672,92 @@ function buildDescriptionBlocks(
       });
 
       index += 1;
+
       continue;
     }
 
-    /**
-     * Parágrafo vazio isolado:
-     * não precisa ser renderizado.
+    /*
+     * Paragraph vazio:
+     *
+     * O Strapi está criando vários paragraphs vazios
+     * entre os itens da lista. Esses paragraphs não
+     * devem aparecer na descrição e também não podem
+     * interromper a identificação de uma lista.
      */
     if (
-      isEmptyParagraph(current)
+      isEmptyDescriptionParagraph(
+        current
+      )
     ) {
       index += 1;
       continue;
     }
 
+    const currentAnalysis =
+      analyzeParagraph(current);
+
+    /*
+     * ==========================================================
+     * DESTAQUES / CARACTERÍSTICAS DO IMÓVEL
+     * ==========================================================
+     *
+     * Exemplo real recebido da API:
+     *
+     * ✨ Destaques do imóvel
+     * 34 m²
+     * [paragraph vazio]
+     * 2 dormitórios
+     * [paragraph vazio]
+     * 1 banheiro
+     * [paragraph vazio]
+     * Condomínio fechado
+     * [paragraph vazio]
+     * ...
+     *
+     * O ponto importante aqui é que os paragraphs vazios
+     * precisam ser ignorados enquanto procuramos os itens.
+     */
     const currentText =
+      currentAnalysis?.text ||
       getTextFromChildren(
         current.children
       );
 
     const currentLines =
-      getTextLines(
-        currentText
+      getTextLines(currentText);
+
+    const firstCurrentLine =
+      currentLines.length === 1
+        ? normalizeVisualLine(
+            currentLines[0]
+          )
+        : "";
+
+    const currentIsExplicitHighlight =
+      currentLines.length === 1 &&
+      isExplicitPropertyHighlight(
+        firstCurrentLine
       );
 
-    /**
-     * =========================================================
-     * 1. DESTAQUE / CARACTERÍSTICA + LISTA
-     * =========================================================
-     */
-    if (
-      currentLines.length === 1 &&
+    const currentIsIconHighlight =
+      currentAnalysis?.type ===
+        "icon" &&
+      currentAnalysis.items.length ===
+        1 &&
       isHighlightCandidate(
-        currentLines[0]
-      )
+        currentAnalysis.items[0]
+      );
+
+    if (
+      currentIsExplicitHighlight ||
+      currentIsIconHighlight
     ) {
       const highlight =
-        normalizeVisualLine(
-          currentLines[0]
-        );
+        currentIsExplicitHighlight
+          ? firstCurrentLine
+          : currentAnalysis.items[0];
 
-      const followingItems =
-        [];
+      const followingItems = [];
 
       let nextIndex =
         index + 1;
@@ -789,58 +769,230 @@ function buildDescriptionBlocks(
         const next =
           description[nextIndex];
 
-        /**
-         * Ignora parágrafos vazios
-         * entre o título e os itens.
+        /*
+         * Ignora paragraphs vazios.
+         *
+         * Isso é exatamente o formato enviado
+         * pelo JSON desta descrição.
          */
         if (
-          isEmptyParagraph(next)
+          isEmptyDescriptionParagraph(
+            next
+          )
         ) {
           nextIndex += 1;
           continue;
         }
 
-        /**
-         * Se encontrou outro tipo de
-         * bloco, a lista terminou.
-         */
         if (
           !next ||
-          next.type !==
-            "paragraph"
+          next.type !== "paragraph"
         ) {
           break;
         }
 
-        const nextText =
-          getTextFromChildren(
-            next.children
-          );
+        const nextAnalysis =
+          analyzeParagraph(next);
 
-        const nextLines =
-          getTextLines(
-            nextText
-          );
-
-        /**
-         * Se o próximo parágrafo é
-         * outro título de destaque,
-         * encerra esta lista.
+        /*
+         * Se encontrarmos outra lista visual
+         * com emoji, ela pertence a outro bloco.
          */
         if (
-          nextLines.length === 1 &&
+          nextAnalysis?.type ===
+          "icon"
+        ) {
+          break;
+        }
+
+        const nextItems =
+          getCharacteristicItemsFromParagraph(
+            next
+          );
+
+        /*
+         * Se o paragraph seguinte tem aparência
+         * de característica, adiciona à lista.
+         */
+        if (
+          nextItems.length > 0
+        ) {
+          followingItems.push(
+            ...nextItems
+          );
+
+          nextIndex += 1;
+
+          continue;
+        }
+
+        /*
+         * Chegamos em texto normal.
+         *
+         * Exemplo do JSON:
+         *
+         * "Uma ótima opção para quem procura..."
+         *
+         * Nesse ponto a lista deve terminar.
+         */
+        break;
+      }
+
+      if (
+        followingItems.length > 0
+      ) {
+        blocks.push({
+          type: "highlight-list",
+          highlight,
+          items: followingItems
+        });
+
+        index = nextIndex;
+
+        continue;
+      }
+    }
+
+    /*
+     * ==========================================================
+     * LISTA DE ÍCONES
+     * ==========================================================
+     */
+    if (
+      currentAnalysis?.type ===
+      "icon"
+    ) {
+      const iconItems = [
+        ...currentAnalysis.items
+      ];
+
+      let nextIndex =
+        index + 1;
+
+      while (
+        nextIndex <
+        description.length
+      ) {
+        const next =
+          description[nextIndex];
+
+        if (
+          isEmptyDescriptionParagraph(
+            next
+          )
+        ) {
+          nextIndex += 1;
+          continue;
+        }
+
+        if (
+          !next ||
+          next.type !== "paragraph"
+        ) {
+          break;
+        }
+
+        const nextAnalysis =
+          analyzeParagraph(next);
+
+        if (
+          nextAnalysis?.type !==
+          "icon"
+        ) {
+          break;
+        }
+
+        if (
+          nextAnalysis.items.length ===
+            1 &&
           isHighlightCandidate(
-            nextLines[0]
+            nextAnalysis.items[0]
           )
         ) {
           break;
         }
 
-        /**
-         * Se é uma lista de ícones,
-         * não mistura com a lista de
-         * características.
-         */
+        iconItems.push(
+          ...nextAnalysis.items
+        );
+
+        nextIndex += 1;
+      }
+
+      blocks.push({
+        type: "icon-list",
+        items: iconItems
+      });
+
+      index = nextIndex;
+
+      continue;
+    }
+
+    /*
+     * ==========================================================
+     * HIGHLIGHT + LISTA DENTRO DO MESMO PARAGRAPH
+     * ==========================================================
+     */
+    if (
+      currentAnalysis?.type ===
+      "highlight-list"
+    ) {
+      blocks.push({
+        type: "highlight-list",
+        highlight:
+          currentAnalysis.highlight,
+        items:
+          currentAnalysis.items
+      });
+
+      index += 1;
+
+      continue;
+    }
+
+    /*
+     * ==========================================================
+     * OUTROS HEADINGS + PARAGRAPHS DE CARACTERÍSTICAS
+     * ==========================================================
+     */
+    if (
+      currentLines.length === 1 &&
+      currentText.trim()
+    ) {
+      const firstLine =
+        normalizeVisualLine(
+          currentLines[0]
+        );
+
+      const followingItems = [];
+
+      let nextIndex =
+        index + 1;
+
+      while (
+        nextIndex <
+        description.length
+      ) {
+        const next =
+          description[nextIndex];
+
+        if (
+          isEmptyDescriptionParagraph(
+            next
+          )
+        ) {
+          nextIndex += 1;
+          continue;
+        }
+
+        if (
+          !next ||
+          next.type !== "paragraph"
+        ) {
+          break;
+        }
+
         const nextAnalysis =
           analyzeParagraph(next);
 
@@ -864,254 +1016,7 @@ function buildDescriptionBlocks(
           );
 
           nextIndex += 1;
-          continue;
-        }
 
-        /**
-         * Se não conseguiu identificar
-         * como característica, encerra.
-         */
-        break;
-      }
-
-      /**
-       * Só transforma em lista quando
-       * realmente existem itens.
-       */
-      if (
-        followingItems.length > 0
-      ) {
-        blocks.push({
-          type:
-            "highlight-list",
-          highlight,
-          items:
-            followingItems
-        });
-
-        index = nextIndex;
-        continue;
-      }
-    }
-
-    const currentAnalysis =
-      analyzeParagraph(
-        current
-      );
-
-    /**
-     * =========================================================
-     * 2. LISTA DE ÍCONES CONSECUTIVOS
-     * =========================================================
-     *
-     * Aqui entram somente linhas que são
-     * realmente itens com ícones.
-     *
-     * Elas NÃO recebem bolinha.
-     */
-    if (
-      currentAnalysis?.type ===
-      "icon"
-    ) {
-      const iconItems = [
-        ...currentAnalysis.items
-      ];
-
-      let nextIndex =
-        index + 1;
-
-      while (
-        nextIndex <
-        description.length
-      ) {
-        const next =
-          description[nextIndex];
-
-        /**
-         * Parágrafo vazio não precisa
-         * interromper uma sequência de
-         * ícones.
-         */
-        if (
-          isEmptyParagraph(next)
-        ) {
-          nextIndex += 1;
-          continue;
-        }
-
-        if (
-          !next ||
-          next.type !==
-            "paragraph"
-        ) {
-          break;
-        }
-
-        const nextAnalysis =
-          analyzeParagraph(
-            next
-          );
-
-        /**
-         * Se o próximo parágrafo é um
-         * título de destaque, para aqui.
-         */
-        const nextText =
-          getTextFromChildren(
-            next.children
-          );
-
-        const nextLines =
-          getTextLines(
-            nextText
-          );
-
-        if (
-          nextLines.length === 1 &&
-          isHighlightCandidate(
-            nextLines[0]
-          )
-        ) {
-          break;
-        }
-
-        if (
-          nextAnalysis?.type !==
-          "icon"
-        ) {
-          break;
-        }
-
-        iconItems.push(
-          ...nextAnalysis.items
-        );
-
-        nextIndex += 1;
-      }
-
-      blocks.push({
-        type: "icon-list",
-        items: iconItems
-      });
-
-      index = nextIndex;
-      continue;
-    }
-
-    /**
-     * =========================================================
-     * 3. DESTAQUE + LISTA NO MESMO PARÁGRAFO
-     * =========================================================
-     */
-    if (
-      currentAnalysis?.type ===
-      "highlight-list"
-    ) {
-      blocks.push({
-        type:
-          "highlight-list",
-        highlight:
-          currentAnalysis.highlight,
-        items:
-          currentAnalysis.items
-      });
-
-      index += 1;
-      continue;
-    }
-
-    /**
-     * =========================================================
-     * 4. TÍTULO NORMAL + LISTA NOS PARÁGRAFOS SEGUINTES
-     * =========================================================
-     *
-     * Mantém compatibilidade com conteúdos antigos
-     * que não possuem emoji no título.
-     */
-    if (
-      currentLines.length === 1 &&
-      currentText.trim()
-    ) {
-      const firstLine =
-        normalizeVisualLine(
-          currentLines[0]
-        );
-
-      const followingItems =
-        [];
-
-      let nextIndex =
-        index + 1;
-
-      while (
-        nextIndex <
-        description.length
-      ) {
-        const next =
-          description[nextIndex];
-
-        /**
-         * Ignora vazios.
-         */
-        if (
-          isEmptyParagraph(next)
-        ) {
-          nextIndex += 1;
-          continue;
-        }
-
-        if (
-          !next ||
-          next.type !==
-            "paragraph"
-        ) {
-          break;
-        }
-
-        const nextText =
-          getTextFromChildren(
-            next.children
-          );
-
-        const nextLines =
-          getTextLines(
-            nextText
-          );
-
-        if (
-          nextLines.length === 1 &&
-          isHighlightCandidate(
-            nextLines[0]
-          )
-        ) {
-          break;
-        }
-
-        const nextAnalysis =
-          analyzeParagraph(
-            next
-          );
-
-        if (
-          nextAnalysis?.type ===
-          "icon"
-        ) {
-          break;
-        }
-
-        const nextItems =
-          getCharacteristicItemsFromParagraph(
-            next
-          );
-
-        if (
-          nextItems.length > 0
-        ) {
-          followingItems.push(
-            ...nextItems
-          );
-
-          nextIndex += 1;
           continue;
         }
 
@@ -1119,29 +1024,25 @@ function buildDescriptionBlocks(
       }
 
       if (
-        followingItems.length >= 2 &&
+        followingItems.length >= 1 &&
         isHighlightCandidate(
           firstLine
         )
       ) {
         blocks.push({
-          type:
-            "highlight-list",
-          highlight:
-            firstLine,
-          items:
-            followingItems
+          type: "highlight-list",
+          highlight: firstLine,
+          items: followingItems
         });
 
         index = nextIndex;
+
         continue;
       }
     }
 
-    /**
-     * =========================================================
-     * 5. PARÁGRAFO NORMAL
-     * =========================================================
+    /*
+     * Paragraph normal.
      */
     blocks.push({
       type: "normal",
@@ -1154,11 +1055,6 @@ function buildDescriptionBlocks(
   return blocks;
 }
 
-/**
- * Item de uma lista composta por ícones.
- *
- * NÃO adiciona "•".
- */
 function VisualIconListItem({
   text
 }) {
@@ -1167,19 +1063,15 @@ function VisualIconListItem({
       component="div"
       sx={{
         display: "flex",
-        alignItems:
-          "flex-start",
+        alignItems: "flex-start",
         minWidth: 0,
         margin: 0,
         padding: 0,
         fontSize: "0.9rem",
         lineHeight: 1.55,
-        wordBreak:
-          "break-word",
-        overflowWrap:
-          "anywhere",
-        whiteSpace:
-          "normal"
+        wordBreak: "break-word",
+        overflowWrap: "anywhere",
+        whiteSpace: "normal"
       }}
     >
       <Box
@@ -1188,12 +1080,9 @@ function VisualIconListItem({
           minWidth: 0,
           fontSize: "0.9rem",
           lineHeight: 1.55,
-          wordBreak:
-            "break-word",
-          overflowWrap:
-            "anywhere",
-          whiteSpace:
-            "normal"
+          wordBreak: "break-word",
+          overflowWrap: "anywhere",
+          whiteSpace: "normal"
         }}
       >
         {text}
@@ -1202,11 +1091,6 @@ function VisualIconListItem({
   );
 }
 
-/**
- * Item da lista de destaque/característica.
- *
- * Aqui SIM adicionamos a bolinha.
- */
 function VisualBulletListItem({
   text
 }) {
@@ -1215,32 +1099,24 @@ function VisualBulletListItem({
       component="div"
       sx={{
         display: "flex",
-        alignItems:
-          "flex-start",
+        alignItems: "flex-start",
         minWidth: 0,
         margin: 0,
         padding: 0,
         fontSize: "0.9rem",
         lineHeight: 1.55,
-        wordBreak:
-          "break-word",
-        overflowWrap:
-          "anywhere",
-        whiteSpace:
-          "normal"
+        wordBreak: "break-word",
+        overflowWrap: "anywhere",
+        whiteSpace: "normal"
       }}
     >
       <Box
         component="span"
         sx={{
-          flex:
-            "0 0 auto",
-          marginRight:
-            "7px",
-          fontSize:
-            "0.9rem",
-          lineHeight:
-            1.55
+          flex: "0 0 auto",
+          marginRight: "7px",
+          fontSize: "0.9rem",
+          lineHeight: 1.55
         }}
       >
         •
@@ -1250,29 +1126,19 @@ function VisualBulletListItem({
         component="span"
         sx={{
           minWidth: 0,
-          fontSize:
-            "0.9rem",
-          lineHeight:
-            1.55,
-          wordBreak:
-            "break-word",
-          overflowWrap:
-            "anywhere",
-          whiteSpace:
-            "normal"
+          fontSize: "0.9rem",
+          lineHeight: 1.55,
+          wordBreak: "break-word",
+          overflowWrap: "anywhere",
+          whiteSpace: "normal"
         }}
       >
-        {removeExistingBullet(
-          text
-        )}
+        {removeExistingBullet(text)}
       </Box>
     </Box>
   );
 }
 
-/**
- * Renderiza listas visuais.
- */
 function VisualList({
   items,
   isMobile,
@@ -1286,35 +1152,25 @@ function VisualList({
     <Box
       component="div"
       sx={{
-        marginLeft:
-          "10px",
-        marginTop:
-          "0.35rem",
-        marginBottom:
-          "0.7rem",
+        marginLeft: "10px",
+        marginTop: "0.35rem",
+        marginBottom: "0.7rem",
         display: "grid",
         gridTemplateColumns:
           isMobile
             ? "minmax(0, 1fr)"
             : "repeat(2, minmax(0, 1fr))",
-        columnGap:
-          "1.5rem",
-        rowGap:
-          "0.45rem",
-        width:
-          "calc(100% - 10px)",
-        maxWidth:
-          "100%",
-        boxSizing:
-          "border-box",
-        fontSize:
-          "0.9rem"
+        columnGap: "1.5rem",
+        rowGap: "0.45rem",
+        width: "calc(100% - 10px)",
+        maxWidth: "100%",
+        boxSizing: "border-box",
+        fontSize: "0.9rem"
       }}
     >
       {items.map(
         (item, index) =>
-          type ===
-          "bullet" ? (
+          type === "bullet" ? (
             <VisualBulletListItem
               key={index}
               text={item}
@@ -1330,6 +1186,84 @@ function VisualList({
   );
 }
 
+const detailVisits = new Set();
+
+const detailFirstVisitInProgress =
+  new Set();
+
+const MIN_SKELETON_TIME = 200;
+
+function getDetailVisitKey(
+  idImovel,
+  paramID
+) {
+  if (idImovel) {
+    return `detailVisitada_${idImovel}`;
+  }
+
+  if (
+    paramID !== null &&
+    paramID !== ""
+  ) {
+    return `detailVisitada_${paramID}`;
+  }
+
+  return null;
+}
+
+function hasVisitedDetail(
+  visitKey
+) {
+  if (!visitKey) {
+    return false;
+  }
+
+  if (
+    detailVisits.has(visitKey)
+  ) {
+    return true;
+  }
+
+  try {
+    if (
+      sessionStorage.getItem(
+        visitKey
+      ) === "true"
+    ) {
+      detailVisits.add(
+        visitKey
+      );
+
+      return true;
+    }
+  } catch (error) {
+    // Continua usando a memória da sessão.
+  }
+
+  return false;
+}
+
+function markDetailVisited(
+  visitKey
+) {
+  if (!visitKey) {
+    return;
+  }
+
+  detailVisits.add(
+    visitKey
+  );
+
+  try {
+    sessionStorage.setItem(
+      visitKey,
+      "true"
+    );
+  } catch (error) {
+    // Não interrompe o carregamento.
+  }
+}
+
 const CharacterDetail = ({
   realestate
 }) => {
@@ -1339,54 +1273,171 @@ const CharacterDetail = ({
   const contentRef =
     useRef(null);
 
-  const [
-    loading,
-    setLoading
-  ] = useState(true);
-
-  const [
-    imoveis,
-    setImoveis
-  ] = useState();
-
-  const [
-    isMobile,
-    setIsMobile
-  ] = useState(
-    window.innerWidth <= 1024
-  );
-
-  const [
-    openToggle,
-    setOpenToggle
-  ] = useState(false);
-
-  const [
-    showToggle,
-    setShowToggle
-  ] = useState(false);
-
-  const [
-    open,
-    setOpen
-  ] = React.useState(false);
-
-  let rows = [];
-
   const paramID =
     getParameterByName(
       "dcID"
     );
 
-  /**
-   * Busca dados do Redux.
-   */
+  const idImovel =
+    window.location.pathname.match(
+      /^\/imovel\/(\d+)/
+    )?.[1];
+
+  const visitKey =
+    getDetailVisitKey(
+      idImovel,
+      paramID
+    );
+
+  const alreadyVisited =
+    hasVisitedDetail(
+      visitKey
+    );
+
+  const matchesCurrentProperty =
+    Boolean(
+      realestate &&
+      Object.keys(realestate).length > 0 &&
+      (
+        (
+          idImovel &&
+          realestate?.id != null &&
+          String(realestate.id) ===
+            String(idImovel)
+        ) ||
+        (
+          paramID !== null &&
+          paramID !== "" &&
+          realestate?.documentId != null &&
+          String(realestate.documentId) ===
+            String(paramID)
+        ) ||
+        (
+          paramID !== null &&
+          paramID !== "" &&
+          realestate?.id != null &&
+          String(realestate.id) ===
+            String(paramID)
+        )
+      )
+    );
+
+  const firstVisitAlreadyStarted =
+    visitKey
+      ? detailFirstVisitInProgress.has(
+          visitKey
+        )
+      : false;
+
+  const shouldShowInitialSkeleton =
+    !alreadyVisited ||
+    firstVisitAlreadyStarted;
+
+  const [loading, setLoading] =
+    useState(
+      shouldShowInitialSkeleton
+    );
+
+  const [imoveis, setImoveis] =
+    useState(() => {
+      if (
+        alreadyVisited &&
+        matchesCurrentProperty
+      ) {
+        return realestate;
+      }
+
+      return undefined;
+    });
+
+  const [isMobile, setIsMobile] =
+    useState(
+      window.innerWidth <= 1024
+    );
+
+  const [openToggle, setOpenToggle] =
+    useState(false);
+
+  const [showToggle, setShowToggle] =
+    useState(false);
+
+  const [open, setOpen] =
+    React.useState(false);
+
+  const [
+    copyCodigoOpen,
+    setCopyCodigoOpen
+  ] = useState(false);
+
+  let rows = [];
+
+  useEffect(() => {
+    window.scrollTo(
+      0,
+      0
+    );
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(
+        window.innerWidth <= 1024
+      );
+    };
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    return () => {
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+    };
+  }, []);
+
   useEffect(() => {
     if (
       !realestate ||
-      Object.keys(
-        realestate
-      ).length === 0
+      Object.keys(realestate).length === 0
+    ) {
+      return;
+    }
+
+    const matchesCurrentProperty =
+      Boolean(
+        (
+          idImovel &&
+          realestate?.id != null &&
+          String(
+            realestate.id
+          ) ===
+            String(idImovel)
+        ) ||
+        (
+          paramID !== null &&
+          paramID !== "" &&
+          realestate?.documentId != null &&
+          String(
+            realestate.documentId
+          ) ===
+            String(paramID)
+        ) ||
+        (
+          paramID !== null &&
+          paramID !== "" &&
+          realestate?.id != null &&
+          String(
+            realestate.id
+          ) ===
+            String(paramID)
+        )
+      );
+
+    if (
+      !matchesCurrentProperty
     ) {
       return;
     }
@@ -1395,111 +1446,344 @@ const CharacterDetail = ({
       realestate
     );
 
+    if (
+      hasVisitedDetail(
+        visitKey
+      )
+    ) {
+      detailFirstVisitInProgress.delete(
+        visitKey
+      );
+
+      setLoading(false);
+
+      return;
+    }
+
+    detailFirstVisitInProgress.add(
+      visitKey
+    );
+
+    markDetailVisited(
+      visitKey
+    );
+
+    setLoading(true);
+
     const timer =
       setTimeout(() => {
+        detailFirstVisitInProgress.delete(
+          visitKey
+        );
+
         setLoading(false);
-      }, 200);
+      }, MIN_SKELETON_TIME);
 
     return () =>
       clearTimeout(timer);
-  }, [realestate]);
+  }, [
+    realestate,
+    idImovel,
+    paramID,
+    visitKey
+  ]);
 
-  /**
-   * Busca imóvel quando a página é recarregada.
-   */
   useEffect(() => {
-    const idImovel =
-      window.location.pathname.match(
-        /^\/imovel\/(\d+)/
-      )?.[1];
-
     if (!idImovel) {
       return;
     }
 
-    const chave =
-      `detailVisitada_${idImovel}`;
-
-    const jaVisitou =
-      sessionStorage.getItem(
-        chave
+    const matchesCurrentProperty =
+      Boolean(
+        realestate &&
+        Object.keys(
+          realestate
+        ).length > 0 &&
+        (
+          (
+            realestate?.id != null &&
+            String(
+              realestate.id
+            ) ===
+              String(idImovel)
+          ) ||
+          (
+            realestate?.documentId != null &&
+            String(
+              realestate.documentId
+            ) ===
+              String(idImovel)
+          )
+        )
       );
 
     if (
-      jaVisitou === "true"
+      matchesCurrentProperty
     ) {
-      console.log(
-        "🔥 Recarregou a página do imóvel:",
-        idImovel
+      return;
+    }
+
+    const wasVisited =
+      hasVisitedDetail(
+        visitKey
       );
 
-      axios
-        .get(
-          `https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/?filters[id][$eq]=${idImovel}&populate=*`
-        )
-        .then(
-          (response) => {
-            setImoveis(
-              response.data.data[0]
+    let cancelled = false;
+
+    const requestStart =
+      Date.now();
+
+    if (!wasVisited) {
+      detailFirstVisitInProgress.add(
+        visitKey
+      );
+
+      markDetailVisited(
+        visitKey
+      );
+
+      setLoading(true);
+    } else {
+      detailFirstVisitInProgress.delete(
+        visitKey
+      );
+
+      setLoading(false);
+    }
+
+    axios
+      .get(
+        `https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/?filters[id][$eq]=${idImovel}&populate=*`
+      )
+      .then(
+        (response) => {
+          if (cancelled) {
+            return;
+          }
+
+          const data =
+            response?.data?.data?.[0];
+
+          if (data) {
+            setImoveis(data);
+          }
+
+          if (wasVisited) {
+            detailFirstVisitInProgress.delete(
+              visitKey
             );
 
             setLoading(false);
+
+            return;
           }
-        )
-        .catch(
-          (error) => {
-            console.log(
-              "An error occurred:",
-              error.response
+
+          const elapsed =
+            Date.now() -
+            requestStart;
+
+          const remaining =
+            Math.max(
+              0,
+              MIN_SKELETON_TIME -
+                elapsed
             );
+
+          setTimeout(() => {
+            if (cancelled) {
+              return;
+            }
+
+            detailFirstVisitInProgress.delete(
+              visitKey
+            );
+
+            setLoading(false);
+          }, remaining);
+        }
+      )
+      .catch(
+        (error) => {
+          if (cancelled) {
+            return;
           }
-        );
-    } else {
-      console.log(
-        "➡️ Primeira entrada no imóvel:",
-        idImovel
+
+          console.log(
+            "An error occurred:",
+            error.response
+          );
+
+          detailFirstVisitInProgress.delete(
+            visitKey
+          );
+
+          markDetailVisited(
+            visitKey
+          );
+
+          setLoading(false);
+        }
       );
 
-      sessionStorage.setItem(
-        chave,
-        "true"
-      );
-    }
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    idImovel,
+    visitKey,
+    realestate
+  ]);
 
-  /**
-   * Busca imóvel por documentId.
-   */
   useEffect(() => {
     if (
-      paramID !== null
+      paramID === null ||
+      paramID === ""
     ) {
-      axios
-        .get(
-          `https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`
+      return;
+    }
+
+    const matchesCurrentProperty =
+      Boolean(
+        realestate &&
+        Object.keys(
+          realestate
+        ).length > 0 &&
+        (
+          (
+            realestate?.documentId != null &&
+            String(
+              realestate.documentId
+            ) ===
+              String(paramID)
+          ) ||
+          (
+            realestate?.id != null &&
+            String(
+              realestate.id
+            ) ===
+              String(paramID)
+          )
         )
-        .then(
-          (response) => {
-            setImoveis(
-              response.data.data
+      );
+
+    if (
+      matchesCurrentProperty
+    ) {
+      return;
+    }
+
+    const wasVisited =
+      hasVisitedDetail(
+        visitKey
+      );
+
+    let cancelled = false;
+
+    const requestStart =
+      Date.now();
+
+    if (!wasVisited) {
+      detailFirstVisitInProgress.add(
+        visitKey
+      );
+
+      markDetailVisited(
+        visitKey
+      );
+
+      setLoading(true);
+    } else {
+      detailFirstVisitInProgress.delete(
+        visitKey
+      );
+
+      setLoading(false);
+    }
+
+    axios
+      .get(
+        `https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`
+      )
+      .then(
+        (response) => {
+          if (cancelled) {
+            return;
+          }
+
+          const data =
+            response?.data?.data;
+
+          if (data) {
+            setImoveis(data);
+          }
+
+          if (wasVisited) {
+            detailFirstVisitInProgress.delete(
+              visitKey
             );
 
             setLoading(false);
-          }
-        )
-        .catch(
-          (error) => {
-            console.log(
-              "An error occurred:",
-              error.response
-            );
-          }
-        );
-    }
 
-    /**
-     * Desabilita botão direito.
-     */
+            return;
+          }
+
+          const elapsed =
+            Date.now() -
+            requestStart;
+
+          const remaining =
+            Math.max(
+              0,
+              MIN_SKELETON_TIME -
+                elapsed
+            );
+
+          setTimeout(() => {
+            if (cancelled) {
+              return;
+            }
+
+            detailFirstVisitInProgress.delete(
+              visitKey
+            );
+
+            setLoading(false);
+          }, remaining);
+        }
+      )
+      .catch(
+        (error) => {
+          if (cancelled) {
+            return;
+          }
+
+          console.log(
+            "An error occurred:",
+            error.response
+          );
+
+          detailFirstVisitInProgress.delete(
+            visitKey
+          );
+
+          markDetailVisited(
+            visitKey
+          );
+
+          setLoading(false);
+        }
+      );
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    paramID,
+    visitKey,
+    realestate
+  ]);
+
+  useEffect(() => {
     const handleContextMenu = (
       e
     ) => {
@@ -1519,9 +1803,6 @@ const CharacterDetail = ({
     };
   }, []);
 
-  /**
-   * Cria linhas da tabela.
-   */
   function createData(
     name,
     info
@@ -1532,194 +1813,80 @@ const CharacterDetail = ({
     };
   }
 
-  /**
-   * Informações do imóvel.
-   */
-  if (
-    imoveis &&
-    Object.keys(imoveis)
-      .length > 0
-  ) {
-    if (
-      imoveis.Tipo_de_Anuncio ===
-      "venda"
-    ) {
-      rows = [
-        createData(
-          "Andar",
-          imoveis?.Andar !==
-            null
-            ? imoveis.Andar +
-                "º"
-            : ""
-        ),
-
-        createData(
-          "Área terreno",
-          imoveis?.Area_Terreno !==
-            null
-            ? imoveis.Area_Terreno +
-                " (m²)"
-            : "Sem Informação"
-        ),
-
-        createData(
-          "Ano de construção",
-          imoveis?.Ano_de_Construcao !==
-            null
-            ? imoveis.Ano_de_Construcao
-            : "Sem Informação"
-        ),
-
-        createData(
-          "Condomínio",
-          imoveis?.Condominio !==
-              null &&
-            imoveis.Condominio
-            ? "R$" +
-              imoveis.Condominio
-            : "Sem Informação"
-        ),
-
-        createData(
-          "IPTU (anual)",
-          imoveis?.IPTU !==
-            null
-            ? parseInt(
-                imoveis.IPTU
-              ).toLocaleString(
-                "pt-BR",
-                {
-                  style:
-                    "currency",
-                  currency:
-                    "BRL"
-                }
-              )
-            : "Sem Informação"
-        ),
-
-        createData(
-          "Quartos",
-          imoveis?.Quartos !==
-            null
-            ? imoveis.Quartos
-            : "Sem Informação"
-        ),
-
-        createData(
-          "Suítes",
-          imoveis?.Suites !==
-            null
-            ? imoveis.Suites
-            : "Sem Informação"
-        ),
-
-        createData(
-          "Banheiros",
-          imoveis?.Banheiros !==
-            null
-            ? imoveis.Banheiros
-            : "Sem Informação"
-        )
-      ];
-
-      rows =
-        rows.filter(
-          (item) =>
-            item.info !==
-            ""
-        );
-    } else {
-      rows = [
-        createData(
-          "Andar",
-          imoveis?.Andar !==
-            null
-            ? imoveis.Andar +
-                "º"
-            : ""
-        ),
-
-        createData(
-          "Área terreno",
-          imoveis?.Area_Terreno !==
-            null
-            ? imoveis.Area_Terreno +
-                " (m²)"
-            : "Sem Informação"
-        ),
-
-        createData(
-          "Condomínio",
-          imoveis?.Condominio !==
-              null &&
-            imoveis.Condominio
-            ? "R$" +
-              imoveis?.Condominio
-            : "Sem Informação"
-        ),
-
-        createData(
-          "IPTU (anual)",
-          imoveis?.IPTU !==
-            null
-            ? parseInt(
-                imoveis.IPTU
-              ).toLocaleString(
-                "pt-BR",
-                {
-                  style:
-                    "currency",
-                  currency:
-                    "BRL"
-                }
-              )
-            : ""
-        ),
-
-        createData(
-          "Quartos",
-          imoveis?.Quartos !==
-            null
-            ? imoveis.Quartos
-            : ""
-        ),
-
-        createData(
-          "Suítes",
-          imoveis?.Suites !==
-            null
-            ? imoveis.Suites
-            : ""
-        ),
-
-        createData(
-          "Banheiros",
-          imoveis?.Banheiros !==
-            null
-            ? imoveis.Banheiros
-            : "Sem Informação"
-        )
-      ];
-
-      rows =
-        rows.filter(
-          (item) =>
-            item.info !==
-            ""
-        );
-    }
-  }
-
   const handleClickOpen =
     () => {
       setOpen(true);
     };
 
-  /**
-   * Controla o botão "Saiba mais".
-   */
+  const handleCopyCodigo =
+    async () => {
+      const codigo =
+        imoveis?.codigo;
+
+      if (!codigo) {
+        return;
+      }
+
+      const codigoParaCopiar =
+        String(codigo).trim();
+
+      try {
+        if (
+          navigator.clipboard &&
+          window.isSecureContext
+        ) {
+          await navigator.clipboard.writeText(
+            codigoParaCopiar
+          );
+        } else {
+          const textArea =
+            document.createElement(
+              "textarea"
+            );
+
+          textArea.value =
+            codigoParaCopiar;
+
+          textArea.style.position =
+            "fixed";
+
+          textArea.style.left =
+            "-9999px";
+
+          textArea.style.top =
+            "0";
+
+          document.body.appendChild(
+            textArea
+          );
+
+          textArea.focus();
+
+          textArea.select();
+
+          document.execCommand(
+            "copy"
+          );
+
+          document.body.removeChild(
+            textArea
+          );
+        }
+
+        setCopyCodigoOpen(true);
+      } catch (error) {
+        console.error(
+          "Não foi possível copiar o código do imóvel:",
+          error
+        );
+      }
+    };
+
+  const handleCloseCopyCodigo =
+    () => {
+      setCopyCodigoOpen(false);
+    };
+
   useEffect(() => {
     if (
       !contentRef.current ||
@@ -1758,30 +1925,149 @@ const CharacterDetail = ({
     imoveis
   ]);
 
-  /**
-   * Atualiza breakpoint mobile.
-   */
-  useEffect(() => {
-    const handleResize =
-      () => {
-        setIsMobile(
-          window.innerWidth <=
-            1024
-        );
-      };
+  if (
+    imoveis &&
+    Object.keys(
+      imoveis
+    ).length > 0
+  ) {
+    if (
+      imoveis.Tipo_de_Anuncio ===
+      "venda"
+    ) {
+      rows = [
+        createData(
+          "Andar",
+          imoveis?.Andar !== null
+            ? imoveis.Andar + "º"
+            : ""
+        ),
+        createData(
+          "Área terreno",
+          imoveis?.Area_Terreno !== null
+            ? imoveis.Area_Terreno +
+              " (m²)"
+            : "Sem Informação"
+        ),
+        createData(
+          "Ano de construção",
+          imoveis?.Ano_de_Construcao !== null
+            ? imoveis.Ano_de_Construcao
+            : "Sem Informação"
+        ),
+        createData(
+          "Condomínio",
+          imoveis?.Condominio !== null &&
+          imoveis.Condominio
+            ? "R$" +
+              imoveis.Condominio
+            : "Sem Informação"
+        ),
+        createData(
+          "IPTU (anual)",
+          imoveis?.IPTU !== null
+            ? parseInt(
+                imoveis.IPTU
+              ).toLocaleString(
+                "pt-BR",
+                {
+                  style:
+                    "currency",
+                  currency:
+                    "BRL"
+                }
+              )
+            : "Sem Informação"
+        ),
+        createData(
+          "Quartos",
+          imoveis?.Quartos !== null
+            ? imoveis.Quartos
+            : "Sem Informação"
+        ),
+        createData(
+          "Suítes",
+          imoveis?.Suites !== null
+            ? imoveis.Suites
+            : "Sem Informação"
+        ),
+        createData(
+          "Banheiros",
+          imoveis?.Banheiros !== null
+            ? imoveis.Banheiros
+            : "Sem Informação"
+        )
+      ];
 
-    window.addEventListener(
-      "resize",
-      handleResize
-    );
-
-    return () => {
-      window.removeEventListener(
-        "resize",
-        handleResize
+      rows = rows.filter(
+        (item) =>
+          item.info !== ""
       );
-    };
-  }, []);
+    } else {
+      rows = [
+        createData(
+          "Andar",
+          imoveis?.Andar !== null
+            ? imoveis.Andar + "º"
+            : ""
+        ),
+        createData(
+          "Área terreno",
+          imoveis?.Area_Terreno !== null
+            ? imoveis.Area_Terreno +
+              " (m²)"
+            : "Sem Informação"
+        ),
+        createData(
+          "Condomínio",
+          imoveis?.Condominio !== null &&
+          imoveis.Condominio
+            ? "R$" +
+              imoveis?.Condominio
+            : "Sem Informação"
+        ),
+        createData(
+          "IPTU (anual)",
+          imoveis?.IPTU !== null
+            ? parseInt(
+                imoveis.IPTU
+              ).toLocaleString(
+                "pt-BR",
+                {
+                  style:
+                    "currency",
+                  currency:
+                    "BRL"
+                }
+              )
+            : ""
+        ),
+        createData(
+          "Quartos",
+          imoveis?.Quartos !== null
+            ? imoveis.Quartos
+            : ""
+        ),
+        createData(
+          "Suítes",
+          imoveis?.Suites !== null
+            ? imoveis.Suites
+            : ""
+        ),
+        createData(
+          "Banheiros",
+          imoveis?.Banheiros !== null
+            ? imoveis.Banheiros
+            : "Sem Informação"
+        )
+      ];
+
+      rows = rows.filter(
+        (item) =>
+          item.info !== ""
+      );
+    }
+  }
 
   return (
     <React.Fragment>
@@ -1850,13 +2136,37 @@ const CharacterDetail = ({
                     {imoveis?.codigo && (
                       <span
                         className="location-chip"
+                        onClick={
+                          handleCopyCodigo
+                        }
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(
+                          event
+                        ) => {
+                          if (
+                            event.key ===
+                              "Enter" ||
+                            event.key ===
+                              " "
+                          ) {
+                            event.preventDefault();
+
+                            handleCopyCodigo();
+                          }
+                        }}
+                        title="Clique para copiar o código do imóvel"
                         style={{
                           display:
-                            "block"
+                            "block",
+                          cursor:
+                            "pointer"
                         }}
                       >
                         Cod. Imóvel{" "}
-                        <i>#</i>
+                        <i>
+                          #
+                        </i>
                         {
                           imoveis.codigo
                         }
@@ -1873,38 +2183,36 @@ const CharacterDetail = ({
                   component="div"
                   color="text.secondary"
                 >
-                  {
-                    imoveis?.Valor_Venda !==
-                    null
-                      ? parseFloat(
-                          imoveis?.Valor_Venda?.replace(
-                            ".",
-                            ""
-                          )
-                        )?.toLocaleString(
-                          "pt-BR",
-                          {
-                            style:
-                              "currency",
-                            currency:
-                              "BRL"
-                          }
+                  {imoveis?.Valor_Venda !==
+                  null
+                    ? parseFloat(
+                        imoveis?.Valor_Venda?.replace(
+                          ".",
+                          ""
                         )
-                      : parseFloat(
-                          imoveis?.Valor_Aluguel?.replace(
-                            ".",
-                            ""
-                          )
-                        )?.toLocaleString(
-                          "pt-BR",
-                          {
-                            style:
-                              "currency",
-                            currency:
-                              "BRL"
-                          }
+                      )?.toLocaleString(
+                        "pt-BR",
+                        {
+                          style:
+                            "currency",
+                          currency:
+                            "BRL"
+                        }
+                      )
+                    : parseFloat(
+                        imoveis?.Valor_Aluguel?.replace(
+                          ".",
+                          ""
                         )
-                  }
+                      )?.toLocaleString(
+                        "pt-BR",
+                        {
+                          style:
+                            "currency",
+                          currency:
+                            "BRL"
+                        }
+                      )}
                 </Typography>
               </Box>
             </div>
@@ -1926,7 +2234,8 @@ const CharacterDetail = ({
                   maxHeight:
                     openToggle
                       ? `${
-                          contentRef.current
+                          contentRef
+                            .current
                             ?.scrollHeight ||
                           9999
                         }px`
@@ -1948,14 +2257,6 @@ const CharacterDetail = ({
                     block,
                     index
                   ) => {
-                    /**
-                     * LISTA DE ÍCONES
-                     *
-                     * Os ícones existentes permanecem
-                     * exatamente como estão.
-                     *
-                     * NÃO recebem bolinha.
-                     */
                     if (
                       block.type ===
                       "icon-list"
@@ -1974,15 +2275,6 @@ const CharacterDetail = ({
                       );
                     }
 
-                    /**
-                     * DESTAQUE / CARACTERÍSTICA
-                     *
-                     * O título permanece com o emoji.
-                     *
-                     * Os itens seguintes recebem
-                     * bolinha e são organizados em
-                     * duas colunas no desktop.
-                     */
                     if (
                       block.type ===
                       "highlight-list"
@@ -2000,13 +2292,7 @@ const CharacterDetail = ({
                               lineHeight:
                                 1.55,
                               marginBottom:
-                                "0.25rem",
-                              wordBreak:
-                                "break-word",
-                              overflowWrap:
-                                "anywhere",
-                              whiteSpace:
-                                "normal"
+                                "0.25rem"
                             }}
                           >
                             {
@@ -2027,9 +2313,6 @@ const CharacterDetail = ({
                       );
                     }
 
-                    /**
-                     * LISTA NATIVA DO STRAPI.
-                     */
                     if (
                       block.type ===
                       "native-list"
@@ -2041,10 +2324,6 @@ const CharacterDetail = ({
                           sx={{
                             marginLeft:
                               "10px",
-                            marginTop:
-                              "0.35rem",
-                            marginBottom:
-                              "0.7rem",
                             display:
                               "grid",
                             gridTemplateColumns:
@@ -2056,11 +2335,7 @@ const CharacterDetail = ({
                             rowGap:
                               "0.45rem",
                             width:
-                              "calc(100% - 10px)",
-                            maxWidth:
-                              "100%",
-                            boxSizing:
-                              "border-box"
+                              "calc(100% - 10px)"
                           }}
                         >
                           {block.desc.children?.map(
@@ -2097,47 +2372,36 @@ const CharacterDetail = ({
                       );
                     }
 
-                    /**
-                     * PARÁGRAFO NORMAL.
-                     */
-                    if (
-                      block.type ===
-                      "normal"
-                    ) {
-                      const text =
-                        block.desc
-                          ?.type ===
-                        "paragraph"
-                          ? getTextFromChildren(
-                              block.desc
-                                .children
-                            )
-                          : "";
+                    const text =
+                      block.desc?.type ===
+                      "paragraph"
+                        ? getTextFromChildren(
+                            block.desc
+                              .children
+                          )
+                        : "";
 
-                      return (
-                        <Typography
-                          key={`paragraph-${index}`}
-                          gutterBottom
-                          variant="h5"
-                          sx={{
-                            fontSize:
-                              "0.9rem",
-                            lineHeight:
-                              1.55,
-                            wordBreak:
-                              "break-word",
-                            overflowWrap:
-                              "anywhere",
-                            whiteSpace:
-                              "pre-wrap"
-                          }}
-                        >
-                          {text}
-                        </Typography>
-                      );
-                    }
-
-                    return null;
+                    return (
+                      <Typography
+                        key={`paragraph-${index}`}
+                        gutterBottom
+                        variant="h5"
+                        sx={{
+                          fontSize:
+                            "0.9rem",
+                          lineHeight:
+                            1.55,
+                          wordBreak:
+                            "break-word",
+                          overflowWrap:
+                            "anywhere",
+                          whiteSpace:
+                            "pre-wrap"
+                        }}
+                      >
+                        {text}
+                      </Typography>
+                    );
                   }
                 )}
               </Box>
@@ -2238,6 +2502,48 @@ const CharacterDetail = ({
         isMobile && (
           <PreloadImovelDetailMobile />
         )}
+
+      <Dialog
+        open={copyCodigoOpen}
+        onClose={
+          handleCloseCopyCodigo
+        }
+        aria-labelledby="copy-codigo-dialog-title"
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle
+          id="copy-codigo-dialog-title"
+          sx={{
+            fontSize: "1rem",
+            fontWeight: 600
+          }}
+        >
+          Código do imóvel
+        </DialogTitle>
+
+        <DialogContent>
+          <Typography
+            sx={{
+              fontSize: "0.95rem",
+              lineHeight: 1.5
+            }}
+          >
+            código do imovel copiado com sucesso !
+          </Typography>
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={
+              handleCloseCopyCodigo
+            }
+            autoFocus
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Footer />
     </React.Fragment>
