@@ -142,6 +142,66 @@ const Root = styled("div")(({ theme }) => ({
 }));
 
 
+/*
+ * =====================================================
+ * INPUT NUMÉRICO MOBILE
+ * =====================================================
+ *
+ * O inputMode/type precisam chegar diretamente ao
+ * elemento <input> nativo.
+ *
+ * Passar apenas inputProps para o NumericFormat pode
+ * não ser suficiente dependendo da combinação entre
+ * react-number-format + MUI + navegador mobile.
+ *
+ * Aqui garantimos:
+ *
+ *     inputMode="numeric"
+ *     pattern="[0-9]*"
+ *     type="tel"
+ *
+ * diretamente no input do TextField.
+ *
+ * Isso faz com que Android/iOS solicitem o teclado
+ * numérico ao tocar nos campos de preço.
+ */
+const MobileNumericTextField =
+  React.forwardRef(
+    (
+      {
+        inputProps,
+        inputRef,
+        ...props
+      },
+      ref
+    ) => (
+
+      <TextField
+        {...props}
+        inputRef={
+          inputRef || ref
+        }
+        inputProps={{
+          ...inputProps,
+          inputMode:
+            "numeric",
+          pattern:
+            "[0-9]*",
+          enterKeyHint:
+            "search",
+          type:
+            "tel"
+        }}
+      />
+
+    )
+  );
+
+
+MobileNumericTextField.displayName =
+  "MobileNumericTextField";
+
+
 const Home = ({
   realstate,
   pagination
@@ -619,6 +679,7 @@ const Home = ({
             meta: {
               pagination
             }
+
           };
 
         }
@@ -1302,8 +1363,13 @@ const Home = ({
    * ENTER NOS CAMPOS DE PREÇO
    * =====================================================
    *
-   * Pressionar Enter executa exatamente a mesma
-   * busca do botão "Buscar Imóveis".
+   * Pressionar "Ir/Buscar" no teclado do celular:
+   *
+   * 1. impede o comportamento padrão;
+   * 2. remove o foco do campo;
+   * 3. fecha o teclado numérico;
+   * 4. executa a mesma busca do botão
+   *    "Buscar Imóveis".
    */
 
   const handlePriceKeyDown =
@@ -1314,6 +1380,14 @@ const Home = ({
       ) {
 
         event.preventDefault();
+
+        /*
+         * Remove o foco do input.
+         *
+         * No mobile isso faz o teclado virtual
+         * ser fechado.
+         */
+        event.currentTarget.blur();
 
         handleClick();
 
@@ -1824,7 +1898,7 @@ const Home = ({
                             )
                         }
                         customInput={
-                          TextField
+                          MobileNumericTextField
                         }
                         thousandSeparator="."
                         decimalSeparator=","
@@ -1832,6 +1906,8 @@ const Home = ({
                         fullWidth
                         label="Valor Mínimo"
                         variant="outlined"
+                        type="tel"
+                        inputMode="numeric"
                         inputProps={{
                           inputMode:
                             "numeric",
@@ -1870,7 +1946,7 @@ const Home = ({
                             )
                         }
                         customInput={
-                          TextField
+                          MobileNumericTextField
                         }
                         thousandSeparator="."
                         decimalSeparator=","
@@ -1878,6 +1954,8 @@ const Home = ({
                         fullWidth
                         label="Valor Máximo"
                         variant="outlined"
+                        type="tel"
+                        inputMode="numeric"
                         inputProps={{
                           inputMode:
                             "numeric",
