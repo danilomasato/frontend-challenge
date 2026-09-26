@@ -1,7 +1,8 @@
 import React, {
   useState,
   useEffect,
-  useMemo
+  useMemo,
+  useRef
 } from "react";
 
 import { withRouter } from "react-router-dom";
@@ -77,10 +78,10 @@ const Home = ({
 
 
   /*
-   * =====================================================
-   * ESTADOS
-   * =====================================================
-   */
+  * =====================================================
+  * ESTADOS
+  * =====================================================
+  */
 
   const [search, setSearch] = useState({
     label: "",
@@ -88,9 +89,133 @@ const Home = ({
   });
 
 
-  const [loading, setLoading] =
-    useState(true);
+  /*
+  * =====================================================
+  * FORÇA LOADING PELA URL
+  * =====================================================
+  */
 
+  const forceLoading =
+    new URLSearchParams(
+      window.location.search
+    ).get("loading") === "true";
+
+
+  /*
+  * =====================================================
+  * CONTROLE ATÔMICO DO LOADING
+  * =====================================================
+  *
+  * initial = 40%
+  * filter  = 40%
+  * page    = 72%
+  */
+
+  const getInitialLoadingState = () => {
+
+    if (forceLoading) {
+      return {
+        active: true,
+        mode: "initial"
+      };
+    }
+
+    if (
+      !Array.isArray(realstate) ||
+      realstate.length === 0
+    ) {
+      return {
+        active: true,
+        mode: "initial"
+      };
+    }
+
+    return {
+      active: false,
+      mode: null
+    };
+
+  };
+
+
+  const [
+    loadingState,
+    setLoadingState
+  ] = useState(
+    getInitialLoadingState
+  );
+
+
+  /*
+  * Mantém o modo atual em ref para que operações
+  * assíncronas não utilizem um valor antigo.
+  */
+
+  const loadingModeRef =
+    useRef(
+      getInitialLoadingState().mode
+    );
+
+
+  /*
+  * Evita que o carregamento inicial seja iniciado
+  * novamente quando o Redux mudar.
+  */
+
+  const initialLoadStartedRef =
+    useRef(false);
+
+
+  /*
+  * Indica operação de filtro em andamento.
+  */
+
+  const filterLoadingRef =
+    useRef(false);
+
+
+  /*
+  * =====================================================
+  * FUNÇÕES CENTRAIS DO LOADING
+  * =====================================================
+  */
+
+  const startLoading = (mode) => {
+
+    loadingModeRef.current =
+      mode;
+
+    setLoadingState({
+      active: true,
+      mode
+    });
+
+  };
+
+
+  const finishLoading = () => {
+
+    loadingModeRef.current =
+      null;
+
+    setLoadingState({
+      active: false,
+      mode: null
+    });
+
+  };
+
+
+  const isLoading =
+    loadingState.active ||
+    forceLoading;
+
+
+  /*
+  * =====================================================
+  * OUTROS ESTADOS
+  * =====================================================
+  */
 
   const [imoveis, setImoveis] =
     useState([]);
@@ -125,10 +250,10 @@ const Home = ({
 
 
   /*
-   * =====================================================
-   * DADOS DOS CARDS
-   * =====================================================
-   */
+  * =====================================================
+  * DADOS DOS CARDS
+  * =====================================================
+  */
 
   const data = useMemo(
     () =>
@@ -150,19 +275,130 @@ const Home = ({
 
 
   /*
-   * =====================================================
-   * CARREGAMENTO INICIAL
-   * =====================================================
-   */
+  * =====================================================
+  * SCROLL AUTOMÁTICO DA PAGINAÇÃO
+  * =====================================================
+  */
+
+  useEffect(() => {
+
+    if (
+      pagination?.page == null
+    ) {
+
+      return;
+
+    }
+
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto"
+    });
+
+  }, [
+    pagination?.page
+  ]);
+
+
+  /*
+  * =====================================================
+  * CARREGAMENTO INICIAL
+  * =====================================================
+  *
+  * IMPORTANTE:
+  *
+  * Este efeito roda somente uma vez.
+  *
+  * Ele NÃO depende de realstate.
+  */
 
   useEffect(() => {
 
     let mounted = true;
 
 
+    if (
+      initialLoadStartedRef.current
+    ) {
+
+      return () => {
+
+        mounted = false;
+
+      };
+
+    }
+
+
+    initialLoadStartedRef.current =
+      true;
+
+
     const loadInitialData = async () => {
 
-      setLoading(true);
+      /*
+      * Se já existem imóveis no Redux,
+      * carregamos somente os bairros.
+      */
+
+      if (
+        Array.isArray(realstate) &&
+        realstate.length > 0
+      ) {
+
+        try {
+
+          const bairros =
+            await api.getAllBairros();
+
+
+          if (
+            mounted &&
+            Array.isArray(bairros)
+          ) {
+
+            setImoveis(
+              bairros.map(
+                (bairro) => ({
+                  Bairro: bairro
+                })
+              )
+            );
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Erro ao carregar bairros:",
+            error
+          );
+
+        }
+
+
+        if (
+          mounted &&
+          loadingModeRef.current ===
+            "initial"
+        ) {
+
+          finishLoading();
+
+        }
+
+        return;
+
+      }
+
+
+      /*
+      * Loading inicial.
+      */
+
+      startLoading("initial");
 
 
       const articlesPromise =
@@ -188,9 +424,13 @@ const Home = ({
 
       } finally {
 
-        if (mounted) {
+        if (
+          mounted &&
+          loadingModeRef.current ===
+            "initial"
+        ) {
 
-          setLoading(false);
+          finishLoading();
 
         }
 
@@ -239,19 +479,25 @@ const Home = ({
 
     };
 
-  }, [dispatch]);
+  }, [
+    dispatch
+  ]);
 
 
   /*
-   * =====================================================
-   * SINCRONIZA DADOS DOS CARDS
-   * =====================================================
-   */
+  * =====================================================
+  * SINCRONIZA DADOS DOS CARDS
+  * =====================================================
+  */
 
   useEffect(() => {
 
-    if (!Array.isArray(realstate)) {
+    if (
+      !Array.isArray(realstate)
+    ) {
+
       return;
+
     }
 
 
@@ -271,19 +517,24 @@ const Home = ({
 
 
   /*
-   * =====================================================
-   * BAIRROS
-   * =====================================================
-   */
+  * =====================================================
+  * BAIRROS
+  * =====================================================
+  */
 
   const options = useMemo(() => {
 
-    if (!imoveis?.length) {
+    if (
+      !imoveis?.length
+    ) {
+
       return [];
+
     }
 
 
-    const bairros = new Map();
+    const bairros =
+      new Map();
 
 
     for (
@@ -291,7 +542,8 @@ const Home = ({
     ) {
 
       if (
-        typeof item?.Bairro !== "string"
+        typeof item?.Bairro !==
+        "string"
       ) {
 
         continue;
@@ -303,8 +555,12 @@ const Home = ({
         item.Bairro.trim();
 
 
-      if (!bairro) {
+      if (
+        !bairro
+      ) {
+
         continue;
+
       }
 
 
@@ -325,7 +581,8 @@ const Home = ({
             b,
             "pt-BR",
             {
-              sensitivity: "base"
+              sensitivity:
+                "base"
             }
           )
       )
@@ -336,22 +593,25 @@ const Home = ({
         })
       );
 
-  }, [imoveis]);
+  }, [
+    imoveis
+  ]);
 
 
   /*
-   * =====================================================
-   * DESABILITA BOTÃO DIREITO
-   * =====================================================
-   */
+  * =====================================================
+  * DESABILITA BOTÃO DIREITO
+  * =====================================================
+  */
 
   useEffect(() => {
 
-    const handleContextMenu = (e) => {
+    const handleContextMenu =
+      (e) => {
 
-      e.preventDefault();
+        e.preventDefault();
 
-    };
+      };
 
 
     document.body.addEventListener(
@@ -373,163 +633,250 @@ const Home = ({
 
 
   /*
-   * =====================================================
-   * FILTROS ATUAIS
-   * =====================================================
-   */
+  * =====================================================
+  * FILTROS ATUAIS
+  * =====================================================
+  */
 
-  const currentFilters = useMemo(() => ({
+  const currentFilters =
+    useMemo(
+      () => ({
 
-    bairro:
-      search?.label || "",
+        bairro:
+          search?.label || "",
 
-    categoria:
-      category || "",
+        categoria:
+          category || "",
 
-    min:
-      Number(optionsValue?.min) || 0,
+        min:
+          Number(
+            optionsValue?.min
+          ) || 0,
 
-    max:
-      Number(optionsValue?.max) || 0
+        max:
+          Number(
+            optionsValue?.max
+          ) || 0
 
-  }), [
-    search,
-    category,
-    optionsValue
-  ]);
+      }),
+      [
+        search,
+        category,
+        optionsValue
+      ]
+    );
 
 
   /*
-   * =====================================================
-   * APLICA FILTROS
-   * =====================================================
-   */
+  * =====================================================
+  * APLICA FILTROS
+  * =====================================================
+  */
 
   const handleClick = async () => {
 
-    setLoading(true);
+    filterLoadingRef.current =
+      true;
 
 
-    setTimeout(async () => {
+    /*
+    * Filtro sempre usa 40%.
+    */
 
-      try {
-
-        const response =
-          await api.getArticles(
-            1,
-            currentFilters
-          );
+    startLoading("filter");
 
 
-        dispatch({
-          type: types.RECEIVE_HOME,
-          payload: response
-        });
+    /*
+    * Permite que o navegador pinte o overlay
+    * antes da requisição.
+    */
+
+    await new Promise(
+      (resolve) =>
+        requestAnimationFrame(
+          resolve
+        )
+    );
 
 
-        if (
-          response?.meta?.pagination
-        ) {
+    try {
 
-          dispatch({
-            type: types.RECEIVE_PAGINATION,
-            payload:
-              response.meta.pagination
-          });
-
-        }
-
-
-        setHasFilters(true);
-
-
-        if (
-          currentFilters.bairro
-        ) {
-
-          localStorage.setItem(
-            "neighborhood",
-            currentFilters.bairro
-          );
-
-        } else {
-
-          localStorage.removeItem(
-            "neighborhood"
-          );
-
-        }
-
-
-        if (
-          window.innerWidth <= 1024
-        ) {
-
-          setMobileSearchOpen(false);
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Erro ao aplicar filtros:",
-          error
+      const response =
+        await api.getArticles(
+          1,
+          currentFilters
         );
 
 
-        dispatch({
-          type: types.RECEIVE_HOME,
-          payload: {
-            data: [],
-            meta: {
-              pagination: {
-                page: 1,
-                pageSize: 25,
-                pageCount: 0,
-                total: 0
-              }
-            }
-          }
-        });
+      dispatch({
+        type:
+          types.RECEIVE_HOME,
 
+        payload:
+          response
+      });
+
+
+      if (
+        response?.meta?.pagination
+      ) {
 
         dispatch({
-          type: types.RECEIVE_PAGINATION,
-          payload: {
-            page: 1,
-            pageSize: 25,
-            pageCount: 0,
-            total: 0
-          }
+          type:
+            types.RECEIVE_PAGINATION,
+
+          payload:
+            response.meta.pagination
         });
-
-
-        setHasFilters(true);
-
-      } finally {
-
-        setLoading(false);
 
       }
 
-    }, 1);
+
+      setHasFilters(
+        true
+      );
+
+
+      if (
+        currentFilters.bairro
+      ) {
+
+        localStorage.setItem(
+          "neighborhood",
+          currentFilters.bairro
+        );
+
+      } else {
+
+        localStorage.removeItem(
+          "neighborhood"
+        );
+
+      }
+
+
+      if (
+        window.innerWidth <= 1024
+      ) {
+
+        setMobileSearchOpen(
+          false
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Erro ao aplicar filtros:",
+        error
+      );
+
+
+      dispatch({
+        type:
+          types.RECEIVE_HOME,
+
+        payload: {
+          data: [],
+
+          meta: {
+            pagination: {
+              page: 1,
+              pageSize: 25,
+              pageCount: 0,
+              total: 0
+            }
+          }
+        }
+      });
+
+
+      dispatch({
+        type:
+          types.RECEIVE_PAGINATION,
+
+        payload: {
+          page: 1,
+          pageSize: 25,
+          pageCount: 0,
+          total: 0
+        }
+      });
+
+
+      setHasFilters(
+        true
+      );
+
+    } finally {
+
+      filterLoadingRef.current =
+        false;
+
+
+      if (
+        loadingModeRef.current ===
+        "filter"
+      ) {
+
+        finishLoading();
+
+      }
+
+    }
 
   };
 
 
   /*
-   * =====================================================
-   * LIMPA LOCAL STORAGE AO FECHAR
-   * =====================================================
-   */
+  * =====================================================
+  * PAGINAÇÃO
+  * =====================================================
+  *
+  * O Pagination avisa o Home diretamente.
+  *
+  * Não esperamos mais pagination.page mudar para
+  * descobrir que uma paginação começou.
+  *
+  * Isso garante 72% desde o primeiro frame.
+  */
+
+  const handlePageChangeStart = () => {
+
+    startLoading("page");
+
+  };
+
+
+  const handlePageChangeEnd = () => {
+
+    if (
+      loadingModeRef.current ===
+      "page"
+    ) {
+
+      finishLoading();
+
+    }
+
+  };
+
+
+  /*
+  * =====================================================
+  * LIMPA LOCAL STORAGE AO FECHAR
+  * =====================================================
+  */
 
   useEffect(() => {
 
-    const handleBeforeUnload = () => {
+    const handleBeforeUnload =
+      () => {
 
-      localStorage.clear();
+        localStorage.clear();
 
-    };
+      };
 
 
     window.addEventListener(
@@ -551,37 +898,37 @@ const Home = ({
 
 
   /*
-   * =====================================================
-   * CATEGORIA
-   * =====================================================
-   */
+  * =====================================================
+  * CATEGORIA
+  * =====================================================
+  */
 
-  const handleChangeCategory = (
-    evento
-  ) => {
+  const handleChangeCategory =
+    (evento) => {
 
-    setCategory(
-      evento.target.value
-    );
-
-  };
-
-
-  /*
-   * =====================================================
-   * RESPONSIVIDADE
-   * =====================================================
-   */
-
-  useEffect(() => {
-
-    const handleResize = () => {
-
-      setIsMobile(
-        window.innerWidth <= 1024
+      setCategory(
+        evento.target.value
       );
 
     };
+
+
+  /*
+  * =====================================================
+  * RESPONSIVIDADE
+  * =====================================================
+  */
+
+  useEffect(() => {
+
+    const handleResize =
+      () => {
+
+        setIsMobile(
+          window.innerWidth <= 1024
+        );
+
+      };
 
 
     window.addEventListener(
@@ -603,37 +950,48 @@ const Home = ({
 
 
   /*
-   * =====================================================
-   * LIMPA TODOS OS FILTROS
-   * =====================================================
-   */
+  * =====================================================
+  * LIMPA TODOS OS FILTROS
+  * =====================================================
+  */
 
-  const resetFilters = async () => {
+  const resetFilters =
+    async () => {
 
-    setSearch({
-      label: "",
-      id: ""
-    });
-
-
-    setCategory("");
+      setSearch({
+        label: "",
+        id: ""
+      });
 
 
-    setOptionsValue({
-      min: 0,
-      max: 0
-    });
+      setCategory("");
 
 
-    setLoading(true);
+      setOptionsValue({
+        min: 0,
+        max: 0
+      });
 
 
-    localStorage.removeItem(
-      "neighborhood"
-    );
+      filterLoadingRef.current =
+        true;
 
 
-    setTimeout(async () => {
+      startLoading("filter");
+
+
+      localStorage.removeItem(
+        "neighborhood"
+      );
+
+
+      await new Promise(
+        (resolve) =>
+          requestAnimationFrame(
+            resolve
+          )
+      );
+
 
       try {
 
@@ -645,8 +1003,11 @@ const Home = ({
 
 
         dispatch({
-          type: types.RECEIVE_HOME,
-          payload: response
+          type:
+            types.RECEIVE_HOME,
+
+          payload:
+            response
         });
 
 
@@ -655,7 +1016,9 @@ const Home = ({
         ) {
 
           dispatch({
-            type: types.RECEIVE_PAGINATION,
+            type:
+              types.RECEIVE_PAGINATION,
+
             payload:
               response.meta.pagination
           });
@@ -663,14 +1026,18 @@ const Home = ({
         }
 
 
-        setHasFilters(false);
+        setHasFilters(
+          false
+        );
 
 
         if (
           window.innerWidth <= 1024
         ) {
 
-          setMobileSearchOpen(false);
+          setMobileSearchOpen(
+            false
+          );
 
         }
 
@@ -683,20 +1050,29 @@ const Home = ({
 
       } finally {
 
-        setLoading(false);
+        filterLoadingRef.current =
+          false;
+
+
+        if (
+          loadingModeRef.current ===
+          "filter"
+        ) {
+
+          finishLoading();
+
+        }
 
       }
 
-    }, 1);
-
-  };
+    };
 
 
   /*
-   * =====================================================
-   * RENDER
-   * =====================================================
-   */
+  * =====================================================
+  * RENDER
+  * =====================================================
+  */
 
   return (
     <React.Fragment>
@@ -704,6 +1080,7 @@ const Home = ({
       {!isMobile && (
         <TopInfo />
       )}
+
 
       <Header />
 
@@ -726,7 +1103,6 @@ const Home = ({
 
           <Box sx={{ flexGrow: 1 }}>
 
-
             {/* =====================================================
                 MOBILE SEARCH
             ===================================================== */}
@@ -739,20 +1115,26 @@ const Home = ({
                   <div
                     className="mobile-search-overlay"
                     onClick={() =>
-                      setMobileSearchOpen(false)
+                      setMobileSearchOpen(
+                        false
+                      )
                     }
                   />
 
                 )}
 
 
-                <div className="mobile-search-trigger">
+                <div
+                  className="mobile-search-trigger"
+                >
 
                   <Button
                     fullWidth
                     className="mobile-search-button"
                     onClick={() =>
-                      setMobileSearchOpen(true)
+                      setMobileSearchOpen(
+                        true
+                      )
                     }
                   >
 
@@ -773,26 +1155,30 @@ const Home = ({
                   }`}
                 >
 
-                  <div className="mobile-search-header">
+                  <div
+                    className="mobile-search-header"
+                  >
 
                     <h2>
                       Buscar Imóveis
                     </h2>
 
+
                     <CloseIcon
                       className="mobile-search-close-icon"
                       onClick={() =>
-                        setMobileSearchOpen(false)
+                        setMobileSearchOpen(
+                          false
+                        )
                       }
                     />
 
                   </div>
 
 
-                  <div className="mobile-search-content">
-
-
-                    {/* BAIRRO */}
+                  <div
+                    className="mobile-search-content"
+                  >
 
                     {imoveis?.length > 0 && (
 
@@ -801,11 +1187,8 @@ const Home = ({
                       >
 
                         <Autocomplete
-
                           disablePortal
-
                           options={options}
-
                           value={
                             options.find(
                               option =>
@@ -813,46 +1196,49 @@ const Home = ({
                                 search?.id
                             ) || null
                           }
-
-                          getOptionLabel={(option) =>
-                            option?.label || ""
+                          getOptionLabel={
+                            (option) =>
+                              option?.label ||
+                              ""
                           }
-
-                          isOptionEqualToValue={(
-                            option,
-                            value
-                          ) =>
-                            option.id ===
-                            value.id
+                          isOptionEqualToValue={
+                            (
+                              option,
+                              value
+                            ) =>
+                              option.id ===
+                              value.id
                           }
+                          onChange={
+                            (
+                              event,
+                              value
+                            ) => {
 
-                          onChange={(
-                            event,
-                            value
-                          ) => {
+                              setSearch(
+                                value || {
+                                  label: "",
+                                  id: ""
+                                }
+                              );
 
-                            setSearch(
-                              value || {
-                                label: "",
-                                id: ""
-                              }
-                            );
+                            }
+                          }
+                          renderInput={
+                            (params) => (
 
-                          }}
+                              <TextField
+                                {...params}
+                                label="Selecione o Bairro"
+                                inputProps={{
+                                  ...params.inputProps,
+                                  readOnly:
+                                    isMobile
+                                }}
+                              />
 
-                          renderInput={(params) => (
-
-                            <TextField
-                              {...params}
-                              label="Selecione o Bairro"
-                              inputProps={{
-                                ...params.inputProps,
-                                readOnly: isMobile
-                              }}
-                            />
-
-                          )}
-
+                            )
+                          }
                         />
 
 
@@ -863,7 +1249,9 @@ const Home = ({
 
                         <CloseIcon
                           className="search-clear mobile-search-clear"
-                          onClick={resetFilters}
+                          onClick={
+                            resetFilters
+                          }
                         />
 
                       </Box>
@@ -871,47 +1259,47 @@ const Home = ({
                     )}
 
 
-                    {/* VALOR MÍNIMO */}
-
-                    <Box className="wrap-input">
+                    <Box
+                      className="wrap-input"
+                    >
 
                       <NumericFormat
+                        value={
+                          optionsValue.min
+                        }
+                        onValueChange={
+                          (values) => {
 
-                        value={optionsValue.min}
+                            setOptionsValue({
+                              ...optionsValue,
+                              min:
+                                values.value
+                            });
 
-                        onValueChange={(values) => {
-
-                          setOptionsValue({
-                            ...optionsValue,
-                            min: values.value
-                          });
-
-                        }}
-
-                        customInput={TextField}
-
+                          }
+                        }
+                        customInput={
+                          TextField
+                        }
                         thousandSeparator="."
-
                         decimalSeparator=","
-
                         prefix="R$ "
-
                         fullWidth
-
                         label="Valor Mínimo"
-
                         variant="outlined"
-
                         inputProps={{
-                          inputMode: "numeric",
-                          pattern: "[0-9]*",
-                          enterKeyHint: "done"
+                          inputMode:
+                            "numeric",
+                          pattern:
+                            "[0-9]*",
+                          enterKeyHint:
+                            "done"
                         }}
-
                         onFocus={() => {
 
                           if (
-                            optionsValue.min === 0
+                            optionsValue.min ===
+                            0
                           ) {
 
                             setOptionsValue({
@@ -922,7 +1310,6 @@ const Home = ({
                           }
 
                         }}
-
                         onBlur={() => {
 
                           if (
@@ -937,53 +1324,52 @@ const Home = ({
                           }
 
                         }}
-
                       />
 
                     </Box>
 
 
-                    {/* VALOR MÁXIMO */}
-
-                    <Box className="wrap-input">
+                    <Box
+                      className="wrap-input"
+                    >
 
                       <NumericFormat
+                        value={
+                          optionsValue.max
+                        }
+                        onValueChange={
+                          (values) => {
 
-                        value={optionsValue.max}
+                            setOptionsValue({
+                              ...optionsValue,
+                              max:
+                                values.value
+                            });
 
-                        onValueChange={(values) => {
-
-                          setOptionsValue({
-                            ...optionsValue,
-                            max: values.value
-                          });
-
-                        }}
-
-                        customInput={TextField}
-
+                          }
+                        }
+                        customInput={
+                          TextField
+                        }
                         thousandSeparator="."
-
                         decimalSeparator=","
-
                         prefix="R$ "
-
                         fullWidth
-
                         label="Valor Máximo"
-
                         variant="outlined"
-
                         inputProps={{
-                          inputMode: "numeric",
-                          pattern: "[0-9]*",
-                          enterKeyHint: "done"
+                          inputMode:
+                            "numeric",
+                          pattern:
+                            "[0-9]*",
+                          enterKeyHint:
+                            "done"
                         }}
-
                         onFocus={() => {
 
                           if (
-                            optionsValue.max === 0
+                            optionsValue.max ===
+                            0
                           ) {
 
                             setOptionsValue({
@@ -994,7 +1380,6 @@ const Home = ({
                           }
 
                         }}
-
                         onBlur={() => {
 
                           if (
@@ -1009,23 +1394,23 @@ const Home = ({
                           }
 
                         }}
-
                       />
 
                     </Box>
 
-
-                    {/* CATEGORIA */}
 
                     <TextField
                       select
                       fullWidth
                       label="Tipo de Anúncio"
                       value={category}
-                      onChange={handleChangeCategory}
+                      onChange={
+                        handleChangeCategory
+                      }
                       SelectProps={{
                         MenuProps: {
-                          disableScrollLock: true
+                          disableScrollLock:
+                            true
                         }
                       }}
                     >
@@ -1052,7 +1437,9 @@ const Home = ({
                     <Button
                       className="search-button"
                       variant="contained"
-                      onClick={handleClick}
+                      onClick={
+                        handleClick
+                      }
                     >
 
                       Buscar Imóveis
@@ -1065,7 +1452,9 @@ const Home = ({
                     <Button
                       className="clear-filters-button"
                       variant="outlined"
-                      onClick={resetFilters}
+                      onClick={
+                        resetFilters
+                      }
                     >
 
                       Limpar filtros
@@ -1091,22 +1480,24 @@ const Home = ({
                 container
               >
 
-                {/* BAIRRO */}
-
                 <Grid size={8}>
 
-                  <Box className="wrap-input">
+                  <Box
+                    className="wrap-input"
+                  >
 
                     <label
                       style={{
                         fontFamily:
                           "quicksand-regular",
-                        fontSize: "0.6rem",
+                        fontSize:
+                          "0.6rem",
                         color:
                           "rgba(0,0,0,.6)",
                         margin:
                           "-5px 0 6px 0",
-                        display: "block"
+                        display:
+                          "block"
                       }}
                     >
                       Selecione o Bairro
@@ -1114,68 +1505,71 @@ const Home = ({
 
 
                     <Autocomplete
-
                       value={
-                        search?.label || null
+                        search?.label ||
+                        null
                       }
-
                       className="search-neighborhoods"
-
                       disablePortal
-
                       options={options}
-
-                      getOptionLabel={(option) =>
-                        typeof option === "string"
-                          ? option
-                          : option?.label || ""
-                      }
-
-                      isOptionEqualToValue={(
-                        option,
-                        value
-                      ) => {
-
-                        const optionId =
-                          typeof option === "string"
+                      getOptionLabel={
+                        (option) =>
+                          typeof option ===
+                          "string"
                             ? option
-                            : option?.id;
+                            : option?.label ||
+                              ""
+                      }
+                      isOptionEqualToValue={
+                        (
+                          option,
+                          value
+                        ) => {
 
-                        const valueId =
-                          typeof value === "string"
-                            ? value
-                            : value?.id;
+                          const optionId =
+                            typeof option ===
+                            "string"
+                              ? option
+                              : option?.id;
 
-                        return (
-                          optionId ===
-                          valueId
-                        );
+                          const valueId =
+                            typeof value ===
+                            "string"
+                              ? value
+                              : value?.id;
 
-                      }}
+                          return (
+                            optionId ===
+                            valueId
+                          );
 
-                      onChange={(
-                        event,
-                        value
-                      ) => {
+                        }
+                      }
+                      onChange={
+                        (
+                          event,
+                          value
+                        ) => {
 
-                        setSearch(
-                          value || {
-                            label: "",
-                            id: ""
-                          }
-                        );
+                          setSearch(
+                            value || {
+                              label: "",
+                              id: ""
+                            }
+                          );
 
-                      }}
+                        }
+                      }
+                      renderInput={
+                        (params) => (
 
-                      renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Selecione o Bairro"
+                          />
 
-                        <TextField
-                          {...params}
-                          label="Selecione o Bairro"
-                        />
-
-                      )}
-
+                        )
+                      }
                     />
 
 
@@ -1186,15 +1580,15 @@ const Home = ({
 
                     <CloseIcon
                       className="search-clear"
-                      onClick={resetFilters}
+                      onClick={
+                        resetFilters
+                      }
                     />
 
                   </Box>
 
                 </Grid>
 
-
-                {/* VALORES */}
 
                 <Grid
                   component="form"
@@ -1208,49 +1602,52 @@ const Home = ({
                   className="minMax"
                 >
 
-                  <Box className="wrap-input">
+                  <Box
+                    className="wrap-input"
+                  >
 
                     <MonetizationOnIcon
                       className="MonetizationOnIcon"
                     />
 
+
                     <NumericFormat
+                      value={
+                        optionsValue.min
+                      }
+                      onValueChange={
+                        (values) => {
 
-                      value={optionsValue.min}
+                          setOptionsValue({
+                            ...optionsValue,
+                            min:
+                              values.value
+                          });
 
-                      onValueChange={(values) => {
-
-                        setOptionsValue({
-                          ...optionsValue,
-                          min: values.value
-                        });
-
-                      }}
-
-                      customInput={TextField}
-
+                        }
+                      }
+                      customInput={
+                        TextField
+                      }
                       thousandSeparator="."
-
                       decimalSeparator=","
-
                       prefix="R$ "
-
                       fullWidth
-
                       label="Valor Mínimo"
-
                       variant="outlined"
-
                       inputProps={{
-                        inputMode: "numeric",
-                        pattern: "[0-9]*",
-                        enterKeyHint: "done"
+                        inputMode:
+                          "numeric",
+                        pattern:
+                          "[0-9]*",
+                        enterKeyHint:
+                          "done"
                       }}
-
                       onFocus={() => {
 
                         if (
-                          optionsValue.min === 0
+                          optionsValue.min ===
+                          0
                         ) {
 
                           setOptionsValue({
@@ -1261,7 +1658,6 @@ const Home = ({
                         }
 
                       }}
-
                       onBlur={() => {
 
                         if (
@@ -1276,60 +1672,65 @@ const Home = ({
                         }
 
                       }}
-
-                      isAllowed={(values) =>
-                        values.value === "" ||
-                        Number(values.value) >= 0
+                      isAllowed={
+                        (values) =>
+                          values.value ===
+                            "" ||
+                          Number(
+                            values.value
+                          ) >= 0
                       }
-
                     />
 
                   </Box>
 
 
-                  <Box className="wrap-input">
+                  <Box
+                    className="wrap-input"
+                  >
 
                     <MonetizationOnIcon
                       className="MonetizationOnIcon"
                     />
 
+
                     <NumericFormat
+                      value={
+                        optionsValue.max
+                      }
+                      onValueChange={
+                        (values) => {
 
-                      value={optionsValue.max}
+                          setOptionsValue({
+                            ...optionsValue,
+                            max:
+                              values.value
+                          });
 
-                      onValueChange={(values) => {
-
-                        setOptionsValue({
-                          ...optionsValue,
-                          max: values.value
-                        });
-
-                      }}
-
-                      customInput={TextField}
-
+                        }
+                      }
+                      customInput={
+                        TextField
+                      }
                       thousandSeparator="."
-
                       decimalSeparator=","
-
                       prefix="R$ "
-
                       fullWidth
-
                       label="Valor Máximo"
-
                       variant="outlined"
-
                       inputProps={{
-                        inputMode: "numeric",
-                        pattern: "[0-9]*",
-                        enterKeyHint: "done"
+                        inputMode:
+                          "numeric",
+                        pattern:
+                          "[0-9]*",
+                        enterKeyHint:
+                          "done"
                       }}
-
                       onFocus={() => {
 
                         if (
-                          optionsValue.max === 0
+                          optionsValue.max ===
+                          0
                         ) {
 
                           setOptionsValue({
@@ -1340,7 +1741,6 @@ const Home = ({
                         }
 
                       }}
-
                       onBlur={() => {
 
                         if (
@@ -1355,20 +1755,20 @@ const Home = ({
                         }
 
                       }}
-
-                      isAllowed={(values) =>
-                        values.value === "" ||
-                        Number(values.value) >= 0
+                      isAllowed={
+                        (values) =>
+                          values.value ===
+                            "" ||
+                          Number(
+                            values.value
+                          ) >= 0
                       }
-
                     />
 
                   </Box>
 
                 </Grid>
 
-
-                {/* CATEGORIA */}
 
                 <Grid
                   size={12}
@@ -1379,9 +1779,12 @@ const Home = ({
                     select
                     label="Tipo de Anúncio"
                     value={category}
-                    onChange={handleChangeCategory}
+                    onChange={
+                      handleChangeCategory
+                    }
                     style={{
-                      minWidth: "100%"
+                      minWidth:
+                        "100%"
                     }}
                     className="selectType"
                   >
@@ -1407,8 +1810,6 @@ const Home = ({
                 </Grid>
 
 
-                {/* BOTÃO */}
-
                 <Grid size={4}>
 
                   <Button
@@ -1417,7 +1818,9 @@ const Home = ({
                     style={{
                       width: "100%"
                     }}
-                    onClick={handleClick}
+                    onClick={
+                      handleClick
+                    }
                   >
 
                     Buscar Imóveis
@@ -1443,13 +1846,15 @@ const Home = ({
           RESULTADOS
       ===================================================== */}
 
-      {loading ? (
+      {isLoading ? (
 
         <>
 
           <Root>
 
-            <Divider className="divider">
+            <Divider
+              className="divider"
+            >
 
               <Chip
                 className="divider-chip"
@@ -1468,14 +1873,17 @@ const Home = ({
           >
 
             {Array.from({
-              length: configPreload
-            }).map((_, index) => (
+              length:
+                configPreload
+            }).map(
+              (_, index) => (
 
-              <PreloadCard
-                key={`preload-${index}`}
-              />
+                <PreloadCard
+                  key={`preload-${index}`}
+                />
 
-            ))}
+              )
+            )}
 
           </Box>
 
@@ -1497,24 +1905,31 @@ const Home = ({
               <div
                 className="center"
                 style={{
-                  position: "relative"
+                  position:
+                    "relative"
                 }}
               >
 
-                <span className="breadcrumb">
+                <span
+                  className="breadcrumb"
+                >
 
                   <span>
                     Imóveis
                   </span>
 
-                  <span className="breadcrumb-separator">
+
+                  <span
+                    className="breadcrumb-separator"
+                  >
                     ›
                   </span>
 
 
                   {hasFilters &&
                     category &&
-                    category !== "todos" && (
+                    category !==
+                      "todos" && (
 
                       <>
 
@@ -1527,7 +1942,10 @@ const Home = ({
 
                         </span>
 
-                        <span className="breadcrumb-separator">
+
+                        <span
+                          className="breadcrumb-separator"
+                        >
                           ›
                         </span>
 
@@ -1539,11 +1957,15 @@ const Home = ({
                   <span>
 
                     {!search?.label ? (
+
                       <strong>
                         São Paulo
                       </strong>
+
                     ) : (
+
                       "São Paulo"
+
                     )}
 
                   </span>
@@ -1554,9 +1976,12 @@ const Home = ({
 
                       <>
 
-                        <span className="breadcrumb-separator">
+                        <span
+                          className="breadcrumb-separator"
+                        >
                           ›
                         </span>
+
 
                         <strong>
                           {search.label}
@@ -1569,11 +1994,14 @@ const Home = ({
                 </span>
 
 
-                <div className="found-properties">
+                <div
+                  className="found-properties"
+                >
 
                   <span>
                     Imóveis encontrados:{" "}
                   </span>
+
 
                   <strong>
                     {
@@ -1596,28 +2024,44 @@ const Home = ({
             <div
               className="mobile-results-summary"
               style={{
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "10px 16px 12px",
-                margin: "0",
-                display: "block"
+                width:
+                  "100%",
+                boxSizing:
+                  "border-box",
+                padding:
+                  "10px 16px 12px",
+                margin:
+                  "0",
+                display:
+                  "block"
               }}
             >
 
               <div
                 className="mobile-results-breadcrumb"
                 style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  display: "block",
-                  margin: "0",
-                  padding: "0",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                  fontSize: "13px",
-                  lineHeight: "20px",
-                  color: "rgba(0,0,0,.52)"
+                  width:
+                    "100%",
+                  boxSizing:
+                    "border-box",
+                  display:
+                    "block",
+                  margin:
+                    "0",
+                  padding:
+                    "0",
+                  overflow:
+                    "hidden",
+                  whiteSpace:
+                    "nowrap",
+                  textOverflow:
+                    "ellipsis",
+                  fontSize:
+                    "13px",
+                  lineHeight:
+                    "20px",
+                  color:
+                    "rgba(0,0,0,.52)"
                 }}
               >
 
@@ -1628,8 +2072,10 @@ const Home = ({
 
                 <span
                   style={{
-                    margin: "0 6px",
-                    color: "rgba(36,122,200,.55)"
+                    margin:
+                      "0 6px",
+                    color:
+                      "rgba(36,122,200,.55)"
                   }}
                 >
                   ›
@@ -1638,7 +2084,8 @@ const Home = ({
 
                 {hasFilters &&
                   category &&
-                  category !== "todos" && (
+                  category !==
+                    "todos" && (
 
                     <>
 
@@ -1649,10 +2096,13 @@ const Home = ({
                           category.slice(1)}
                       </span>
 
+
                       <span
                         style={{
-                          margin: "0 6px",
-                          color: "rgba(36,122,200,.55)"
+                          margin:
+                            "0 6px",
+                          color:
+                            "rgba(36,122,200,.55)"
                         }}
                       >
                         ›
@@ -1665,8 +2115,10 @@ const Home = ({
 
                 <span
                   style={{
-                    color: "#247ac8",
-                    fontWeight: 600
+                    color:
+                      "#247ac8",
+                    fontWeight:
+                      600
                   }}
                 >
                   São Paulo
@@ -1680,17 +2132,22 @@ const Home = ({
 
                       <span
                         style={{
-                          margin: "0 6px",
-                          color: "rgba(36,122,200,.55)"
+                          margin:
+                            "0 6px",
+                          color:
+                            "rgba(36,122,200,.55)"
                         }}
                       >
                         ›
                       </span>
 
+
                       <span
                         style={{
-                          color: "#247ac8",
-                          fontWeight: 600
+                          color:
+                            "#247ac8",
+                          fontWeight:
+                            600
                         }}
                       >
                         {search.label}
@@ -1706,15 +2163,24 @@ const Home = ({
               <div
                 className="mobile-found-properties"
                 style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  display: "flex",
-                  alignItems: "baseline",
-                  margin: "4px 0 10px",
-                  padding: "0",
-                  fontSize: "13px",
-                  lineHeight: "21px",
-                  color: "rgba(0,0,0,.52)"
+                  width:
+                    "100%",
+                  boxSizing:
+                    "border-box",
+                  display:
+                    "flex",
+                  alignItems:
+                    "baseline",
+                  margin:
+                    "4px 0 10px",
+                  padding:
+                    "0",
+                  fontSize:
+                    "13px",
+                  lineHeight:
+                    "21px",
+                  color:
+                    "rgba(0,0,0,.52)"
                 }}
               >
 
@@ -1722,12 +2188,17 @@ const Home = ({
                   Imóveis encontrados:
                 </span>
 
+
                 <strong
                   style={{
-                    marginLeft: "5px",
-                    color: "#247ac8",
-                    fontSize: "16px",
-                    fontWeight: 700
+                    marginLeft:
+                      "5px",
+                    color:
+                      "#247ac8",
+                    fontSize:
+                      "16px",
+                    fontWeight:
+                      700
                   }}
                 >
                   {
@@ -1743,10 +2214,6 @@ const Home = ({
           )}
 
 
-          {/* =====================================================
-              CARDS
-          ===================================================== */}
-
           <Card
             data={realEstate}
             hasFilters={hasFilters}
@@ -1757,46 +2224,70 @@ const Home = ({
       ) : null}
 
 
-      {!loading &&
+      {!isLoading &&
         hasFilters &&
         data.length <= 0 && (
 
-          <Container className="empty-state">
+          <Container
+            className="empty-state"
+          >
 
-            <div className="empty-state__illustration">
+            <div
+              className="empty-state__illustration"
+            >
 
-              <div className="empty-state__decor">
+              <div
+                className="empty-state__decor"
+              >
 
-                <span>✦</span>
+                <span>
+                  ✦
+                </span>
 
-                <span>+</span>
+                <span>
+                  +
+                </span>
 
-                <span>✦</span>
+                <span>
+                  ✦
+                </span>
 
               </div>
 
-              <div className="empty-state__icon"></div>
+
+              <div
+                className="empty-state__icon"
+              />
 
             </div>
 
 
-            <div className="empty-state__content">
+            <div
+              className="empty-state__content"
+            >
 
-              <div className="empty-state__tag">
+              <div
+                className="empty-state__tag"
+              >
 
                 Ops, nada por aqui
 
               </div>
 
 
-              <h2 className="empty-state__title">
+              <h2
+                className="empty-state__title"
+              >
 
-                Não encontramos mais resultados.
+                Não encontramos mais
+                resultados.
 
               </h2>
 
 
-              <p className="empty-state__description">
+              <p
+                className="empty-state__description"
+              >
 
                 Não encontramos mais imóveis
                 com os filtros aplicados.
@@ -1809,7 +2300,9 @@ const Home = ({
 
               <button
                 className="empty-state__button"
-                onClick={resetFilters}
+                onClick={
+                  resetFilters
+                }
               >
 
                 🧹 Limpar filtros
@@ -1823,14 +2316,41 @@ const Home = ({
         )}
 
 
-      {loading ? <Loading /> : ""}
+      {/* =====================================================
+          LOADING OVERLAY
+      ===================================================== */}
+
+      {isLoading ? (
+
+        <Loading
+          isPageChange={
+            loadingState.mode ===
+            "page"
+          }
+        />
+
+      ) : null}
 
 
-      {!loading && (
+      {/* =====================================================
+          PAGINAÇÃO
+      ===================================================== */}
+
+      {!isLoading && (
 
         <Pagination
-          pagination={pagination}
-          filters={currentFilters}
+          pagination={
+            pagination
+          }
+          filters={
+            currentFilters
+          }
+          onPageChangeStart={
+            handlePageChangeStart
+          }
+          onPageChangeEnd={
+            handlePageChangeEnd
+          }
         />
 
       )}
@@ -1844,20 +2364,23 @@ const Home = ({
 
 
 /*
- * =====================================================
- * REDUX
- * =====================================================
- */
+* =====================================================
+* REDUX
+* =====================================================
+*/
 
-const mapStateToProps = (state) => ({
+const mapStateToProps =
+  (state) => ({
 
-  realstate:
-    state.home.realestate?.data || [],
+    realstate:
+      state.home.realestate?.data ||
+      [],
 
-  pagination:
-    state.home.pagination || {}
+    pagination:
+      state.home.pagination ||
+      {}
 
-});
+  });
 
 
 export default withRouter(

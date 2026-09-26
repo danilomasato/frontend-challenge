@@ -33,7 +33,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-
 import {
   Button,
   CardActionArea,
@@ -42,7 +41,6 @@ import {
 
 import SellIcon from "@mui/icons-material/Sell";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
@@ -60,9 +58,28 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import axios from "axios";
 
 import Loading from "../../components/Loading";
-
 import PreloadImovelDetail from "../../components/PreloadImovelDetail";
 import PreloadImovelDetailMobile from "../../components/PreloadImovelDetail/Mobile";
+
+
+const DETAIL_CACHE_KEY =
+  "tsa_imovel_detail_cache";
+
+const detailMemoryCache =
+  new Map();
+
+
+function normalizeIdentifier(value) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return null;
+  }
+
+  return String(value).trim();
+}
 
 
 function getParameterByName(
@@ -70,7 +87,7 @@ function getParameterByName(
   url = window.location.href
 ) {
   name = name.replace(
-    /[\\[\]]/g,
+    /[\[\]]/g,
     "\\$&"
   );
 
@@ -91,1217 +108,335 @@ function getParameterByName(
   }
 
   return decodeURIComponent(
-    results[2].replace(
-      /\+/g,
-      " "
-    )
+    results[2].replace(/\+/g, " ")
   );
 }
 
 
-/*
- * ==========================================================
- * FUNÇÕES AUXILIARES DA DESCRIÇÃO
- * ==========================================================
- */
-
-
-/*
- * Obtém todo o texto de um bloco.
- *
- * Funciona tanto para:
- *
- * {
- *   text: "Texto"
- * }
- *
- * quanto para estruturas com children aninhados.
- */
-const getChildText = (child) => {
-  if (!child) {
-    return "";
-  }
-
-  if (
-    Array.isArray(child.children) &&
-    child.children.length > 0
-  ) {
-    return child.children
-      .map((nestedChild) =>
-        getChildText(nestedChild)
-      )
-      .join("");
-  }
-
-  if (
-    child.text !== undefined &&
-    child.text !== null
-  ) {
-    return String(child.text);
-  }
-
-  return "";
-};
-
-
-/*
- * Obtém o texto completo de um bloco do Strapi.
- */
-const getBlockText = (block) => {
-  if (!block) {
-    return "";
-  }
-
-  if (
-    Array.isArray(block.children)
-  ) {
-    return block.children
-      .map((child) =>
-        getChildText(child)
-      )
-      .join("");
-  }
-
-  return getChildText(block);
-};
-
-
-/*
- * Verifica se o texto está vazio.
- */
-const isEmptyText = (text) => {
-  return !String(
-    text || ""
-  ).trim();
-};
-
-
-/*
- * Verifica se um texto começa com emoji
- * ou algum símbolo visual.
- *
- * A ideia não é limitar a um emoji específico.
- *
- * Isso permite tratar:
- *
- * 🏋️ Academia
- * 📍 Localização
- * 🚆 Estação
- * 🛍️ Comércio
- * ✨ Destaques
- * etc.
- */
-const startsWithVisualIcon = (
-  text
-) => {
-  if (!text) {
-    return false;
-  }
-
-  const value = String(
-    text
-  ).trim();
-
-  if (!value) {
-    return false;
-  }
-
-  /*
-   * Emoji / símbolos Unicode.
-   */
-  const emojiPattern =
-    /^[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Emoji}\uFE0F]/u;
-
-  /*
-   * Alguns marcadores comuns.
-   */
-  const markerPattern =
-    /^(?:[-•●▪◦‣∙·*]|(?:\d+[.)]))\s+/;
-
-  return (
-    emojiPattern.test(value) ||
-    markerPattern.test(value)
-  );
-};
-
-
-/*
- * Remove marcadores que já existem.
- *
- * Se o conteúdo vier:
- *
- * - Academia
- * • Academia
- * * Academia
- * 1. Academia
- *
- * não colocamos outro marcador antes.
- */
-const removeExistingBullet = (
-  text
-) => {
-  if (!text) {
-    return "";
-  }
-
-  return String(text)
-    .replace(
-      /^\s*(?:[•●▪◦‣∙·*-]|\d+[.)])\s*/,
-      ""
-    )
-    .trim();
-};
-
-
-/*
- * Verifica se existe quebra de linha dentro
- * de um bloco.
- */
-const hasMultipleLines = (
-  children
-) => {
-  if (!Array.isArray(children)) {
-    return false;
-  }
-
-  return children.some(
-    (child) => {
-      const text =
-        getChildText(child);
-
-      return (
-        text.includes("\n") ||
-        text.includes("\r")
-      );
-    }
-  );
-};
-
-
-/*
- * Divide texto em linhas.
- */
-const splitTextLines = (
-  text
-) => {
-  if (!text) {
-    return [];
-  }
-
-  return String(text)
-    .replace(
-      /\r\n/g,
-      "\n"
-    )
-    .replace(
-      /\r/g,
-      "\n"
-    )
-    .split("\n")
-    .map(
-      (line) =>
-        line.trim()
-    )
-    .filter(
-      (line) =>
-        line !== ""
-    );
-};
-
-
-/*
- * Verifica se um texto parece ser um título
- * ou cabeçalho de uma seção.
- *
- * Exemplos:
- *
- * Destaques do imóvel
- * Características do imóvel
- * Lazer
- * Área de lazer
- * Estrutura
- * Infraestrutura
- */
-const isListHeading = (
-  text
-) => {
-  if (!text) {
-    return false;
-  }
-
-  const value =
-    String(text)
-      .trim()
-      .toLowerCase();
-
-  if (!value) {
-    return false;
-  }
-
-  return (
-    value.includes(
-      "destaques"
-    ) ||
-    value.includes(
-      "características"
-    ) ||
-    value.includes(
-      "caracteristicas"
-    ) ||
-    value.includes(
-      "estrutura de lazer"
-    ) ||
-    value.includes(
-      "área de lazer"
-    ) ||
-    value.includes(
-      "area de lazer"
-    ) ||
-    value === "lazer" ||
-    value.includes(
-      "infraestrutura"
-    ) ||
-    value.includes(
-      "comodidades"
-    ) ||
-    value.includes(
-      "facilidades"
-    )
-  );
-};
-
-
-/*
- * Verifica se um texto é muito provavelmente
- * um item curto de característica.
- *
- * Exemplos:
- *
- * 34 m²
- * 2 dormitórios
- * 1 banheiro
- * Portaria 24 horas
- * Condomínio fechado
- * Academia
- * Playground
- */
-const isShortFeatureText = (
-  text
-) => {
-  if (!text) {
-    return false;
-  }
-
-  const value =
-    String(text)
-      .trim();
-
-  if (!value) {
-    return false;
-  }
-
-  /*
-   * Textos muito grandes normalmente são
-   * parágrafos descritivos.
-   */
-  if (
-    value.length > 90
-  ) {
-    return false;
-  }
-
-  /*
-   * Se houver pontuação típica de uma
-   * frase longa, evitamos transformar em lista.
-   */
-  const sentencePattern =
-    /[.!?]\s+[A-ZÁÀÃÂÉÊÍÓÔÕÚÇ]/;
-
-  if (
-    sentencePattern.test(
-      value
-    )
-  ) {
-    return false;
-  }
-
-  return true;
-};
-
-
-/*
- * Renderização normal dos children.
- */
-const renderNormalChildren = (
-  children
-) => {
-  if (!Array.isArray(children)) {
-    return null;
-  }
-
-  return children.map(
-    (
-      child,
-      childIndex
-    ) => {
-      if (!child) {
-        return null;
-      }
-
-      if (
-        Array.isArray(
-          child.children
-        ) &&
-        child.children.length > 0
-      ) {
-        return (
-          <React.Fragment
-            key={childIndex}
-          >
-            {renderNormalChildren(
-              child.children
-            )}
-          </React.Fragment>
-        );
-      }
-
-      const text =
-        getChildText(child);
-
-      if (!text) {
-        return null;
-      }
-
-      return (
-        <React.Fragment
-          key={childIndex}
-        >
-          {text}
-        </React.Fragment>
-      );
-    }
-  );
-};
-
-
-/*
- * ==========================================================
- * LISTAS NATIVAS
- * ==========================================================
- *
- * Converte uma lista nativa do Strapi
- * em linhas simples.
- */
-const collectNativeListItems = (
-  children
-) => {
-  if (!Array.isArray(children)) {
-    return [];
-  }
-
-  const items = [];
-
-  children.forEach(
-    (item) => {
-      if (!item) {
-        return;
-      }
-
-      const text =
-        getBlockText(item);
-
-      if (
-        text &&
-        text.trim()
-      ) {
-        splitTextLines(
-          text
-        ).forEach(
-          (line) => {
-            items.push(
-              line
-            );
-          }
-        );
-
-        return;
-      }
-
-      if (
-        Array.isArray(
-          item.children
-        )
-      ) {
-        item.children.forEach(
-          (child) => {
-            const childText =
-              getChildText(
-                child
-              );
-
-            splitTextLines(
-              childText
-            ).forEach(
-              (line) => {
-                items.push(
-                  line
-                );
-              }
-            );
-          }
-        );
-      }
-    }
-  );
-
-  return items;
-};
-
-
-/*
- * ==========================================================
- * AGRUPAMENTO DOS PARÁGRAFOS
- * ==========================================================
- *
- * Esta é a parte principal da nova lógica.
- *
- * O Strapi pode representar uma lista assim:
- *
- * paragraph
- * paragraph
- * paragraph
- * paragraph
- *
- * mesmo quando visualmente aquilo é uma lista.
- *
- * Portanto, analisamos o conjunto dos blocos.
- */
-const buildDescriptionBlocks = (
-  descricao
-) => {
-  if (!Array.isArray(descricao)) {
-    return [];
-  }
-
-  const blocks = [];
-
-  let index = 0;
-
-  while (
-    index <
-    descricao.length
-  ) {
-    const current =
-      descricao[index];
-
-    if (!current) {
-      index++;
-      continue;
-    }
-
-    /*
-     * ------------------------------------------------------
-     * LISTA NATIVA DO STRAPI
-     * ------------------------------------------------------
-     */
-    if (
-      current.type === "list"
-    ) {
-      blocks.push({
-        type: "visual-list",
-        items:
-          collectNativeListItems(
-            current.children
-          ),
-        key:
-          `native-list-${index}`
-      });
-
-      index++;
-      continue;
-    }
-
-    /*
-     * Só analisamos paragraph aqui.
-     */
-    if (
-      current.type !==
-      "paragraph"
-    ) {
-      blocks.push({
-        type: "normal",
-        block: current,
-        key:
-          `block-${index}`
-      });
-
-      index++;
-      continue;
-    }
-
-    const currentText =
-      getBlockText(current)
-        .trim();
-
-    /*
-     * Parágrafo vazio.
-     *
-     * Ele será usado como separador.
-     */
-    if (
-      isEmptyText(
-        currentText
-      )
-    ) {
-      blocks.push({
-        type: "spacer",
-        key:
-          `spacer-${index}`
-      });
-
-      index++;
-      continue;
-    }
-
-    /*
-     * ------------------------------------------------------
-     * LISTA DE ÍCONES
-     * ------------------------------------------------------
-     *
-     * Exemplo:
-     *
-     * 🏋️ Academia
-     * 🛝 Playground
-     * 👶 Play baby
-     *
-     * Pode existir um parágrafo vazio entre os itens.
-     */
-    if (
-      startsWithVisualIcon(
-        currentText
-      )
-    ) {
-      const iconItems = [];
-
-      let scan =
-        index;
-
-      let emptyCount =
-        0;
-
-      while (
-        scan <
-        descricao.length
-      ) {
-        const candidate =
-          descricao[scan];
-
-        if (
-          !candidate ||
-          candidate.type !==
-            "paragraph"
-        ) {
-          break;
-        }
-
-        const candidateText =
-          getBlockText(
-            candidate
-          ).trim();
-
-        /*
-         * Ignora espaços entre itens.
-         */
-        if (
-          isEmptyText(
-            candidateText
-          )
-        ) {
-          emptyCount++;
-
-          /*
-           * Permitimos alguns vazios,
-           * mas não infinitamente.
-           */
-          if (
-            emptyCount <= 2
-          ) {
-            scan++;
-            continue;
-          }
-
-          break;
-        }
-
-        /*
-         * Assim que aparece um texto que não
-         * começa com ícone, a lista terminou.
-         */
-        if (
-          !startsWithVisualIcon(
-            candidateText
-          )
-        ) {
-          break;
-        }
-
-        iconItems.push(
-          candidateText
-        );
-
-        emptyCount = 0;
-
-        scan++;
-      }
-
-      /*
-       * Só consideramos como lista quando
-       * existem pelo menos 2 itens.
-       */
-      if (
-        iconItems.length >= 2
-      ) {
-        blocks.push({
-          type: "visual-list",
-          items: iconItems,
-          key:
-            `icon-list-${index}`
-        });
-
-        index = scan;
-        continue;
-      }
-    }
-
-
-    /*
-     * ------------------------------------------------------
-     * LISTA DE CARACTERÍSTICAS
-     * ------------------------------------------------------
-     *
-     * Exemplo:
-     *
-     * ✨ Destaques do imóvel
-     *
-     * 34 m²
-     *
-     * 2 dormitórios
-     *
-     * 1 banheiro
-     *
-     * Condomínio fechado
-     *
-     * ...
-     *
-     * O título fica separado.
-     */
-    if (
-      isListHeading(
-        currentText
-      )
-    ) {
-      blocks.push({
-        type: "normal",
-        block: current,
-        key:
-          `heading-${index}`
-      });
-
-      const featureItems = [];
-
-      let scan =
-        index + 1;
-
-      let emptyCount =
-        0;
-
-      while (
-        scan <
-        descricao.length
-      ) {
-        const candidate =
-          descricao[scan];
-
-        if (
-          !candidate ||
-          candidate.type !==
-            "paragraph"
-        ) {
-          break;
-        }
-
-        const candidateText =
-          getBlockText(
-            candidate
-          ).trim();
-
-        /*
-         * Parágrafo vazio.
-         */
-        if (
-          isEmptyText(
-            candidateText
-          )
-        ) {
-          emptyCount++;
-
-          /*
-           * Os dados enviados pelo Strapi
-           * possuem um vazio entre praticamente
-           * todos os itens.
-           *
-           * Mantemos esses vazios enquanto
-           * estivermos dentro da lista.
-           */
-          if (
-            featureItems.length > 0 &&
-            emptyCount <= 2
-          ) {
-            scan++;
-            continue;
-          }
-
-          /*
-           * Se ainda não encontramos itens,
-           * apenas avançamos.
-           */
-          scan++;
-          continue;
-        }
-
-        /*
-         * Quando encontramos outro título,
-         * encerramos a lista atual.
-         */
-        if (
-          isListHeading(
-            candidateText
-          )
-        ) {
-          break;
-        }
-
-        /*
-         * Texto muito longo significa que
-         * provavelmente voltamos para a descrição normal.
-         */
-        if (
-          !isShortFeatureText(
-            candidateText
-          )
-        ) {
-          break;
-        }
-
-        featureItems.push(
-          candidateText
-        );
-
-        emptyCount = 0;
-
-        scan++;
-      }
-
-      /*
-       * Só transforma em lista se realmente
-       * houver pelo menos 2 características.
-       */
-      if (
-        featureItems.length >= 2
-      ) {
-        blocks.push({
-          type: "visual-list",
-          items:
-            featureItems,
-          key:
-            `feature-list-${index}`
-        });
-
-        index = scan;
-        continue;
-      }
-
-      index++;
-      continue;
-    }
-
-
-    /*
-     * ------------------------------------------------------
-     * LISTA DE CARACTERÍSTICAS SEM TÍTULO
-     * ------------------------------------------------------
-     *
-     * Também tratamos sequências como:
-     *
-     * 34 m²
-     * 2 dormitórios
-     * 1 banheiro
-     * Condomínio fechado
-     *
-     * quando o conteúdo claramente se comporta
-     * como uma sequência de itens.
-     */
-    const featureItems = [];
-
-    let scan =
-      index;
-
-    let emptyCount =
-      0;
-
-    while (
-      scan <
-      descricao.length
-    ) {
-      const candidate =
-        descricao[scan];
-
-      if (
-        !candidate ||
-        candidate.type !==
-          "paragraph"
-      ) {
-        break;
-      }
-
-      const candidateText =
-        getBlockText(
-          candidate
-        ).trim();
-
-      if (
-        isEmptyText(
-          candidateText
-        )
-      ) {
-        emptyCount++;
-
-        if (
-          featureItems.length > 0 &&
-          emptyCount <= 2
-        ) {
-          scan++;
-          continue;
-        }
-
-        scan++;
-        continue;
-      }
-
-      /*
-       * Não misturamos uma lista com um
-       * parágrafo descritivo longo.
-       */
-      if (
-        !isShortFeatureText(
-          candidateText
-        )
-      ) {
-        break;
-      }
-
-      /*
-       * Um parágrafo com ícone já possui
-       * sua própria regra.
-       */
-      if (
-        startsWithVisualIcon(
-          candidateText
-        )
-      ) {
-        break;
-      }
-
-      featureItems.push(
-        candidateText
+function getPersistentDetailCache() {
+  try {
+    const stored =
+      localStorage.getItem(
+        DETAIL_CACHE_KEY
       );
 
-      emptyCount = 0;
-
-      scan++;
+    if (!stored) {
+      return {};
     }
 
-    /*
-     * Para evitar transformar duas frases curtas
-     * comuns em lista, exigimos pelo menos 3 itens.
-     */
+    const parsed =
+      JSON.parse(stored);
+
     if (
-      featureItems.length >= 3
+      !parsed ||
+      typeof parsed !== "object" ||
+      Array.isArray(parsed)
     ) {
-      blocks.push({
-        type: "visual-list",
-        items:
-          featureItems,
-        key:
-          `feature-list-${index}`
-      });
-
-      index = scan;
-      continue;
+      return {};
     }
 
-
-    /*
-     * ------------------------------------------------------
-     * PARÁGRAFO NORMAL
-     * ------------------------------------------------------
-     */
-    blocks.push({
-      type: "normal",
-      block: current,
-      key:
-        `paragraph-${index}`
-    });
-
-    index++;
-  }
-
-  return blocks;
-};
-
-
-/*
- * ==========================================================
- * LISTA VISUAL
- * ==========================================================
- *
- * Desktop:
- *
- * • item 1              • item 2
- * • item 3              • item 4
- *
- * Mobile:
- *
- * • item 1
- * • item 2
- * • item 3
- *
- * Cada item possui:
- *
- *   • + conteúdo
- *
- * mantendo ícone + texto juntos.
- */
-const renderAsVisualList = (
-  items,
-  keyPrefix = "list",
-  isMobile = false
-) => {
-  if (
-    !Array.isArray(items) ||
-    items.length === 0
-  ) {
-    return null;
-  }
-
-  const lines = items
-    .map(
-      (item) =>
-        removeExistingBullet(
-          item
-        )
-    )
-    .filter(
-      (item) =>
-        item &&
-        item.trim() !== ""
+    return parsed;
+  } catch (error) {
+    console.warn(
+      "Não foi possível ler o cache dos imóveis:",
+      error
     );
 
+    return {};
+  }
+}
+
+
+function savePersistentDetailCache(
+  cache
+) {
+  try {
+    localStorage.setItem(
+      DETAIL_CACHE_KEY,
+      JSON.stringify(cache)
+    );
+  } catch (error) {
+    console.warn(
+      "Não foi possível salvar o cache dos imóveis:",
+      error
+    );
+  }
+}
+
+
+function getDetailIdentifiers(data) {
+  if (!data) {
+    return [];
+  }
+
+  const identifiers = [
+    data.id,
+    data.documentId
+  ]
+    .map(normalizeIdentifier)
+    .filter(Boolean);
+
+  return [
+    ...new Set(identifiers)
+  ];
+}
+
+
+function cacheDetail(
+  data,
+  extraIdentifiers = []
+) {
   if (
-    lines.length === 0
+    !data ||
+    typeof data !== "object"
+  ) {
+    return;
+  }
+
+  const identifiers = [
+    ...getDetailIdentifiers(data),
+    ...extraIdentifiers
+      .map(normalizeIdentifier)
+      .filter(Boolean)
+  ];
+
+  const uniqueIdentifiers = [
+    ...new Set(identifiers)
+  ];
+
+  if (
+    !uniqueIdentifiers.length
+  ) {
+    return;
+  }
+
+  uniqueIdentifiers.forEach(
+    (identifier) => {
+      detailMemoryCache.set(
+        identifier,
+        data
+      );
+    }
+  );
+
+  const persistentCache =
+    getPersistentDetailCache();
+
+  uniqueIdentifiers.forEach(
+    (identifier) => {
+      persistentCache[
+        identifier
+      ] = data;
+    }
+  );
+
+  savePersistentDetailCache(
+    persistentCache
+  );
+}
+
+
+function getCachedDetail(
+  identifiers = []
+) {
+  const normalizedIdentifiers =
+    identifiers
+      .map(normalizeIdentifier)
+      .filter(Boolean);
+
+  if (
+    !normalizedIdentifiers.length
   ) {
     return null;
   }
 
-  return (
-    <Box
-      component="div"
-      sx={{
-        display: "grid",
+  for (
+    const identifier of normalizedIdentifiers
+  ) {
+    if (
+      detailMemoryCache.has(
+        identifier
+      )
+    ) {
+      return detailMemoryCache.get(
+        identifier
+      );
+    }
+  }
 
-        /*
-         * Desktop = 2 colunas.
-         *
-         * Mobile = 1 coluna.
-         */
-        gridTemplateColumns:
-          isMobile
-            ? "minmax(0, 1fr)"
-            : "repeat(2, minmax(0, 1fr))",
+  const persistentCache =
+    getPersistentDetailCache();
 
-        columnGap: "28px",
+  for (
+    const identifier of normalizedIdentifiers
+  ) {
+    if (
+      persistentCache[
+        identifier
+      ]
+    ) {
+      const cachedData =
+        persistentCache[
+          identifier
+        ];
 
-        rowGap: "0.45rem",
+      cacheDetail(
+        cachedData,
+        normalizedIdentifiers
+      );
 
-        /*
-         * Deslocamento real solicitado.
-         */
-        marginLeft: "10px",
+      return cachedData;
+    }
+  }
 
-        /*
-         * Impede que o margin aumente
-         * o tamanho total do container.
-         */
-        width:
-          "calc(100% - 10px)",
+  return null;
+}
 
-        boxSizing:
-          "border-box",
 
-        alignItems:
-          "start",
+function getPropertyIdentifiers(
+  data
+) {
+  return [
+    data?.id,
+    data?.documentId
+  ]
+    .map(normalizeIdentifier)
+    .filter(Boolean);
+}
 
-        whiteSpace:
-          "normal",
 
-        wordBreak:
-          "break-word",
+function propertyMatchesIdentifiers(
+  data,
+  identifiers
+) {
+  if (
+    !data ||
+    typeof data !== "object"
+  ) {
+    return false;
+  }
 
-        overflowWrap:
-          "anywhere"
-      }}
-    >
-      {lines.map(
-        (
-          line,
-          index
-        ) => (
-          <Box
-            key={`${keyPrefix}-${index}`}
-            component="div"
-            sx={{
-              display: "flex",
+  const propertyIdentifiers =
+    getPropertyIdentifiers(
+      data
+    );
 
-              alignItems:
-                "flex-start",
+  const normalizedIdentifiers =
+    identifiers
+      .map(normalizeIdentifier)
+      .filter(Boolean);
 
-              width: "100%",
-
-              minWidth: 0,
-
-              fontSize:
-                "0.9rem",
-
-              lineHeight: 1.45,
-
-              whiteSpace:
-                "normal",
-
-              wordBreak:
-                "break-word",
-
-              overflowWrap:
-                "anywhere"
-            }}
-          >
-            <Box
-              component="span"
-              sx={{
-                flexShrink: 0,
-
-                marginRight:
-                  "6px",
-
-                lineHeight:
-                  1.45,
-
-                fontSize:
-                  "0.9rem"
-              }}
-            >
-              •
-            </Box>
-
-            <Box
-              component="span"
-              sx={{
-                display:
-                  "block",
-
-                minWidth: 0,
-
-                flex: 1,
-
-                fontSize:
-                  "0.9rem",
-
-                lineHeight:
-                  1.45,
-
-                whiteSpace:
-                  "normal",
-
-                wordBreak:
-                  "break-word",
-
-                overflowWrap:
-                  "anywhere"
-              }}
-            >
-              {line}
-            </Box>
-          </Box>
-        )
-      )}
-    </Box>
+  return propertyIdentifiers.some(
+    (identifier) =>
+      normalizedIdentifiers.includes(
+        identifier
+      )
   );
-};
+}
 
-
-/*
- * ==========================================================
- * COMPONENTE
- * ==========================================================
- */
 
 const CharacterDetail = ({
-  realestate
+  realestate,
+  location
 }) => {
-  const history =
-    useHistory();
+  const history = useHistory();
 
   const contentRef =
     useRef(null);
 
-  const [loading, setLoading] =
-    useState(true);
+  const pathname =
+    location?.pathname ||
+    window.location.pathname;
 
-  const [imoveis, setImoveis] =
-    useState();
+  const search =
+    location?.search ||
+    window.location.search;
 
-  const [isMobile, setIsMobile] =
-    useState(
-      window.innerWidth <= 1024
-    );
-
-  const [openToggle, setOpenToggle] =
-    useState(false);
-
-  const [showToggle, setShowToggle] =
-    useState(false);
-
-  const [open, setOpen] =
-    React.useState(false);
-
-  let rows = [];
+  const pathId =
+    pathname.match(
+      /^\/imovel\/(\d+)/
+    )?.[1] || null;
 
   const paramID =
     getParameterByName(
-      "dcID"
+      "dcID",
+      `${window.location.origin}${search}`
     );
+
+  const detailIdentifiers = [
+    paramID,
+    pathId
+  ]
+    .map(normalizeIdentifier)
+    .filter(Boolean);
+
+  const initialCachedDetail =
+    getCachedDetail(
+      detailIdentifiers
+    );
+
+  const [
+    loading,
+    setLoading
+  ] = useState(
+    !initialCachedDetail
+  );
+
+  const [
+    imoveis,
+    setImoveis
+  ] = useState(
+    initialCachedDetail ||
+      undefined
+  );
+
+  const [
+    isMobile,
+    setIsMobile
+  ] = useState(
+    window.innerWidth <= 1024
+  );
+
+  const [
+    openToggle,
+    setOpenToggle
+  ] = useState(false);
+
+  const [
+    showToggle,
+    setShowToggle
+  ] = useState(false);
+
+  const [
+    open,
+    setOpen
+  ] = React.useState(false);
+
+  let rows = [];
 
 
   /*
-   * Atualiza o estado mobile.
+   * Sempre que entrar em um imóvel
+   * ou trocar de imóvel, volta para o topo.
    */
   useEffect(() => {
-    const handleResize =
-      () => {
-        setIsMobile(
-          window.innerWidth <=
-            1024
-        );
-      };
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto"
+    });
+  }, [pathname]);
+
+
+  /*
+   * Atualiza o estado mobile
+   */
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(
+        window.innerWidth <= 1024
+      );
+    };
 
     window.addEventListener(
       "resize",
@@ -1318,106 +453,93 @@ const CharacterDetail = ({
 
 
   /*
-   * Busca dados do Redux.
+   * Carrega o imóvel pelo cache ou pela API.
+   *
+   * A primeira visita não possui cache e,
+   * portanto, mantém o preload.
+   *
+   * Depois que o imóvel é carregado, ele fica
+   * armazenado em memória e localStorage.
    */
   useEffect(() => {
+    let cancelled = false;
+
+    const identifiers =
+      [
+        paramID,
+        pathId
+      ]
+        .map(normalizeIdentifier)
+        .filter(Boolean);
+
+    if (!identifiers.length) {
+      return undefined;
+    }
+
+    const cachedDetail =
+      getCachedDetail(
+        identifiers
+      );
+
+    if (cachedDetail) {
+      setImoveis(
+        cachedDetail
+      );
+
+      setLoading(false);
+
+      return undefined;
+    }
+
+    /*
+     * Se o Redux já possui exatamente o imóvel
+     * solicitado, utilizamos os dados dele.
+     *
+     * Nunca utilizamos um imóvel diferente apenas
+     * porque existe algo em state.character.realestate.
+     */
     if (
-      !realestate ||
-      Object.keys(
+      propertyMatchesIdentifiers(
+        realestate,
+        identifiers
+      )
+    ) {
+      cacheDetail(
+        realestate,
+        identifiers
+      );
+
+      setImoveis(
         realestate
-      ).length === 0
-    ) {
-      return;
-    }
-
-    setImoveis(
-      realestate
-    );
-
-    const timer =
-      setTimeout(() => {
-        setLoading(false);
-      }, 200);
-
-    return () =>
-      clearTimeout(
-        timer
-      );
-  }, [realestate]);
-
-
-  /*
-   * Busca imóvel quando a página
-   * é recarregada.
-   */
-  useEffect(() => {
-    const idImovel =
-      window.location.pathname.match(
-        /^\/imovel\/(\d+)/
-      )?.[1];
-
-    if (!idImovel) {
-      return;
-    }
-
-    const chave =
-      `detailVisitada_${idImovel}`;
-
-    const jaVisitou =
-      sessionStorage.getItem(
-        chave
       );
 
-    if (
-      jaVisitou === "true"
-    ) {
-      console.log(
-        "🔥 Recarregou a página do imóvel:",
-        idImovel
-      );
-
-      axios
-        .get(
-          `https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/?filters[id][$eq]=${idImovel}&populate=*`
-        )
-        .then(
-          (response) => {
-            setImoveis(
-              response.data
-                .data[0]
-            );
-
-            setLoading(
-              false
-            );
+      /*
+       * Mantém o comportamento original da primeira
+       * entrada: o preload aparece por um pequeno
+       * período antes de liberar o conteúdo.
+       */
+      const timer =
+        setTimeout(() => {
+          if (!cancelled) {
+            setLoading(false);
           }
-        )
-        .catch(
-          (error) => {
-            console.log(
-              "An error occurred:",
-              error.response
-            );
-          }
-        );
-    } else {
-      console.log(
-        "➡️ Primeira entrada no imóvel:",
-        idImovel
-      );
+        }, 200);
 
-      sessionStorage.setItem(
-        chave,
-        "true"
-      );
+      return () => {
+        cancelled = true;
+        clearTimeout(timer);
+      };
     }
-  }, []);
 
+    /*
+     * Sem cache e sem dados correspondentes no Redux:
+     * primeira abertura do imóvel.
+     */
+    setLoading(true);
 
-  /*
-   * Busca imóvel por documentId.
-   */
-  useEffect(() => {
+    /*
+     * Busca por documentId quando existe dcID.
+     */
     if (
       paramID !== null &&
       paramID !== ""
@@ -1426,31 +548,99 @@ const CharacterDetail = ({
         .get(
           `https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/${paramID}?status=published&populate[0]=Fotos`
         )
-        .then(
-          (response) => {
-            setImoveis(
-              response.data
-                .data
-            );
+        .then((response) => {
+          if (cancelled) {
+            return;
+          }
 
-            setLoading(
-              false
-            );
+          const data =
+            response?.data?.data;
+
+          if (!data) {
+            return;
           }
-        )
-        .catch(
-          (error) => {
-            console.log(
-              "An error occurred:",
-              error.response
-            );
+
+          cacheDetail(
+            data,
+            identifiers
+          );
+
+          setImoveis(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          if (cancelled) {
+            return;
           }
-        );
+
+          console.log(
+            "An error occurred:",
+            error.response
+          );
+        });
+
+      return () => {
+        cancelled = true;
+      };
     }
 
     /*
-     * Desabilita botão direito.
+     * Busca por ID numérico quando a URL é:
+     * /imovel/221/...
      */
+    if (pathId) {
+      axios
+        .get(
+          `https://sublime-bat-ad2fca1255.strapiapp.com/api/Anuncios/?filters[id][$eq]=${pathId}&populate=*`
+        )
+        .then((response) => {
+          if (cancelled) {
+            return;
+          }
+
+          const data =
+            response?.data?.data?.[0];
+
+          if (!data) {
+            return;
+          }
+
+          cacheDetail(
+            data,
+            identifiers
+          );
+
+          setImoveis(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          if (cancelled) {
+            return;
+          }
+
+          console.log(
+            "An error occurred:",
+            error.response
+          );
+        });
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    pathname,
+    search,
+    paramID,
+    pathId,
+    realestate
+  ]);
+
+
+  /*
+   * Desabilita botão direito
+   */
+  useEffect(() => {
     const handleContextMenu =
       (e) => {
         e.preventDefault();
@@ -1467,11 +657,11 @@ const CharacterDetail = ({
         handleContextMenu
       );
     };
-  }, [paramID]);
+  }, []);
 
 
   /*
-   * Cria linhas da tabela.
+   * Cria linhas da tabela
    */
   function createData(
     name,
@@ -1485,13 +675,11 @@ const CharacterDetail = ({
 
 
   /*
-   * Informações do imóvel.
+   * Informações do imóvel
    */
   if (
     imoveis &&
-    Object.keys(
-      imoveis
-    ).length > 0
+    Object.keys(imoveis).length > 0
   ) {
     if (
       imoveis.Tipo_de_Anuncio ===
@@ -1500,17 +688,14 @@ const CharacterDetail = ({
       rows = [
         createData(
           "Andar",
-          imoveis?.Andar !==
-            null
-            ? imoveis.Andar +
-                "º"
+          imoveis?.Andar !== null
+            ? imoveis.Andar + "º"
             : ""
         ),
 
         createData(
           "Área terreno",
-          imoveis?.Area_Terreno !==
-            null
+          imoveis?.Area_Terreno !== null
             ? imoveis.Area_Terreno +
                 " (m²)"
             : "Sem Informação"
@@ -1519,16 +704,15 @@ const CharacterDetail = ({
         createData(
           "Ano de construção",
           imoveis?.Ano_de_Construcao !==
-            null
+          null
             ? imoveis.Ano_de_Construcao
             : "Sem Informação"
         ),
 
         createData(
           "Condomínio",
-          imoveis?.Condominio !==
-              null &&
-            imoveis.Condominio
+          imoveis?.Condominio !== null &&
+          imoveis.Condominio
             ? "R$" +
               imoveis.Condominio
             : "Sem Informação"
@@ -1536,8 +720,7 @@ const CharacterDetail = ({
 
         createData(
           "IPTU (anual)",
-          imoveis?.IPTU !==
-            null
+          imoveis?.IPTU !== null
             ? parseInt(
                 imoveis.IPTU
               ).toLocaleString(
@@ -1554,24 +737,21 @@ const CharacterDetail = ({
 
         createData(
           "Quartos",
-          imoveis?.Quartos !==
-            null
+          imoveis?.Quartos !== null
             ? imoveis.Quartos
             : "Sem Informação"
         ),
 
         createData(
           "Suítes",
-          imoveis?.Suites !==
-            null
+          imoveis?.Suites !== null
             ? imoveis.Suites
             : "Sem Informação"
         ),
 
         createData(
           "Banheiros",
-          imoveis?.Banheiros !==
-            null
+          imoveis?.Banheiros !== null
             ? imoveis.Banheiros
             : "Sem Informação"
         )
@@ -1580,24 +760,20 @@ const CharacterDetail = ({
       rows =
         rows.filter(
           (item) =>
-            item.info !==
-            ""
+            item.info !== ""
         );
     } else {
       rows = [
         createData(
           "Andar",
-          imoveis?.Andar !==
-            null
-            ? imoveis.Andar +
-                "º"
+          imoveis?.Andar !== null
+            ? imoveis.Andar + "º"
             : ""
         ),
 
         createData(
           "Área terreno",
-          imoveis?.Area_Terreno !==
-            null
+          imoveis?.Area_Terreno !== null
             ? imoveis.Area_Terreno +
                 " (m²)"
             : "Sem Informação"
@@ -1605,9 +781,8 @@ const CharacterDetail = ({
 
         createData(
           "Condomínio",
-          imoveis?.Condominio !==
-              null &&
-            imoveis.Condominio
+          imoveis?.Condominio !== null &&
+          imoveis.Condominio
             ? "R$" +
               imoveis?.Condominio
             : "Sem Informação"
@@ -1615,8 +790,7 @@ const CharacterDetail = ({
 
         createData(
           "IPTU (anual)",
-          imoveis?.IPTU !==
-            null
+          imoveis?.IPTU !== null
             ? parseInt(
                 imoveis.IPTU
               ).toLocaleString(
@@ -1633,24 +807,21 @@ const CharacterDetail = ({
 
         createData(
           "Quartos",
-          imoveis?.Quartos !==
-            null
+          imoveis?.Quartos !== null
             ? imoveis.Quartos
             : ""
         ),
 
         createData(
           "Suítes",
-          imoveis?.Suites !==
-            null
+          imoveis?.Suites !== null
             ? imoveis.Suites
             : ""
         ),
 
         createData(
           "Banheiros",
-          imoveis?.Banheiros !==
-            null
+          imoveis?.Banheiros !== null
             ? imoveis.Banheiros
             : "Sem Informação"
         )
@@ -1659,22 +830,19 @@ const CharacterDetail = ({
       rows =
         rows.filter(
           (item) =>
-            item.info !==
-            ""
+            item.info !== ""
         );
     }
   }
 
 
-  const handleClickOpen =
-    () => {
-      setOpen(true);
-    };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
 
   /*
-   * Controla o botão
-   * "Saiba mais".
+   * Controla o botão "Saiba mais"
    */
   useEffect(() => {
     if (
@@ -1687,13 +855,12 @@ const CharacterDetail = ({
     const element =
       contentRef.current;
 
-    const updateToggle =
-      () => {
-        setShowToggle(
-          element.scrollHeight >
-            160
-        );
-      };
+    const updateToggle = () => {
+      setShowToggle(
+        element.scrollHeight >
+          160
+      );
+    };
 
     updateToggle();
 
@@ -1715,18 +882,6 @@ const CharacterDetail = ({
   ]);
 
 
-  /*
-   * Monta os blocos da descrição.
-   *
-   * Isso é calculado a cada renderização
-   * com base no conteúdo atual do imóvel.
-   */
-  const descriptionBlocks =
-    buildDescriptionBlocks(
-      imoveis?.descricao
-    );
-
-
   return (
     <React.Fragment>
 
@@ -1739,7 +894,6 @@ const CharacterDetail = ({
 
       {!loading && (
         <>
-
           <div className="ThumbSLider-highligh slick-slider center slick-initialized">
 
             <ThumbSLider
@@ -1761,8 +915,7 @@ const CharacterDetail = ({
             <Box
               className="back"
               sx={{
-                width:
-                  "100%"
+                width: "100%"
               }}
             >
 
@@ -1774,7 +927,6 @@ const CharacterDetail = ({
                 }}
               >
                 <KeyboardBackspaceIcon />
-
                 Voltar para Resultados
               </Button>
 
@@ -1790,29 +942,20 @@ const CharacterDetail = ({
                     ""}
                 </span>
 
-
                 <div className="property-header">
 
                   <div className="property-location">
 
                     <span className="location-chip">
-
                       <LocationPinIcon fontSize="small" />
-
                       {imoveis?.Bairro ||
                         ""}
-
                     </span>
-
 
                     <span className="location-chip">
-
                       <LocationCityIcon fontSize="small" />
-
                       São Paulo - SP
-
                     </span>
-
 
                     {imoveis?.codigo && (
                       <span
@@ -1823,15 +966,10 @@ const CharacterDetail = ({
                         }}
                       >
                         Cod. Imóvel{" "}
-
-                        <i>
-                          #
-                        </i>
-
+                        <i>#</i>
                         {
                           imoveis.codigo
                         }
-
                       </span>
                     )}
 
@@ -1849,10 +987,6 @@ const CharacterDetail = ({
                   variant="h6"
                   component="div"
                   color="text.secondary"
-                  sx={{
-                    fontSize:
-                      "0.9rem"
-                  }}
                 >
 
                   {imoveis?.Valor_Venda !==
@@ -1901,8 +1035,7 @@ const CharacterDetail = ({
             <Box
               className="propertyDetails"
               sx={{
-                width:
-                  "100%"
+                width: "100%"
               }}
             >
 
@@ -1933,206 +1066,111 @@ const CharacterDetail = ({
                 </h2>
 
 
-                {descriptionBlocks.map(
+                {imoveis?.descricao?.map(
                   (
-                    block,
+                    desc,
                     index
                   ) => {
 
-                    /*
-                     * --------------------------------------------------
-                     * LISTA VISUAL
-                     * --------------------------------------------------
-                     */
                     if (
-                      block.type ===
-                      "visual-list"
+                      desc.type ===
+                      "paragraph"
                     ) {
-                      return (
-                        <Box
-                          key={
-                            block.key ||
-                            `visual-list-${index}`
-                          }
-                          component="div"
-                          sx={{
-                            width:
-                              "100%",
-
-                            marginTop:
-                              "10px",
-
-                            marginBottom:
-                              "10px",
-
-                            fontSize:
-                              "0.9rem"
-                          }}
-                        >
-                          {renderAsVisualList(
-                            block.items,
-                            block.key ||
-                              `visual-list-${index}`,
-                            isMobile
-                          )}
-                        </Box>
-                      );
-                    }
-
-
-                    /*
-                     * --------------------------------------------------
-                     * ESPAÇO ENTRE BLOCOS
-                     * --------------------------------------------------
-                     *
-                     * Mantemos apenas um pequeno espaçamento.
-                     * Isso evita que os parágrafos vazios do Strapi
-                     * criem espaços exagerados.
-                     */
-                    if (
-                      block.type ===
-                      "spacer"
-                    ) {
-                      return (
-                        <Box
-                          key={
-                            block.key ||
-                            `spacer-${index}`
-                          }
-                          sx={{
-                            height:
-                              "6px"
-                          }}
-                        />
-                      );
-                    }
-
-
-                    /*
-                     * --------------------------------------------------
-                     * PARÁGRAFO NORMAL
-                     * --------------------------------------------------
-                     */
-                    if (
-                      block.type ===
-                      "normal"
-                    ) {
-                      const desc =
-                        block.block;
-
-                      if (
-                        !desc
-                      ) {
-                        return null;
-                      }
-
-                      /*
-                       * Parágrafos com várias linhas
-                       * continuam recebendo o tratamento de lista.
-                       */
-                      if (
-                        desc.type ===
-                          "paragraph" &&
-                        hasMultipleLines(
-                          desc.children
-                        )
-                      ) {
-                        const lines =
-                          [];
-
-                        desc.children?.forEach(
-                          (
-                            child
-                          ) => {
-                            splitTextLines(
-                              getChildText(
-                                child
-                              )
-                            ).forEach(
-                              (
-                                line
-                              ) => {
-                                lines.push(
-                                  line
-                                );
-                              }
-                            );
-                          }
-                        );
-
-                        return (
-                          <Typography
-                            key={
-                              block.key ||
-                              `multiline-${index}`
-                            }
-                            component="div"
-                            variant="h5"
-                            gutterBottom
-                            sx={{
-                              width:
-                                "100%",
-
-                              fontSize:
-                                "0.9rem",
-
-                              whiteSpace:
-                                "normal",
-
-                              wordBreak:
-                                "break-word",
-
-                              overflowWrap:
-                                "anywhere"
-                            }}
-                          >
-                            {renderAsVisualList(
-                              lines,
-                              block.key ||
-                                `multiline-${index}`,
-                              isMobile
-                            )}
-                          </Typography>
-                        );
-                      }
-
-
-                      /*
-                       * Renderização normal.
-                       *
-                       * Aqui permanecem textos descritivos
-                       * que NÃO foram identificados como lista.
-                       */
                       return (
                         <Typography
-                          key={
-                            block.key ||
-                            `paragraph-${index}`
-                          }
-                          component="div"
-                          variant="h5"
+                          key={`paragraph-${index}`}
                           gutterBottom
-                          sx={{
-                            width:
-                              "100%",
-
-                            fontSize:
-                              "0.9rem",
-
-                            whiteSpace:
-                              "normal",
-
-                            wordBreak:
-                              "break-word",
-
-                            overflowWrap:
-                              "anywhere"
-                          }}
+                          variant="h5"
                         >
-                          {renderNormalChildren(
-                            desc.children
+                          {desc.children?.map(
+                            (
+                              child,
+                              childIndex
+                            ) => (
+                              <React.Fragment
+                                key={
+                                  childIndex
+                                }
+                              >
+                                {
+                                  child.text
+                                }
+                              </React.Fragment>
+                            )
                           )}
                         </Typography>
+                      );
+                    }
+
+
+                    if (
+                      desc.type ===
+                      "list"
+                    ) {
+                      return (
+                        <ol
+                          key={`list-${index}`}
+                          className="list"
+                          style={{
+                            marginLeft:
+                              "10px"
+                          }}
+                        >
+
+                          {desc.children?.map(
+                            (
+                              listItem,
+                              itemIndex
+                            ) => (
+                              <li
+                                key={
+                                  itemIndex
+                                }
+                                style={{
+                                  marginTop:
+                                    itemIndex ===
+                                    0
+                                      ? "15px"
+                                      : "0.3rem",
+
+                                  marginBottom:
+                                    itemIndex ===
+                                    desc
+                                      .children
+                                      .length -
+                                      1
+                                      ? "15px"
+                                      : "0.3rem"
+                                }}
+                              >
+
+                                <Typography
+                                  component="span"
+                                  variant="h5"
+                                >
+                                  {listItem.children?.map(
+                                    (
+                                      child,
+                                      childIndex
+                                    ) => (
+                                      <React.Fragment
+                                        key={
+                                          childIndex
+                                        }
+                                      >
+                                        {
+                                          child.text
+                                        }
+                                      </React.Fragment>
+                                    )
+                                  )}
+                                </Typography>
+
+                              </li>
+                            )
+                          )}
+
+                        </ol>
                       );
                     }
 
@@ -2200,10 +1238,7 @@ const CharacterDetail = ({
                 <TableBody>
 
                   {rows.map(
-                    (
-                      row
-                    ) => (
-
+                    (row) => (
                       <TableRow
                         key={
                           row.name
@@ -2211,8 +1246,7 @@ const CharacterDetail = ({
                         sx={{
                           "&:last-child td, &:last-child th":
                             {
-                              border:
-                                0
+                              border: 0
                             }
                         }}
                       >
@@ -2225,9 +1259,7 @@ const CharacterDetail = ({
                               "30px"
                           }}
                         >
-                          {
-                            row.name
-                          }
+                          {row.name}
                         </TableCell>
 
 
@@ -2238,7 +1270,6 @@ const CharacterDetail = ({
                         </TableCell>
 
                       </TableRow>
-
                     )
                   )}
 
@@ -2249,7 +1280,6 @@ const CharacterDetail = ({
             </TableContainer>
 
           </div>
-
         </>
       )}
 
@@ -2284,7 +1314,5 @@ const mapStateToProps = (
 export default withRouter(
   connect(
     mapStateToProps
-  )(
-    CharacterDetail
-  )
+  )(CharacterDetail)
 );

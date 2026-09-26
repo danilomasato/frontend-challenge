@@ -160,15 +160,61 @@ const CarouselControls = ({
       ) : (
         <>
           {!isFirstSlide && (
-            <ButtonBack>
-              ‹
-            </ButtonBack>
+            <>
+              {/* Fundo de destaque independente do botão Prev */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  left: '-10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '54px',
+                  height: '54px',
+                  borderRadius: '50%',
+                  background: 'rgba(255, 255, 255, 0.42)',
+                  border: '1px solid rgba(255, 255, 255, 0.35)',
+                  backdropFilter: 'blur(4px)',
+                  WebkitBackdropFilter: 'blur(4px)',
+                  boxSizing: 'border-box',
+                  zIndex: 0,
+                  pointerEvents: 'none'
+                }}
+              />
+
+              <ButtonBack>
+                ‹
+              </ButtonBack>
+            </>
           )}
 
           {!isLastSlide && (
-            <ButtonNext>
-              ›
-            </ButtonNext>
+            <>
+              {/* Fundo de destaque independente do botão Next */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  right: '-10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '54px',
+                  height: '54px',
+                  borderRadius: '50%',
+                  background: 'rgba(255, 255, 255, 0.42)',
+                  border: '1px solid rgba(255, 255, 255, 0.35)',
+                  backdropFilter: 'blur(4px)',
+                  WebkitBackdropFilter: 'blur(4px)',
+                  boxSizing: 'border-box',
+                  zIndex: 0,
+                  pointerEvents: 'none'
+                }}
+              />
+
+              <ButtonNext>
+                ›
+              </ButtonNext>
+            </>
           )}
         </>
       )}
