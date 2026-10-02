@@ -49,7 +49,7 @@ import { Container } from "../../components";
 
 import LocationPinIcon from "@mui/icons-material/LocationOn";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import PreloadCard from "../../components/PreloadCard";
 
 import Divider from "@mui/material/Divider";
@@ -1367,8 +1367,10 @@ const Home = ({
    *
    * 1. impede o comportamento padrão;
    * 2. remove o foco do campo;
-   * 3. fecha o teclado numérico;
-   * 4. executa a mesma busca do botão
+   * 3. aguarda o navegador processar o evento;
+   * 4. remove novamente o foco do elemento ativo;
+   * 5. fecha o teclado virtual;
+   * 6. executa a mesma busca do botão
    *    "Buscar Imóveis".
    */
 
@@ -1381,15 +1383,57 @@ const Home = ({
 
         event.preventDefault();
 
-        /*
-         * Remove o foco do input.
-         *
-         * No mobile isso faz o teclado virtual
-         * ser fechado.
-         */
-        event.currentTarget.blur();
 
-        handleClick();
+        /*
+         * Remove imediatamente o foco do input.
+         */
+        const input =
+          event.currentTarget;
+
+
+        if (
+          input &&
+          typeof input.blur ===
+            "function"
+        ) {
+
+          input.blur();
+
+        }
+
+
+        /*
+         * No mobile, alguns navegadores e o
+         * react-number-format podem processar
+         * novamente o foco durante o evento Enter.
+         *
+         * Por isso fazemos uma segunda remoção
+         * de foco após o navegador processar o
+         * evento do teclado.
+         */
+        setTimeout(
+          () => {
+
+            if (
+              document.activeElement &&
+              typeof document
+                .activeElement
+                .blur ===
+                "function"
+            ) {
+
+              document
+                .activeElement
+                .blur();
+
+            }
+
+
+            handleClick();
+
+          },
+          50
+        );
 
       }
 
@@ -2022,16 +2066,28 @@ const Home = ({
 
 
                     <Button
-                      className="clear-filters-button"
-                      variant="outlined"
-                      onClick={
-                        resetFilters
-                      }
-                    >
+  variant="text"
+  onClick={resetFilters}
+  style={{
+    width: "100%",
+    marginTop: "6px",
+    textTransform: "none",
+    fontSize: "13px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "4px",
+    whiteSpace: "nowrap"
+  }}
+>
+  <AutorenewIcon
+    style={{
+      fontSize: "18px"
+    }}
+  />
 
-                      Limpar filtros
-
-                    </Button>
+  Limpar filtros
+</Button>
 
                   </div>
 
@@ -2342,12 +2398,43 @@ const Home = ({
                       handleClick
                     }
                   >
-
                     Buscar Imóveis
 
                     <SearchIcon />
 
                   </Button>
+
+                  <Grid size={12}>
+  <div
+    style={{
+      marginTop: '6px',
+  position: 'relative',
+  right: '-119px'
+    }}
+  >
+    <Button
+      variant="text"
+      onClick={resetFilters}
+      style={{
+        textTransform: "none",
+        fontSize: "13px",
+        whiteSpace: "nowrap",
+        minWidth: "unset",
+        padding: "4px 0"
+      }}
+    >
+      <AutorenewIcon
+        style={{
+          marginRight: "4px",
+          fontSize: "18px"
+        }}
+      />
+
+      Limpar filtros
+    </Button>
+  </div>
+</Grid>
+
 
                 </Grid>
 
@@ -2517,12 +2604,6 @@ const Home = ({
                 <div
                   className="found-properties"
                 >
-
-                  <span>
-                    Imóveis encontrados:{" "}
-                  </span>
-
-
                   <strong>
                     {
                       pagination?.total ??
@@ -2530,6 +2611,13 @@ const Home = ({
                     }
                   </strong>
 
+                  <span
+                    style={{
+                      marginLeft: "2px"
+                    }}
+                  >
+                    imóveis encontrados
+                  </span>
                 </div>
 
               </div>
@@ -2683,42 +2771,23 @@ const Home = ({
               <div
                 className="mobile-found-properties"
                 style={{
-                  width:
-                    "100%",
-                  boxSizing:
-                    "border-box",
-                  display:
-                    "flex",
-                  alignItems:
-                    "baseline",
-                  margin:
-                    "4px 0 10px",
-                  padding:
-                    "0",
-                  fontSize:
-                    "13px",
-                  lineHeight:
-                    "21px",
-                  color:
-                    "rgba(0,0,0,.52)"
+                  width: "100%",
+                  boxSizing: "border-box",
+                  display: "flex",
+                  alignItems: "baseline",
+                  margin: "4px 0 10px",
+                  padding: "0",
+                  fontSize: "13px",
+                  lineHeight: "21px",
+                  color: "rgba(0,0,0,.52)"
                 }}
               >
 
-                <span>
-                  Imóveis encontrados:
-                </span>
-
-
                 <strong
                   style={{
-                    marginLeft:
-                      "5px",
-                    color:
-                      "#247ac8",
-                    fontSize:
-                      "16px",
-                    fontWeight:
-                      700
+                    color: "#247ac8",
+                    fontSize: "16px",
+                    fontWeight: 700
                   }}
                 >
                   {
@@ -2726,6 +2795,14 @@ const Home = ({
                     data.length
                   }
                 </strong>
+
+                <span
+                  style={{
+                    marginLeft: "2px"
+                  }}
+                >
+                  imóveis encontrados
+                </span>
 
               </div>
 
