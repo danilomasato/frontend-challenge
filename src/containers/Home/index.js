@@ -70,6 +70,8 @@ const Home = ({ realstate, pagination }) => {
     isMobile: window.innerWidth <= 1024
   });
 
+  const [paginationLoading, setPaginationLoading] = useState(false);
+
   const configPreload = 6;
 
   const data = Array.isArray(realstate) ? realstate : [];
@@ -409,40 +411,6 @@ const Home = ({ realstate, pagination }) => {
     }));
   };
 
-  const handlePaginationChange = async page => {
-    setHome(prev => ({
-      ...prev,
-      loading: true
-    }));
-
-    try {
-      const response = await api.getArticles(page, currentFilters);
-
-      dispatch({
-        type: types.RECEIVE_HOME,
-        payload: response
-      });
-
-      if (response?.meta?.pagination) {
-        dispatch({
-          type: types.RECEIVE_PAGINATION,
-          payload: response.meta.pagination
-        });
-      }
-
-      homeInitialDataCache = response;
-    } catch (error) {
-      console.error("Erro ao carregar página:", error);
-    } finally {
-      if (mountedRef.current) {
-        setHome(prev => ({
-          ...prev,
-          loading: false
-        }));
-      }
-    }
-  };
-
   const resetFilters = async () => {
     setFilters({
       search: { label: "", id: "" },
@@ -600,10 +568,19 @@ const Home = ({ realstate, pagination }) => {
             resetFilters={resetFilters}
           />
 
-          {isLoading && <Loading />}
+          {(isLoading || paginationLoading) && <Loading />}
 
           {!isLoading && data.length > 0 && (
-            <Pagination pagination={pagination} onChange={handlePaginationChange} />
+            <Pagination
+              pagination={pagination}
+              filters={currentFilters}
+              onPageChangeStart={() => {
+                setPaginationLoading(true);
+              }}
+              onPageChangeEnd={() => {
+                setPaginationLoading(false);
+              }}
+            />
           )}
         </Container>
       </main>
