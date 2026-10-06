@@ -152,6 +152,7 @@ const CarouselControls = ({
             aria-label="Imóveis anteriores"
             disabled={isFirstSlide}
             style={{
+              position: 'static',
               width: '34px',
               height: '34px',
               minWidth: '34px',
@@ -202,6 +203,7 @@ const CarouselControls = ({
             aria-label="Próximos imóveis"
             disabled={isLastSlide}
             style={{
+              position: 'static',
               width: '34px',
               height: '34px',
               minWidth: '34px',
