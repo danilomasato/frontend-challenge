@@ -3,6 +3,8 @@ import logo from "../../assets/icon/logo_tsa.png";
 import "../../css/libs/hamburgers.min.css";
 import { NavLink } from "react-router-dom";
 import "./Header.css";
+import Button from '@mui/material/Button';
+import PersonIcon from '@mui/icons-material/Person';
 
 const baseURL = process.env.REACT_APP_BASEURL;
 
@@ -53,6 +55,13 @@ export const Header = props => {
             </li>
           ))}
         </ul>
+
+        <Button className="area-corretor" variant="outlined"
+        onClick={() => {
+          window.location.href = "https://sublime-bat-ad2fca1255.strapiapp.com/admin/auth/login";
+        }}>
+          <PersonIcon /> Área do Corretor
+        </Button>
       </div>
     </header>
   );

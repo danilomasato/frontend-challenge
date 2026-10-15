@@ -1,124 +1,152 @@
-import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React, { useState } from "react";
 import "./Register.css";
+
 import { Header } from "../../components/Header";
 import { TopInfo } from "../../components/TopInfo";
-import { TopHeader } from "../../components/TopHeader";
 import { Footer } from "../../components/Footer";
-import SendIcon from '@mui/icons-material/Send';
-import Typography from '@mui/material/Typography';
-import axios from 'axios';
-import { TextField, Box, Button } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import Checkbox from '@mui/material/Checkbox';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import CloseIcon from '@mui/icons-material/Close';
-import { Loading } from "../../components/Loading";
 
-const Register = ({ props }) => {
+import SendIcon from "@mui/icons-material/Send";
+import Typography from "@mui/material/Typography";
+import axios from "axios";
+import { TextField, Box, Button } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import Checkbox from "@mui/material/Checkbox";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import CloseIcon from "@mui/icons-material/Close";
 
-  const [email, setEmail] = useState('');
+const STRAPI_URL = "https://sublime-bat-ad2fca1255.strapiapp.com";
+
+const Register = () => {
   const [erro, setErro] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  const [creciFile, setCreciFile] = useState(null);
+
   const [formData, setFormData] = useState({
-    name: '',
-    surname: '',
-    user: '',
-    email: '', 
-    password: '',
-    creci: '',
-    termsAccepted: false
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+    creci: "",
+    termsAccepted: false,
   });
 
-const passwordValidation = {
-  minLength: formData.password.length >= 8,
-  uppercase: /[A-Z]/.test(formData.password),
-  lowercase: /[a-z]/.test(formData.password),
-  number: /\d/.test(formData.password),
-  special: /[^A-Za-z0-9]/.test(formData.password),
-};
+  const passwordValidation = {
+    minLength: formData.password.length >= 8,
+    uppercase: /[A-Z]/.test(formData.password),
+    lowercase: /[a-z]/.test(formData.password),
+    number: /\d/.test(formData.password),
+    special: /[^A-Za-z0-9]/.test(formData.password),
+  };
 
-const isPasswordValid =
-  Object.values(passwordValidation).every(Boolean);
+  const isPasswordValid =
+    Object.values(passwordValidation).every(Boolean);
 
-const isCreciValid = /^\d{3}\.\d{3}$/.test(formData.creci);
-
-const isFormValid =
-  formData.name.trim() !== '' &&
-  formData.surname.trim() !== '' &&
-  formData.user.trim() !== '' &&
-  isCreciValid &&
-  formData.email.trim() !== '' &&
-  !erro &&
-  isPasswordValid &&
-  formData.termsAccepted;
-
-const handleChange = (e) => {
-  const { name, value, type, checked } = e.target;
-
-  let newValue = value;
-
-  if (type === 'checkbox') {
-    newValue = checked;
-  }
-
-  if (name === 'creci') {
-    const numbers = value.replace(/\D/g, '').slice(0, 6);
-
-    newValue =
-      numbers.length > 3
-        ? `${numbers.slice(0, 3)}.${numbers.slice(3)}`
-        : numbers;
-  }
-
-  setFormData((prev) => ({
-    ...prev,
-    [name]: newValue,
-  }));
-
-  if (name === 'email') {
-    setEmail(value);
-    setErro(!validarEmail(value));
-  }
-};
-  
-  let JWTToken
+  const isCreciValid = /^\d{3}\.\d{3}$/.test(formData.creci);
 
   const validarEmail = (valor) => {
-    // Regex simples para validação de formato de e-mail
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(valor);
   };
 
-  const formatCreci = (value) => {
-    const numbers = value.replace(/\D/g, '').slice(0, 6);
+  const isFormValid =
+    formData.name.trim() !== "" &&
+    formData.surname.trim() !== "" &&
+    isCreciValid &&
+    validarEmail(formData.email) &&
+    !erro &&
+    isPasswordValid &&
+    formData.termsAccepted &&
+    creciFile !== null;
 
-    if (numbers.length <= 3) {
-      return numbers;
+  const handleClickShowPassword = () => {
+    setShowPassword((show) => !show);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    let newValue = type === "checkbox" ? checked : value;
+
+    if (name === "creci") {
+      const numbers = value.replace(/\D/g, "").slice(0, 6);
+
+      newValue =
+        numbers.length > 3
+          ? `${numbers.slice(0, 3)}.${numbers.slice(3)}`
+          : numbers;
     }
 
-    return `${numbers.slice(0, 3)}.${numbers.slice(3)}`;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: newValue,
+    }));
+
+    if (name === "email") {
+      setErro(value.trim() !== "" && !validarEmail(value));
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      setCreciFile(null);
+      return;
+    }
+
+    const allowedTypes = [
+      "application/pdf",
+      "image/jpeg",
+      "image/png",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      alert("Envie a credencial do CRECI em PDF, JPG ou PNG.");
+      e.target.value = "";
+      setCreciFile(null);
+      return;
+    }
+
+    const maxSize = 10 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+      alert("O arquivo deve ter no máximo 10 MB.");
+      e.target.value = "";
+      setCreciFile(null);
+      return;
+    }
+
+    setCreciFile(file);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    if (!loading) {
+      setOpen(false);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.name.trim() || !formData.surname.trim()) {
+      alert("Preencha seu nome e sobrenome.");
+      return;
+    }
+
+    if (!validarEmail(formData.email)) {
+      setErro(true);
+      alert("Digite um endereço de e-mail válido.");
+      return;
+    }
 
     if (!isPasswordValid) {
       alert(
@@ -127,90 +155,74 @@ const handleChange = (e) => {
       return;
     }
 
+    if (!isCreciValid) {
+      alert("Digite um CRECI válido no formato 123.456.");
+      return;
+    }
+
+    if (!creciFile) {
+      alert("Envie a credencial do CRECI.");
+      return;
+    }
+
+    if (!formData.termsAccepted) {
+      alert("Você precisa aceitar os termos para continuar.");
+      return;
+    }
+
+    if (!isFormValid) {
+      return;
+    }
+
     setLoading(true);
+    setOpen(true);
 
-    if (isFormValid) {
-      setOpen(true);
+    try {
+      const registrationData = new FormData();
 
-      axios.post('https://sublime-bat-ad2fca1255.strapiapp.com/admin/login', {
-        "email": "danilomasato@hotmail.com",
-        "password": "Admin@123"
-      })
-        .then(response => {
-          // Handle success.
-          JWTToken = response.data.data.accessToken
-          console.log('User profile', response.data.data.accessToken);
-          axios.post('https://sublime-bat-ad2fca1255.strapiapp.com/admin/users', {
-              "firstname":formData.name,
-              "lastname": formData.surname,
-              "email": formData.email,
-              "roles":["2"]
-            }, {
-            headers: {
-              'Authorization': `Bearer ${JWTToken}`
-            }})
-            .then(response => {
-              console.log('usuario criado!');
-              
-              const id = response.data.data.id.toString()
+      registrationData.append("nome", formData.name.trim());
+      registrationData.append("sobrenome", formData.surname.trim());
+      registrationData.append("email", formData.email.trim());
+      registrationData.append("password", formData.password);
+      registrationData.append(
+        "creci",
+        formData.creci.replace(/\./g, "")
+      );
+      registrationData.append("credencialCreci", creciFile);
 
-              axios.put(`https://sublime-bat-ad2fca1255.strapiapp.com/admin/users/${id}`, {
-                "firstname":formData.name,
-                "lastname": formData.surname,
-                "password": formData.password,
-                "roles":["2"],  
-                "isActive": true
-                }, {
-              headers: {
-                'Authorization': `Bearer ${JWTToken}`
-              }})
-              .then(response => {
-                // Handle success.
-                console.log('usuario ativado!');                 
-              })
-              .catch(error => {
-                // Handle error.
-                console.log('An error occurred:', error.response);
-              });
+      const response = await axios.post(
+        `${STRAPI_URL}/api/broker/register`,
+        registrationData
+      );
 
-              //api corretores para registrar o CRECI
-              axios.post(`https://sublime-bat-ad2fca1255.strapiapp.com/api/brokers`, {
-                  "data": {
-                    "nome":formData.name,
-                    "sobrenome": formData.surname,
-                    "creci": formData.creci.replace(/\./g, ""),
-                    "email": formData.email
-                  }}, {
-                  headers: {
-                    //token FullAcess fixo para registrar Coleção API Corretores
-                    'Authorization': `Bearer bb71d99fd4e9cc6af847e1f75af8eb8eb895c8cdc50b835d210efbf504e1bdb69005dd946f1c001a554d6eb8f867941f76e7dd8183213298576dd0cf0081c92a89117e759cdd270cc1fc3a46bd7bdf0a19489ee45c2bebf79828e2e775dfaaf2aad1feec705c8b4ebd14d470c9fa46fbca5734e8f98f20cb932193d3db19a050`
-                  }})
-                  .then(response => {
-                    // Handle success.
-                    console.log('brokers', response);
-                    setLoading(false);
-                    setTimeout(()=> {
-                      //fecha modal
-                      setOpen(false);
-                      window.location.href = 'https://sublime-bat-ad2fca1255.strapiapp.com/admin'
-                    }, 6000)
-                  })
-                  .catch(error => {
-                    // Handle error.
-                    console.log('An error occurred:', error.response);
-                  });
-              })
-              .catch(error => {
-                // Handle error.
-                console.log('An error occurred:', error.response);
-              })
-        })
-        .catch(error => {
-          // Handle error.
-          console.log('An error occurred:', error.response);
-        });
-    } else {
-      setErro(true);
+      if (response.data?.success !== true) {
+        throw new Error(
+          response.data?.message ||
+            "O servidor não confirmou a conclusão do cadastro."
+        );
+      }
+
+      setLoading(false);
+
+      window.setTimeout(() => {
+        setOpen(false);
+        window.location.href = `${STRAPI_URL}/admin`;
+      }, 6000);
+    } catch (error) {
+      console.error(
+        "Erro durante o cadastro:",
+        error.response?.data || error
+      );
+
+      setLoading(false);
+      setOpen(false);
+
+      alert(
+        error.response?.data?.error?.message ||
+          error.response?.data?.message ||
+          error.message ||
+          "Não foi possível concluir o cadastro. Verifique os dados e tente novamente."
+      );
     }
   };
 
@@ -222,48 +234,87 @@ const handleChange = (e) => {
       <Dialog
         open={open}
         onClose={handleClose}
-        fullWidth="lg"
+        fullWidth
         maxWidth="lg"
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogContent className="success">
-            <div className="row center">
-            <div className="content" style={{ minHeight: "50px",  display: "block", width: "500px" }}>
-
-              {loading ?
+          <div className="row center">
+            <div
+              className="content"
+              style={{
+                minHeight: "100px",
+                display: "block",
+                width: "300px",
+              }}
+            >
+              {loading ? (
                 <>
-                  <img style={{ left: 'inherit' }} src="https://cdn.pixabay.com/animation/2023/05/02/04/29/04-29-06-428_512.gif" className="overlay-img" />
-                  <Typography variant="h5" className="title" style={{ 
-                    float: 'left',
-                    border: '0'
+                  <img
+                    style={{
+                      left: "inherit",
+                      width: "50px",
                     }}
-                    >
+                    src="https://cdn.pixabay.com/animation/2023/05/02/04/29/04-29-06-428_512.gif"
+                    className="overlay-img"
+                    alt="Registrando"
+                  />
+
+                  <Typography
+                    variant="h5"
+                    className="title"
+                    style={{
+                      float: "left",
+                      border: "0",
+                      width: "auto",
+                      margin: "5% 0 0 10%",
+                    }}
+                  >
                     Registrando
                   </Typography>
                 </>
+              ) : (
+                <>
+                  <img
+                    src="https://tudosobreap.com.br/assets/images/loading.gif"
+                    width="100"
+                    alt="Sucesso"
+                  />
 
-              : 
-              <>
-                <img src="https://tudosobreap.com.br/assets/images/loading.gif" width="100"/>
-                <Typography variant="h2" className="description">
-                  Você foi registrado com Sucesso ! <br />
-                  Vamos Redirecionar você para página de Administração de imóveis da TSA
-                </Typography> 
-              </>
-              } 
+                  <Typography
+                    variant="h2"
+                    className="description"
+                  >
+                    Você foi registrado com Sucesso! <br />
+                    Vamos Redirecionar você para página de Administração de
+                    imóveis da TSA
+                  </Typography>
+                </>
+              )}
             </div>
           </div>
         </DialogContent>
-        <CloseIcon className="modal-close" onClick={handleClose} />
+
+        <CloseIcon
+          className="modal-close"
+          onClick={handleClose}
+        />
       </Dialog>
 
       <div className="row center">
-        <div className="content" style={{ minHeight: "auto",  display: "block" }}>
-          <div sx={{ width: '100%' }}>
+        <div
+          className="content"
+          style={{
+            minHeight: "auto",
+            display: "block",
+          }}
+        >
+          <div sx={{ width: "100%" }}>
             <Box className="form-left">
               <Typography variant="h5" className="title">
-                Venha ser<br />
+                Venha ser
+                <br />
                 parceiro TSA
               </Typography>
 
@@ -272,96 +323,211 @@ const handleChange = (e) => {
                 usufrua de nossa ferramenta <br />
                 para expandir seus <br />
                 negócios como corretor(a)
-              </Typography> 
+              </Typography>
             </Box>
+
             <Box
               className="form"
               component="form"
-              sx={{ '& > :not(style)': { m: 1, width: '100%' } }}
+              sx={{
+                "& > :not(style)": {
+                  m: 1,
+                  width: "100%",
+                },
+              }}
               noValidate
               autoComplete="off"
               onSubmit={handleSubmit}
             >
               <Typography variant="h5" className="title">
-                <PersonAddAltIcon style={{ marginRight: '10px'}}/> Crie Sua Conta
+                <PersonAddAltIcon
+                  style={{
+                    marginRight: "10px",
+                  }}
+                />
+                Crie Sua Conta
               </Typography>
+
               <Typography variant="h2" className="description">
                 Preencha os dados abaixo para se cadastrar
-              </Typography> 
-              
-              <TextField id="outlined-basic" label="Digite seu Nome..." variant="outlined" 
-              onChange={handleChange} 
-              value={formData.name}
-              name="name"
-               style={{float: 'left', width: '46%'}} />
-              <TextField id="outlined-basic" label="Digite seu Sobrenome..." variant="outlined" 
-              onChange={handleChange} 
-              value={formData.surname}
-              name="surname"
-              style={{float: 'left', width: '46%'}} />
-              <TextField id="outlined-basic" label="Digite seu usuário..." variant="outlined" 
-              onChange={handleChange} 
-              value={formData.user}
-              name="user"
-              style={{float: 'left', width: '46%'}} />
-              
-              <TextField id="outlined-basic" label="Digite seu CRECI..." variant="outlined"  
-              onChange={handleChange} 
-              value={formData.creci}
-              name="creci"
-               style={{float: 'left', width: '46%'}} />
-              
-              <Box style={{ position: 'relative', float: 'left', width: '100%' }}>
+              </Typography>
+
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: "16px",
+                  width: "100%",
+                  boxSizing: "border-box",
+                  "@media (max-width: 768px)": {
+                    gridTemplateColumns: "minmax(0, 1fr)",
+                  },
+                }}
+              >
                 <TextField
-                  style={{ width: '100%' }}
+                  id="outlined-name"
+                  label="Digite seu Nome..."
+                  variant="outlined"
+                  onChange={handleChange}
+                  value={formData.name}
+                  name="name"
+                  fullWidth
+                  sx={{ minWidth: 0 }}
+                />
+
+                <TextField
+                  id="outlined-surname"
+                  label="Digite seu Sobrenome..."
+                  variant="outlined"
+                  onChange={handleChange}
+                  value={formData.surname}
+                  name="surname"
+                  fullWidth
+                  sx={{ minWidth: 0 }}
+                />
+
+                <TextField
+                  id="outlined-creci"
+                  label="Digite seu CRECI..."
+                  variant="outlined"
+                  onChange={handleChange}
+                  value={formData.creci}
+                  name="creci"
+                  error={
+                    formData.creci.length > 0 && !isCreciValid
+                  }
+                  helperText={
+                    formData.creci.length > 0 && !isCreciValid
+                      ? "Use o formato 123.456"
+                      : ""
+                  }
+                  fullWidth
+                  sx={{ minWidth: 0 }}
+                />
+
+                <Box
+                  sx={{
+                    width: "100%",
+                    minWidth: 0,
+                    minHeight: "56px",
+                    border: "1px solid #c4c4c4",
+                    borderRadius: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "0 14px",
+                    boxSizing: "border-box",
+                    position: "relative",
+                    transition: "border-color 0.2s ease",
+                    "&:hover": {
+                      borderColor: "#222",
+                    },
+                  }}
+                >
+                  <input
+                    id="creci-file"
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={handleFileChange}
+                    style={{
+                      display: "none",
+                    }}
+                  />
+
+                  <label
+                    htmlFor="creci-file"
+                    style={{
+                      width: "100%",
+                      minWidth: 0,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "10px",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        color: creciFile ? "#333" : "#666",
+                        fontSize: "16px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        minWidth: 0,
+                      }}
+                    >
+                      {creciFile
+                        ? creciFile.name
+                        : "Credencial do CRECI"}
+                    </Typography>
+
+                    <Button
+                      component="span"
+                      variant="outlined"
+                      size="small"
+                      sx={{
+                        flexShrink: 0,
+                      }}
+                    >
+                      Selecionar
+                    </Button>
+                  </label>
+                </Box>
+              </Box>
+
+              <Box
+                style={{
+                  position: "relative",
+                  float: "left",
+                  width: "100%",
+                }}
+              >
+                <TextField
+                  style={{
+                    width: "100%",
+                  }}
                   label="Senha"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   variant="outlined"
                 />
 
                 <Box
                   sx={{
-                    position: 'absolute',
+                    position: "absolute",
                     top: 0,
-                    left: '-320px',
-                    width: '290px',
-                    background: '#fff',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '12px',
-                    padding: '16px',
-                    boxShadow: '0 10px 30px rgba(0,0,0,.08)',
+                    left: "-320px",
+                    width: "290px",
+                    background: "#fff",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "12px",
+                    padding: "16px",
+                    boxShadow: "0 10px 30px rgba(0,0,0,.08)",
                     zIndex: 10,
-
-                    '&::before': {
+                    "&::before": {
                       content: '""',
-                      position: 'absolute',
-                      top: '22px',
-                      right: '-10px',
-                      width: '18px',
-                      height: '18px',
-                      background: '#fff',
-                      borderTop: '1px solid #e5e7eb',
-                      borderRight: '1px solid #e5e7eb',
-                      transform: 'rotate(45deg)',
+                      position: "absolute",
+                      top: "22px",
+                      right: "-10px",
+                      width: "18px",
+                      height: "18px",
+                      background: "#fff",
+                      borderTop: "1px solid #e5e7eb",
+                      borderRight: "1px solid #e5e7eb",
+                      transform: "rotate(45deg)",
                     },
-
-                    // 📱 MOBILE
-                    '@media (max-width: 768px)': {
-                      position: 'relative',
-                      top: 'auto',
-                      left: 'auto',
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      marginTop: '12px',
-                      marginBottom: '8px',
-                      padding: '14px',
-
-                      // Remove a setinha do pop-up
-                      '&::before': {
-                        display: 'none',
+                    "@media (max-width: 768px)": {
+                      position: "relative",
+                      top: "auto",
+                      left: "auto",
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "12px",
+                      marginBottom: "8px",
+                      padding: "14px",
+                      "&::before": {
+                        display: "none",
                       },
                     },
                   }}
@@ -377,37 +543,42 @@ const handleChange = (e) => {
                   </Typography>
 
                   <div>
-                    {passwordValidation.minLength ? "✅" : "❌"} Mínimo de 8 caracteres
+                    {passwordValidation.minLength ? "✅" : "❌"}{" "}
+                    Mínimo de 8 caracteres
                     {!passwordValidation.minLength &&
                       ` (${formData.password.length}/8)`}
                   </div>
 
                   <div>
-                    {passwordValidation.uppercase ? "✅" : "❌"} Uma letra maiúscula
+                    {passwordValidation.uppercase ? "✅" : "❌"}{" "}
+                    Uma letra maiúscula
                   </div>
 
                   <div>
-                    {passwordValidation.lowercase ? "✅" : "❌"} Uma letra minúscula
+                    {passwordValidation.lowercase ? "✅" : "❌"}{" "}
+                    Uma letra minúscula
                   </div>
 
                   <div>
-                    {passwordValidation.number ? "✅" : "❌"} Um número
+                    {passwordValidation.number ? "✅" : "❌"}{" "}
+                    Um número
                   </div>
 
                   <div>
-                    {passwordValidation.special ? "✅" : "❌"} Um caractere especial
+                    {passwordValidation.special ? "✅" : "❌"}{" "}
+                    Um caractere especial
                   </div>
                 </Box>
 
                 <IconButton
-                  aria-label="toggle password visibility"
+                  aria-label="Alternar visibilidade da senha"
                   onClick={handleClickShowPassword}
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
                   style={{
-                    position: 'absolute',
-                    right: '1.2rem',
-                    top: '0.5rem'
+                    position: "absolute",
+                    right: "1.2rem",
+                    top: "0.5rem",
                   }}
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -427,28 +598,36 @@ const handleChange = (e) => {
                 value={formData.email}
                 onChange={handleChange}
                 error={erro}
-                helperText={erro ? "Por favor, digite um e-mail válido." : ""}
+                helperText={
+                  erro ? "Por favor, digite um e-mail válido." : ""
+                }
               />
 
-             <Typography className="ThumbSLider-description" gutterBottom>
-              <Checkbox
-                name="termsAccepted"
-                checked={Boolean(formData.termsAccepted)}
-                onChange={handleChange}
-                inputProps={{ 'aria-label': 'Aceitar termos de uso' }}
-                style={{ paddingLeft: '0' }}
-              />
-
-              Estando de acordo, você aceita nosso{' '}
-
-              <a
-                href="https://drive.google.com/file/d/14KrwuRBWVf1IT5m7Iu4FqS7D-bgyIYdE/view?usp=sharing"
-                target="_blank"
-                rel="noreferrer"
+              <Typography
+                className="ThumbSLider-description"
+                gutterBottom
               >
-                termos
-              </a>
-            </Typography>
+                <Checkbox
+                  name="termsAccepted"
+                  checked={Boolean(formData.termsAccepted)}
+                  onChange={handleChange}
+                  inputProps={{
+                    "aria-label": "Aceitar termos de uso",
+                  }}
+                  style={{
+                    paddingLeft: "0",
+                  }}
+                />
+                Estando de acordo, você aceita nosso{" "}
+                <a
+                  href="https://drive.google.com/file/d/14KrwuRBWVf1IT5m7Iu4FqS7D-bgyIYdE/view?usp=sharing"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  termos
+                </a>
+              </Typography>
+
               <Button
                 type="submit"
                 variant="contained"

@@ -142,18 +142,22 @@ const CardDetail = ({ data }) => {
 };
 
 const valorVenda = toNumber(imovel?.Valor_Venda);
+
 const valorAluguel = toNumber(imovel?.Valor_Aluguel);
+
 const condominio = toNumber(imovel?.Condominio);
+
 const iptu = toNumber(imovel?.IPTU);
 
-const valorBase =
-  toNumber(imovel?.Valor_Venda) ||
-  toNumber(imovel?.Valor_Aluguel);
+const isVenda = valorVenda > 0;
 
-const total =
-  valorBase +
-  toNumber(imovel?.Condominio) +
-  toNumber(imovel?.IPTU);
+const valorBase = isVenda
+  ? valorVenda
+  : valorAluguel;
+
+const total = isVenda
+  ? valorVenda
+  : valorAluguel + condominio + iptu;
                
   return (
     <>  

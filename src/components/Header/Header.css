@@ -96,6 +96,26 @@
   position: absolute;
 }
 
+#header .area-corretor {
+  float: right;
+  height: 40px !important;
+  color: #0b2c3d;
+  border-color: #0b2c3d;
+  text-transform: none;
+  margin-top: 30px;
+  margin-right: 103px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  letter-spacing: -0.1px;
+  font-weight: bold;
+  font-family: 'quicksand-regular', helvetica, arial !important;
+}
+
+#header .area-corretor svg {
+  margin-right: 5px;
+}
+
+
 @media (min-width: 1025px) {
   #header {
     height: 100px;

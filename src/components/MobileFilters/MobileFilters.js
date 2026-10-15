@@ -4,7 +4,8 @@ import {
   Box,
   Button,
   TextField,
-  MenuItem
+  MenuItem,
+  Chip
 } from "@mui/material";
 
 import Autocomplete from "@mui/material/Autocomplete";
@@ -15,6 +16,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import LocationPinIcon from "@mui/icons-material/LocationOn";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 
 const MobileFilters = ({
   isMobile,
@@ -33,11 +35,18 @@ const MobileFilters = ({
   optionsValue,
 
   handlePriceValueChange,
+  handlePriceFocus,
   handlePriceKeyDown,
   handlePriceBlur,
 
   handleClick,
   resetFilters,
+
+  appliedFilters,
+
+  removeSearchFilter,
+  removeCategoryFilter,
+  removePriceFilter,
 
   MobileNumericTextField
 }) => {
@@ -46,8 +55,203 @@ const MobileFilters = ({
     return null;
   }
 
+  const appliedSearch =
+    appliedFilters?.search?.label || "";
+
+  const appliedCategory =
+    appliedFilters?.category || "";
+
+  const appliedMin =
+    Number(
+      appliedFilters?.optionsValue?.min
+    ) || 0;
+
+  const appliedMax =
+    Number(
+      appliedFilters?.optionsValue?.max
+    ) || 0;
+
+  const hasActiveBadges =
+    Boolean(appliedSearch) ||
+    Boolean(appliedCategory) ||
+    appliedMin > 0 ||
+    appliedMax > 0;
+
+  const chipSx = {
+    flexShrink: 0,
+    height: "28px",
+    borderRadius: "8px",
+    backgroundColor: "rgba(22, 135, 232, 0.08)",
+    border: "1px solid rgba(22, 135, 232, 0.18)",
+    color: "#315b7d",
+    fontSize: "12px",
+    fontWeight: 600,
+
+    "& .MuiChip-label": {
+      paddingLeft: "9px",
+      paddingRight: "4px"
+    },
+
+    "& .MuiChip-deleteIcon": {
+      color: "rgba(49, 91, 125, 0.65)",
+      fontSize: "17px",
+      marginRight: "5px",
+      marginLeft: "2px",
+
+      "&:hover": {
+        color: "#315b7d"
+      }
+    }
+  };
+
+  const renderAppliedFilters = () => {
+    if (!hasActiveBadges) {
+      return null;
+    }
+
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          marginTop: "10px",
+          minWidth: 0
+        }}
+      >
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "5px",
+            flexShrink: 0,
+            whiteSpace: "nowrap",
+            color: "rgba(0,0,0,.62)",
+            fontSize: "12px",
+            fontWeight: 600
+          }}
+        >
+
+          <FilterAltOutlinedIcon
+            sx={{
+              fontSize: "17px"
+            }}
+          />
+
+          <span>
+            Filtros aplicados
+          </span>
+
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            flexWrap: "nowrap",
+            overflowX: "auto",
+            overflowY: "hidden",
+            minWidth: 0,
+            flex: 1,
+            paddingBottom: "2px",
+
+            scrollbarWidth: "thin",
+
+            "&::-webkit-scrollbar": {
+              height: "3px"
+            },
+
+            "&::-webkit-scrollbar-thumb": {
+              borderRadius: "10px",
+              backgroundColor:
+                "rgba(0,0,0,.16)"
+            }
+          }}
+        >
+
+          {appliedSearch && (
+            <Chip
+              label={appliedSearch}
+              onDelete={
+                removeSearchFilter
+              }
+              deleteIcon={
+                <CloseIcon />
+              }
+              size="small"
+              sx={chipSx}
+            />
+          )}
+
+          {appliedCategory && (
+            <Chip
+              label={
+                appliedCategory ===
+                "venda"
+                  ? "Venda"
+                  : appliedCategory ===
+                    "aluguel"
+                    ? "Aluguel"
+                    : appliedCategory ===
+                      "Lançamentos"
+                      ? "Lançamentos"
+                      : appliedCategory
+              }
+              onDelete={
+                removeCategoryFilter
+              }
+              deleteIcon={
+                <CloseIcon />
+              }
+              size="small"
+              sx={chipSx}
+            />
+          )}
+
+          {appliedMin > 0 && (
+            <Chip
+              label={`A partir de R$ ${appliedMin.toLocaleString(
+                "pt-BR"
+              )}`}
+              onDelete={() =>
+                removePriceFilter("min")
+              }
+              deleteIcon={
+                <CloseIcon />
+              }
+              size="small"
+              sx={chipSx}
+            />
+          )}
+
+          {appliedMax > 0 && (
+            <Chip
+              label={`Até R$ ${appliedMax.toLocaleString(
+                "pt-BR"
+              )}`}
+              onDelete={() =>
+                removePriceFilter("max")
+              }
+              deleteIcon={
+                <CloseIcon />
+              }
+              size="small"
+              sx={chipSx}
+            />
+          )}
+
+        </Box>
+
+      </Box>
+    );
+  };
+
   return (
     <>
+
       {mobileSearchOpen && (
 
         <div
@@ -125,15 +329,22 @@ const MobileFilters = ({
                   ) || null
                 }
                 getOptionLabel={
-                  (option) =>
+                  option =>
                     option?.label || ""
                 }
                 isOptionEqualToValue={
-                  (option, value) =>
-                    option.id === value.id
+                  (
+                    option,
+                    value
+                  ) =>
+                    option.id ===
+                    value.id
                 }
                 onChange={
-                  (event, value) => {
+                  (
+                    event,
+                    value
+                  ) => {
 
                     setSearch(
                       value || {
@@ -145,7 +356,7 @@ const MobileFilters = ({
                   }
                 }
                 renderInput={
-                  (params) => (
+                  params => (
 
                     <TextField
                       {...params}
@@ -166,7 +377,9 @@ const MobileFilters = ({
 
               <CloseIcon
                 className="search-clear mobile-search-clear"
-                onClick={resetFilters}
+                onClick={
+                  resetFilters
+                }
               />
 
             </Box>
@@ -178,15 +391,30 @@ const MobileFilters = ({
           >
 
             <NumericFormat
-              value={optionsValue.min}
+              value={
+                optionsValue?.min ??
+                0
+              }
               onValueChange={
-                handlePriceValueChange("min")
+                handlePriceValueChange(
+                  "min"
+                )
+              }
+              onFocus={
+                handlePriceFocus
+                  ? () =>
+                      handlePriceFocus(
+                        "min"
+                      )
+                  : undefined
               }
               onKeyDown={
                 handlePriceKeyDown
               }
               onBlur={() =>
-                handlePriceBlur("min")
+                handlePriceBlur(
+                  "min"
+                )
               }
               customInput={
                 MobileNumericTextField
@@ -200,9 +428,12 @@ const MobileFilters = ({
               type="tel"
               inputMode="numeric"
               inputProps={{
-                inputMode: "numeric",
-                pattern: "[0-9]*",
-                enterKeyHint: "search",
+                inputMode:
+                  "numeric",
+                pattern:
+                  "[0-9]*",
+                enterKeyHint:
+                  "search",
                 type: "tel"
               }}
             />
@@ -214,15 +445,30 @@ const MobileFilters = ({
           >
 
             <NumericFormat
-              value={optionsValue.max}
+              value={
+                optionsValue?.max ??
+                0
+              }
               onValueChange={
-                handlePriceValueChange("max")
+                handlePriceValueChange(
+                  "max"
+                )
+              }
+              onFocus={
+                handlePriceFocus
+                  ? () =>
+                      handlePriceFocus(
+                        "max"
+                      )
+                  : undefined
               }
               onKeyDown={
                 handlePriceKeyDown
               }
               onBlur={() =>
-                handlePriceBlur("max")
+                handlePriceBlur(
+                  "max"
+                )
               }
               customInput={
                 MobileNumericTextField
@@ -236,9 +482,12 @@ const MobileFilters = ({
               type="tel"
               inputMode="numeric"
               inputProps={{
-                inputMode: "numeric",
-                pattern: "[0-9]*",
-                enterKeyHint: "search",
+                inputMode:
+                  "numeric",
+                pattern:
+                  "[0-9]*",
+                enterKeyHint:
+                  "search",
                 type: "tel"
               }}
             />
@@ -281,7 +530,9 @@ const MobileFilters = ({
           <Button
             className="search-button"
             variant="contained"
-            onClick={handleClick}
+            onClick={
+              handleClick
+            }
           >
 
             Buscar Imóveis
@@ -292,7 +543,9 @@ const MobileFilters = ({
 
           <Button
             variant="text"
-            onClick={resetFilters}
+            onClick={
+              resetFilters
+            }
             style={{
               width: "100%",
               marginTop: "6px",
@@ -316,9 +569,12 @@ const MobileFilters = ({
 
           </Button>
 
+          {renderAppliedFilters()}
+
         </div>
 
       </div>
+
     </>
   );
 };
