@@ -266,6 +266,26 @@
   animation: skeleton-loading 1.5s ease infinite;
 }
 
+div[role="dialog"] .container__slider .slick-slide {
+  position: relative;
+}
+
+div[role="dialog"] .container__slider .slick-slide::after {
+  background-image: url("https://tudosobreap.com.br/static/media/logo_tsa.065f0e6987b69aca20e9.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  bottom: 10px;
+  content: "";
+  height: 50px;
+  opacity: 0.5;
+  position: absolute;
+  right: 20px;
+  width: 84px;
+  z-index: 9;
+  pointer-events: none;
+}
+
 @keyframes skeleton-loading {
   0% {
     background-position: 100% 0;
