@@ -7,10 +7,14 @@ import Contact from "./Contact";
 import About from "./About";
 import Register from "./Register";
 import "./App.css";
+import LandingPage, { getHostSubdomain } from "./LandingPage";
 
-const App = ({ store }) => (
+const App = ({ store }) => {
+  const subdomain = getHostSubdomain();
+
+  return (
   <Provider store={store}>
-    <BrowserRouter>
+    {subdomain ? <LandingPage subdomain={subdomain} /> : <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/imovel/:id/:id" component={CharacterDetail} />
@@ -18,8 +22,9 @@ const App = ({ store }) => (
         <Route exact path="/sobre-nos" component={About} />
         <Route exact path="/Register" component={Register} />
       </Switch>
-    </BrowserRouter>
+    </BrowserRouter>}
   </Provider>
-);
+  );
+};
 
 export default App;
