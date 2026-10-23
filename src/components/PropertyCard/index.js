@@ -133,7 +133,7 @@ const PropertyCard = ({ card, count }) => {
         height="180"
         image={
           Array.isArray(card?.Fotos)
-            ? card.Fotos.slice(1)
+            ? card.Fotos
             : []
         }
         alt={title}

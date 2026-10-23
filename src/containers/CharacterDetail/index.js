@@ -676,14 +676,6 @@ function buildDescriptionBlocks(
       continue;
     }
 
-    /*
-     * Paragraph vazio:
-     *
-     * O Strapi está criando vários paragraphs vazios
-     * entre os itens da lista. Esses paragraphs não
-     * devem aparecer na descrição e também não podem
-     * interromper a identificação de uma lista.
-     */
     if (
       isEmptyDescriptionParagraph(
         current
@@ -696,27 +688,6 @@ function buildDescriptionBlocks(
     const currentAnalysis =
       analyzeParagraph(current);
 
-    /*
-     * ==========================================================
-     * DESTAQUES / CARACTERÍSTICAS DO IMÓVEL
-     * ==========================================================
-     *
-     * Exemplo real recebido da API:
-     *
-     * ✨ Destaques do imóvel
-     * 34 m²
-     * [paragraph vazio]
-     * 2 dormitórios
-     * [paragraph vazio]
-     * 1 banheiro
-     * [paragraph vazio]
-     * Condomínio fechado
-     * [paragraph vazio]
-     * ...
-     *
-     * O ponto importante aqui é que os paragraphs vazios
-     * precisam ser ignorados enquanto procuramos os itens.
-     */
     const currentText =
       currentAnalysis?.text ||
       getTextFromChildren(
@@ -769,12 +740,6 @@ function buildDescriptionBlocks(
         const next =
           description[nextIndex];
 
-        /*
-         * Ignora paragraphs vazios.
-         *
-         * Isso é exatamente o formato enviado
-         * pelo JSON desta descrição.
-         */
         if (
           isEmptyDescriptionParagraph(
             next
@@ -794,10 +759,6 @@ function buildDescriptionBlocks(
         const nextAnalysis =
           analyzeParagraph(next);
 
-        /*
-         * Se encontrarmos outra lista visual
-         * com emoji, ela pertence a outro bloco.
-         */
         if (
           nextAnalysis?.type ===
           "icon"
@@ -810,10 +771,6 @@ function buildDescriptionBlocks(
             next
           );
 
-        /*
-         * Se o paragraph seguinte tem aparência
-         * de característica, adiciona à lista.
-         */
         if (
           nextItems.length > 0
         ) {
@@ -826,15 +783,6 @@ function buildDescriptionBlocks(
           continue;
         }
 
-        /*
-         * Chegamos em texto normal.
-         *
-         * Exemplo do JSON:
-         *
-         * "Uma ótima opção para quem procura..."
-         *
-         * Nesse ponto a lista deve terminar.
-         */
         break;
       }
 
@@ -853,11 +801,6 @@ function buildDescriptionBlocks(
       }
     }
 
-    /*
-     * ==========================================================
-     * LISTA DE ÍCONES
-     * ==========================================================
-     */
     if (
       currentAnalysis?.type ===
       "icon"
@@ -929,11 +872,6 @@ function buildDescriptionBlocks(
       continue;
     }
 
-    /*
-     * ==========================================================
-     * HIGHLIGHT + LISTA DENTRO DO MESMO PARAGRAPH
-     * ==========================================================
-     */
     if (
       currentAnalysis?.type ===
       "highlight-list"
@@ -951,11 +889,6 @@ function buildDescriptionBlocks(
       continue;
     }
 
-    /*
-     * ==========================================================
-     * OUTROS HEADINGS + PARAGRAPHS DE CARACTERÍSTICAS
-     * ==========================================================
-     */
     if (
       currentLines.length === 1 &&
       currentText.trim()
@@ -1041,9 +974,6 @@ function buildDescriptionBlocks(
       }
     }
 
-    /*
-     * Paragraph normal.
-     */
     blocks.push({
       type: "normal",
       desc: current
@@ -2077,23 +2007,34 @@ const CharacterDetail = ({
 
       <Header />
 
+      <div
+        className="ThumbSLider-highligh slick-slider center slick-initialized"
+        style={{
+          height: "400px",
+          minHeight: "400px",
+          width: "100%",
+          display: "flow-root",
+          position: "relative",
+          flex: "0 0 400px",
+          flexShrink: 0,
+          boxSizing: "border-box",
+          overflow: "hidden"
+        }}
+      >
+        {!loading && (
+          <ThumbSLider
+            height="400"
+            image={imoveis?.Fotos}
+            detail="true"
+            onClick={
+              handleClickOpen
+            }
+          />
+        )}
+      </div>
+
       {!loading && (
         <>
-          <div className="ThumbSLider-highligh slick-slider center slick-initialized">
-            <ThumbSLider
-              height="300"
-              image={
-                imoveis?.Fotos?.slice(
-                  1
-                )
-              }
-              detail="true"
-              onClick={
-                handleClickOpen
-              }
-            />
-          </div>
-
           <div className="row center">
             <Box
               className="back"

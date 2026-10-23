@@ -162,6 +162,16 @@
   display: block;
 }
 
+.GroupBelowHighligh .card .icon-card {
+  border-right: 1px solid #dedede;
+  padding-right: 10px;
+}
+
+.GroupBelowHighligh .card .icon-card:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
 .GroupBelowHighligh .imovel-info {
     width: 100%;
     margin: 0;
@@ -173,7 +183,7 @@
 }
 
 .GroupBelowHighligh .imovel-info svg {
-	margin: 7px 10px 0 0;
+	margin: 5px 7px 0 0;
 }
 
 .GroupBelowHighligh .imovel-info .icon-info {
@@ -208,7 +218,7 @@
 
 .GroupBelowHighligh .ButtonGroup button {
     color: #494949;
-		height: 53px;
+	height: 50px;
     background: #f8f8ff;
     border-color: #cfcfe461;
     font-size: small;
@@ -388,7 +398,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
     box-shadow: none;
     transition: all 0.2s ease;
 }
